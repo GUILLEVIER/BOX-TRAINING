@@ -1,0 +1,85 @@
+<div class="main-container">
+  <!-- Page Header Component -->
+  <app-page-header
+    title="Gestión de Planes"
+    titleIcon="fitness_center"
+    [actions]="headerActionsTemplate"
+  >
+  </app-page-header>
+
+  <!-- Header Actions Template -->
+  <ng-template #headerActionsTemplate>
+    <div>
+      <button mat-raised-button color="primary" (click)="openCreatePlanDialog()">
+        <mat-icon>add</mat-icon>
+        Crear Plan
+      </button>
+    </div>
+  </ng-template>
+
+  <!-- Data Table Component -->
+  <app-data-table
+    [columns]="tableColumns"
+    [dataSource]="dataSource"
+    [filters]="tableFilters"
+    [loading]="loading"
+    loadingMessage="Cargando planes..."
+    tableClass="planes-table"
+    [pageSizeOptions]="[5, 10, 20]"
+    [showFirstLastButtons]="true"
+    noDataMessage="No se encontraron planes"
+    noDataIcon="info"
+    [actionsTemplate]="actionsTemplate"
+    [noDataActions]="noDataActionsTemplate"
+    (filterChange)="onFilterChange($event)"
+    (filtersCleared)="clearFilters()"
+  >
+  </app-data-table>
+
+  <!-- Column Templates -->
+  <ng-template #nameTemplate let-plan>
+    <div>
+      <strong>{{ plan.name }}</strong>
+      <div>{{ plan.description }}</div>
+    </div>
+  </ng-template>
+
+  <ng-template #typeTemplate let-plan>
+    <mat-chip [color]="getChipTypeColor(plan.type)">
+      {{ getTypeDisplayName(plan.type) }}
+    </mat-chip>
+  </ng-template>
+
+  <ng-template #durationTemplate let-plan> {{ plan.durationDays }} días </ng-template>
+
+  <ng-template #classesTemplate let-plan>
+    {{ plan.includedClasses === 999 ? 'Ilimitadas' : plan.includedClasses }}
+  </ng-template>
+
+  <ng-template #priceTemplate let-plan>
+    {{ formatCurrency(plan.price) }}
+  </ng-template>
+
+  <ng-template #statusTemplate let-plan>
+    <mat-chip [color]="getStatusChipColor(plan.status)">
+      {{ plan.status }}
+    </mat-chip>
+  </ng-template>
+
+  <!-- Actions Template -->
+  <ng-template #actionsTemplate let-plan>
+    <app-action-buttons
+      [actionButtons]="getActionButtons(plan)"
+      [menuActions]="getMenuActions(plan)"
+      (actionClicked)="onActionClicked($event, plan)"
+    >
+    </app-action-buttons>
+  </ng-template>
+
+  <!-- No Data Actions Template -->
+  <ng-template #noDataActionsTemplate>
+    <button mat-raised-button color="primary" (click)="openCreatePlanDialog()">
+      Crear Primer Plan
+    </button>
+  </ng-template>
+</div>

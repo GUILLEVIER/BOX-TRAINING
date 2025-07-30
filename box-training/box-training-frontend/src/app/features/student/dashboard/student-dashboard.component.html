@@ -1,0 +1,45 @@
+<div class="main-container">
+  <!-- Header -->
+  <app-main-header [userName]="currentUser?.name" title="Mi Dashboard"></app-main-header>
+
+  <!-- Loading -->
+  <app-loading *ngIf="loading" message="Cargando información..."></app-loading>
+
+  <!-- Sin plan activo -->
+  <app-no-plan-message
+    *ngIf="!loading && !dashboardData.activePlan"
+    (contactAdmin)="contactAdmin()"
+  >
+  </app-no-plan-message>
+
+  <!-- Dashboard con plan activo -->
+  <div *ngIf="!loading && dashboardData.activePlan" class="main-content">
+    <!-- Plan Info -->
+    <app-plan-info
+      [planInfo]="dashboardData.planInfo"
+      [activePlan]="dashboardData.activePlan"
+      [remainingDays]="dashboardData.statistics.remainingDays"
+    >
+    </app-plan-info>
+
+    <!-- Stats Grid -->
+    <div class="stats-section">
+      <app-section-header icon="analytics" title="Resumen de Clases"></app-section-header>
+      <app-stats-grid [stats]="statsData"></app-stats-grid>
+    </div>
+
+    <!-- Upcoming Reservations -->
+    <app-upcoming-reservations
+      [reservations]="dashboardData.upcomingReservations"
+      (navigateToSchedules)="navigateToSchedules()"
+      (navigateToReservations)="navigateToReservations()"
+      (cancelReservation)="cancelReservation($event)"
+    ></app-upcoming-reservations>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions-section">
+      <app-section-header icon="flash_on" title="Acciones Rápidas"></app-section-header>
+      <app-quick-actions-grid [actions]="quickActions"></app-quick-actions-grid>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,47 @@
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1.25rem; /* 20px -> REM para escalabilidad */
+}
+
+.login-card {
+  width: 100%;
+  max-width: 25rem; /* 400px -> REM para escalabilidad */
+}
+
+.login-icon {
+  vertical-align: middle;
+  margin-right: 0.5rem; /* 8px -> REM para espaciado */
+}
+
+.demo-credentials {
+  width: 100%;
+  margin-top: 1rem; /* 16px -> REM para espaciado */
+}
+
+.credentials-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem; /* 12px -> REM para espaciado */
+  margin-top: 1rem; /* 16px -> REM para espaciado */
+}
+
+.credential-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem; /* 12px -> REM para espaciado */
+  border: 1px solid var(--box-training-white); /* 1px -> PX para bordes */
+  border-radius: 4px; /* PX para bordes específicos */
+}
+
+.credential-info {
+  flex: 1;
+}
+
+.credential-info small {
+  display: block;
+  margin-top: 0.125rem; /* 2px -> REM para espaciado pequeño */
+}

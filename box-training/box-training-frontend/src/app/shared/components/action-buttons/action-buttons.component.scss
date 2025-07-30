@@ -1,0 +1,13 @@
+.actions-container {
+  display: flex;
+  gap: 0.25rem; /* 4px -> REM para espaciado */
+  align-items: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .actions-container {
+    flex-direction: column;
+    gap: 0.125rem; /* 2px -> REM para espaciado */
+  }
+}

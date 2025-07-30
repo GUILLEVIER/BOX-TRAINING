@@ -1,0 +1,33 @@
+<div class="actions-container">
+  <!-- Primary action buttons -->
+  <button
+    *ngFor="let button of actionButtons; trackBy: trackByAction"
+    mat-icon-button
+    [color]="button.color || 'primary'"
+    [disabled]="button.disabled"
+    [matTooltip]="button.tooltip"
+    (click)="onActionClick(button.action)"
+  >
+    <mat-icon>{{ button.icon }}</mat-icon>
+  </button>
+  <!-- Menu actions -->
+  <button
+    *ngIf="menuActions.length > 0"
+    mat-icon-button
+    [matMenuTriggerFor]="actionsMenu"
+    matTooltip="Más opciones"
+  >
+    <mat-icon>more_vert</mat-icon>
+  </button>
+  <mat-menu #actionsMenu="matMenu">
+    <button
+      *ngFor="let action of menuActions; trackBy: trackByMenuAction"
+      mat-menu-item
+      [disabled]="action.disabled"
+      (click)="onActionClick(action.action)"
+    >
+      <mat-icon>{{ action.icon }}</mat-icon>
+      <span>{{ action.label }}</span>
+    </button>
+  </mat-menu>
+</div>

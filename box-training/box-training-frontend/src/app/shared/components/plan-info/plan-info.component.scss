@@ -1,0 +1,82 @@
+.plan-info-section h2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.plan-card {
+  margin-bottom: 16px;
+}
+
+.plan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.plan-header h3 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.plan-details {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.plan-dates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.date-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 200px;
+}
+
+.date-item mat-icon {
+}
+
+.plan-description {
+  margin: 0;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.progress-card {
+  margin-top: 16px;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.progress-details {
+  margin-top: 8px;
+  font-size: 12px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .plan-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .plan-dates {
+    flex-direction: column;
+  }
+
+  .date-item {
+    min-width: auto;
+  }
+}

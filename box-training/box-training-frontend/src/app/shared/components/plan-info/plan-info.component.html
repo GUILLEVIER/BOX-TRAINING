@@ -1,0 +1,49 @@
+<div class="plan-info-section" *ngIf="planInfo && activePlan">
+  <h2><mat-icon>card_membership</mat-icon>Mi Plan Activo</h2>
+  <mat-card class="plan-card">
+    <mat-card-content>
+      <div class="plan-details">
+        <!-- Título y Estado -->
+        <div class="plan-header">
+          <h3>{{ planInfo.name }}</h3>
+          <div class="plan-status">
+            <mat-chip [color]="getColorStatus(activePlan.status)" selected>
+              {{ getStatusDisplayName(activePlan.status) }}
+            </mat-chip>
+          </div>
+        </div>
+        <!-- Fechas -->
+        <div class="plan-dates">
+          <div class="date-item">
+            <mat-icon>event</mat-icon>
+            <!-- <span><strong>Inicio:</strong> {{ formatDate(activePlan.startDate) }}</span> -->
+          </div>
+          <div class="date-item">
+            <mat-icon>event_available</mat-icon>
+            <!-- <span><strong>Fin:</strong> {{ formatDate(activePlan.endDate) }}</span> -->
+          </div>
+          <div class="date-item">
+            <mat-icon>timer</mat-icon>
+            <span><strong>Días restantes:</strong> {{ remainingDays }}</span>
+          </div>
+        </div>
+        <!-- Descripción -->
+        <p class="plan-description" *ngIf="planInfo.description">
+          {{ planInfo.description }}
+        </p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <!-- Progreso -->
+  <mat-card class="progress-card" *ngIf="planInfo.includedClasses !== 999">
+    <mat-card-content>
+      <div class="progress-info">
+        <span>Progreso del Plan</span>
+        <span>{{ getUsedClasses() }} / {{ planInfo.includedClasses }} clases</span>
+      </div>
+      <mat-progress-bar mode="determinate" [value]="getProgressPercentage()" color="primary">
+      </mat-progress-bar>
+      <div class="progress-details">{{ getProgressPercentage() }}% completado</div>
+    </mat-card-content>
+  </mat-card>
+</div>

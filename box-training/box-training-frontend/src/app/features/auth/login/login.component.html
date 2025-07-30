@@ -1,0 +1,83 @@
+<div class="login-container">
+  <mat-card class="login-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon class="login-icon">fitness_center</mat-icon>
+        Iniciar Sesión - Box Training
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <app-form-row [fullWidth]="true">
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" type="email" placeholder="ejemplo@email.com" />
+            <mat-icon matSuffix>email</mat-icon>
+            <mat-error *ngIf="loginForm.get('email')?.hasError('required')">
+              El email es obligatorio
+            </mat-error>
+            <mat-error *ngIf="loginForm.get('email')?.hasError('email')">
+              Ingrese un email válido
+            </mat-error>
+          </mat-form-field>
+        </app-form-row>
+        <app-form-row [fullWidth]="true">
+          <mat-form-field appearance="outline">
+            <mat-label>Contraseña</mat-label>
+            <input
+              matInput
+              formControlName="password"
+              [type]="hidePassword ? 'password' : 'text'"
+              placeholder="Ingrese su contraseña"
+            />
+            <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+              La contraseña es obligatoria
+            </mat-error>
+          </mat-form-field>
+        </app-form-row>
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="loginForm.invalid || loading"
+        >
+          <mat-icon *ngIf="loading">hourglass_empty</mat-icon>
+          <span *ngIf="!loading">Iniciar Sesión</span>
+          <span *ngIf="loading">Verificando...</span>
+        </button>
+      </form>
+    </mat-card-content>
+    <!-- Información de credenciales de demo -->
+    <mat-card-actions>
+      <mat-expansion-panel class="demo-credentials">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>info</mat-icon>
+            Credenciales de Demo
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="credentials-list">
+          <div *ngFor="let cred of mockCredentials" class="credential-item">
+            <div class="credential-info">
+              <strong>{{ cred.role }}</strong
+              ><br />
+              <small>{{ cred.email }}</small
+              ><br />
+              <small>Contraseña: {{ cred.password }}</small>
+            </div>
+            <button
+              mat-stroked-button
+              size="small"
+              (click)="fillCredentials(cred.email, cred.password)"
+            >
+              Usar
+            </button>
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </mat-card-actions>
+  </mat-card>
+</div>

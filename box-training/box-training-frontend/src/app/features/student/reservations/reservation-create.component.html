@@ -1,0 +1,109 @@
+<div>
+  <!-- Loading -->
+  <app-loading *ngIf="loadingSchedules()" message="Cargando horarios disponibles..."> </app-loading>
+  <!-- Formulario -->
+  <form [formGroup]="reservationForm" (ngSubmit)="onSubmit()" *ngIf="!loadingSchedules()">
+    <div formGroupName="schedules">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>schedule</mat-icon>
+            Horarios Disponibles
+          </mat-card-title>
+          <mat-card-subtitle>
+            Selecciona los horarios donde estará disponible este plan
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          @if (filteredSchedules().length === 0) {
+          <div class="no-schedules">
+            <mat-icon>schedule_off</mat-icon>
+            <p>No hay horarios disponibles para el tipo de plan activado</p>
+          </div>
+          } @else {
+          <div class="schedules-selection">
+            <div>
+              <button mat-button (click)="selectAllSchedules()" type="button">
+                <mat-icon>select_all</mat-icon>
+                Seleccionar Todo
+              </button>
+              <button mat-button (click)="clearAllSchedules()" type="button">
+                <mat-icon>clear</mat-icon>
+                Limpiar Todo
+              </button>
+            </div>
+            <div class="schedules-grid">
+              @for (schedule of filteredSchedules(); track schedule.id) {
+              <div class="schedule-item">
+                <mat-checkbox
+                  [checked]="isScheduleSelected(schedule.id)"
+                  (change)="toggleSchedule(schedule.id, $event.checked)"
+                >
+                  <div class="schedule-info">
+                    <div class="schedule-time">
+                      <strong>{{ getDayName(schedule.dayOfWeek) }}</strong>
+                      <span>{{ schedule.startTime }} - {{ schedule.endTime }}</span>
+                    </div>
+                    <div class="schedule-details">
+                      <span>{{ schedule.room }}</span>
+                      <span class="capacity">
+                        <mat-icon>group</mat-icon>
+                        {{ schedule.maxCapacity }} personas
+                      </span>
+                    </div>
+                    @if (schedule.description) {
+                    <div class="schedule-description">
+                      {{ schedule.description }}
+                    </div>
+                    }
+                  </div>
+                </mat-checkbox>
+              </div>
+              }
+            </div>
+            @if (selectedSchedules().length > 0) {
+            <div class="selected-summary">
+              <h4>Horarios Seleccionados ({{ selectedSchedules().length }})</h4>
+              <app-filter-chips
+                [chips]="getSelectedSchedulesChips()"
+                [showClearAll]="true"
+                (chipRemoved)="onScheduleChipRemoved($event)"
+                (allCleared)="clearAllSchedules()"
+              >
+              </app-filter-chips>
+            </div>
+            }
+          </div>
+          }
+        </mat-card-content>
+        <mat-card-actions align="end">
+          <button mat-button>
+            <mat-icon>navigate_before</mat-icon>
+            Anterior
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="selectedSchedules().length === 0 || reservationForm.invalid || creating()"
+          >
+            @if (creating()) {
+            <ng-container>
+              <mat-icon>hourglass_empty</mat-icon>
+              Reservando...
+            </ng-container>
+            } @else {
+            <ng-container>
+              Reservar
+            </ng-container>
+            }
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </form>
+  <!-- Indicador de progreso -->
+  @if (creating()) {
+  <mat-progress-bar mode="indeterminate" class="loading-bar"></mat-progress-bar>
+  }
+</div>

@@ -1,0 +1,31 @@
+<div class="main-container">
+  <!-- Header -->
+  <app-main-header
+    [userName]="currentUser?.name"
+    title="Panel de Administración"
+    [userRole]="currentUser?.role"
+  ></app-main-header>
+
+  <!-- Loading -->
+  <app-loading *ngIf="loading" message="Cargando estadísticas..."></app-loading>
+
+  <div class="main-content">
+    <!-- Estadísticas principales -->
+    <div *ngIf="!loading && plansStats" class="stats-section">
+      <app-section-header icon="analytics" title="Estadísticas Principales"></app-section-header>
+      <app-stats-grid [stats]="statsData"></app-stats-grid>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions-section">
+      <app-section-header icon="flash_on" title="Accesos Rápidos"></app-section-header>
+      <app-quick-actions-grid [actions]="quickActions"></app-quick-actions-grid>
+    </div>
+
+    <!-- Actividad reciente -->
+    <div class="recent-activity-section">
+      <app-section-header icon="history" title="Actividad Reciente"></app-section-header>
+      <app-activity-list [items]="activityItems"></app-activity-list>
+    </div>
+  </div>
+</div>

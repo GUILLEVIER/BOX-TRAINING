@@ -1,0 +1,13 @@
+<div class="filter-chips" *ngIf="chips.length > 0">
+  <span class="chips-label">Filtros activos:</span>
+  <mat-chip-set>
+    <mat-chip
+      *ngFor="let chip of chips; trackBy: trackByChip"
+      [removable]="chip.removable !== false"
+      (removed)="onChipRemoved(chip)"
+    >
+      {{ chip.label }}
+      <mat-icon matChipRemove *ngIf="chip.removable !== false">cancel</mat-icon>
+    </mat-chip>
+  </mat-chip-set>
+</div>

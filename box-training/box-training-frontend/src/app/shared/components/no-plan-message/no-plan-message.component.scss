@@ -1,0 +1,41 @@
+.no-plan-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.no-plan-card {
+  max-width: 400px;
+  width: 100%;
+}
+
+.no-plan-content {
+  text-align: center;
+  padding: 32px 24px;
+}
+
+.no-plan-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+}
+
+.no-plan-content h2 {
+  margin: 0 0 16px 0;
+}
+
+.no-plan-content p {
+  margin: 0 0 12px 0;
+  line-height: 1.5;
+}
+
+.no-plan-actions {
+  margin-top: 24px;
+}
+
+.no-plan-actions button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

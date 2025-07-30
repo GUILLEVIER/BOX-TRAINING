@@ -1,0 +1,16 @@
+<div class="stats-grid" [class]="gridClass" [style.grid-template-columns]="columns ? 'repeat(' + columns + ', 1fr)' : null">
+  <mat-card class="stat-card" *ngFor="let stat of stats" [class]="stat.cardClass">
+    <mat-card-content>
+      <div class="stat-content">
+        <div class="stat-icon" [class]="stat.iconClass">
+          <mat-icon>{{ stat.icon }}</mat-icon>
+        </div>
+        <div class="stat-info">
+          <div class="stat-number">{{ stat.value }}</div>
+          <div class="stat-label">{{ stat.label }}</div>
+          <div class="stat-sublabel" *ngIf="stat.sublabel">{{ stat.sublabel }}</div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

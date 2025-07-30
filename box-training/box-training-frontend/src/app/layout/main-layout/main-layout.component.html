@@ -1,0 +1,95 @@
+<div class="layout-container">
+  <!-- Barra de navegación superior -->
+  <mat-toolbar color="primary" class="app-toolbar">
+    <button mat-icon-button (click)="toggleSidenav()" *ngIf="isAuthenticated">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span class="app-title">Box Training</span>
+    <span class="spacer"></span>
+    <!-- Menú de usuario -->
+    <div *ngIf="isAuthenticated" class="user-menu">
+      <button mat-button [matMenuTriggerFor]="userMenuRef" class="user-button">
+        <span class="user-name">{{ currentUser?.name }}</span>
+      </button>
+      <mat-menu #userMenuRef="matMenu">
+        <div class="user-info">
+          <div class="user-name">{{ currentUser?.name }} {{ currentUser?.lastName }}</div>
+          <div class="user-role">{{ getRoleDisplayName(currentUser?.role) }}</div>
+        </div>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="navigateToProfile()">
+          <span>Mi Perfil</span>
+        </button>
+        <button mat-menu-item (click)="logout()">
+          <span>Cerrar Sesión</span>
+        </button>
+      </mat-menu>
+    </div>
+    <!-- Botón de login para usuarios no autenticados -->
+    <button *ngIf="!isAuthenticated" mat-raised-button color="accent" (click)="navigateToLogin()">
+      Iniciar Sesión
+    </button>
+  </mat-toolbar>
+  <div class="layout-content">
+    <!-- Menú lateral -->
+    <mat-sidenav-container class="sidenav-container" *ngIf="isAuthenticated">
+      <mat-sidenav #sidenav mode="side" [opened]="isOpen" class="app-sidenav">
+        <mat-nav-list>
+          <!-- Menú para Administradores -->
+          <ng-container *ngIf="isAdmin()">
+            <h2 matSubheader>Panel de Administración</h2>
+            <a mat-list-item routerLink="/admin/dashboard" routerLinkActive="active">
+              <span>Dashboard</span>
+            </a>
+            <a mat-list-item routerLink="/admin/plans" routerLinkActive="active">
+              <span>Gestión de Planes</span>
+            </a>
+            <a mat-list-item routerLink="/admin/schedules" routerLinkActive="active">
+              <span>Gestión de Horarios</span>
+            </a>
+            <a mat-list-item routerLink="/admin/students" routerLinkActive="active">
+              <span>Gestión de Estudiantes</span>
+            </a>
+            <mat-divider></mat-divider>
+            <h3 matSubheader>Reportes</h3>
+            <a mat-list-item routerLink="/admin/reports" routerLinkActive="active">
+              <span>Reportes y Estadísticas</span>
+            </a>
+          </ng-container>
+
+          <!-- Menú para Estudiantes -->
+          <ng-container *ngIf="isStudent()">
+            <h3 matSubheader>Mi Área</h3>
+            <a mat-list-item routerLink="/student/dashboard" routerLinkActive="active">
+              <span>Mi Dashboard</span>
+            </a>
+            <a mat-list-item routerLink="/student/schedules" routerLinkActive="active">
+              <span>Horarios Disponibles</span>
+            </a>
+            <a mat-list-item routerLink="/student/reservations" routerLinkActive="active">
+              <span>Mis Reservas</span>
+            </a>
+            <mat-divider></mat-divider>
+            <h3 matSubheader>Mi Plan</h3>
+            <a mat-list-item routerLink="/student/plan" routerLinkActive="active">
+              <span>Plan Activo</span>
+            </a>
+            <a mat-list-item routerLink="/student/history" routerLinkActive="active">
+              <span>Historial de Clases</span>
+            </a>
+          </ng-container>
+        </mat-nav-list>
+      </mat-sidenav>
+
+      <!-- Contenido principal -->
+      <mat-sidenav-content>
+        <router-outlet></router-outlet>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+
+    <!-- Contenido para usuarios no autenticados -->
+    <div *ngIf="!isAuthenticated" class="unauthenticated-content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

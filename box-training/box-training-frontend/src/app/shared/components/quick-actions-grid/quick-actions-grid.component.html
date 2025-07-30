@@ -1,0 +1,14 @@
+<div class="quick-actions-grid" [class]="gridClass" [style.grid-template-columns]="columns ? 'repeat(' + columns + ', 1fr)' : null">
+  <mat-card 
+    class="action-card" 
+    *ngFor="let action of actions" 
+    (click)="executeAction(action)"
+    [class.disabled]="action.disabled"
+  >
+    <mat-card-content>
+      <mat-icon class="action-icon">{{ action.icon }}</mat-icon>
+      <h3>{{ action.title }}</h3>
+      <p>{{ action.description }}</p>
+    </mat-card-content>
+  </mat-card>
+</div>

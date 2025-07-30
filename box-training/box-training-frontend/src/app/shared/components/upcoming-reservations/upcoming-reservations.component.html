@@ -1,0 +1,45 @@
+<div class="reservas-section">
+  <h2><mat-icon>upcoming</mat-icon>Próximas Reservas</h2>
+  <mat-card>
+    <mat-card-content>
+      <!-- Con reservas -->
+      <mat-list *ngIf="reservations.length > 0">
+        <mat-list-item *ngFor="let reservation of reservations; trackBy: trackReservation">
+          <div matListItemTitle>
+            <strong>{{ formatDateWithTime(reservation.date) }}</strong>
+          </div>
+          <div matListItemLine>
+            {{ getScheduleInfo(reservation.scheduleId) }}
+          </div>
+          <div matListItemMeta>
+            <button
+              mat-icon-button
+              color="warn"
+              (click)="onCancelReservation(reservation)"
+              matTooltip="Cancelar reserva"
+            >
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </div>
+        </mat-list-item>
+      </mat-list>
+      <!-- Sin reservas -->
+      <div *ngIf="reservations.length === 0" class="no-reservas">
+        <mat-icon>event_busy</mat-icon>
+        <p>No tienes clases agendadas próximamente</p>
+        <p>¡Agenda tu próxima sesión de entrenamiento!</p>
+      </div>
+      <!-- Acciones -->
+      <div class="reservas-actions">
+        <button mat-raised-button color="primary" (click)="onNavigateToSchedules()">
+          <mat-icon>add</mat-icon>
+          Agendar Clase
+        </button>
+        <button mat-stroked-button color="primary" (click)="onNavigateToReservations()">
+          <mat-icon>list</mat-icon>
+          Ver Todas
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

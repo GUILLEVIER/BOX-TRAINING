@@ -1,0 +1,30 @@
+.activity-card {
+  max-height: 25rem; /* 400px -> REM para escalabilidad */
+  overflow-y: auto;
+}
+
+.activity-time {
+  font-size: 0.75rem; /* 12px -> REM para tipografía */
+  color: var(--box-training-text-secondary, #666);
+}
+
+.activity-subtitle {
+  font-size: 0.875rem; /* 14px -> REM para tipografía */
+  color: var(--box-training-text-secondary, #666);
+}
+
+.activity-icon-new {
+  color: #4caf50;
+}
+
+.activity-icon-update {
+  color: #ff9800;
+}
+
+.activity-icon-delete {
+  color: #f44336;
+}
+
+.activity-icon-info {
+  color: #2196f3;
+}

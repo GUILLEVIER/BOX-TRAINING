@@ -1,0 +1,30 @@
+<div class="pwa-banner" *ngIf="showBanner" [@slideIn]>
+  <mat-card class="banner-card">
+    <div class="banner-content">
+      <div class="banner-info">
+        <mat-icon>install_mobile</mat-icon>
+        <div class="banner-text">
+          <h4>Instalar Box Training</h4>
+          <p>Accede más rápido y recibe notificaciones</p>
+        </div>
+      </div>
+      <div class="banner-actions">
+        <button mat-button color="primary" (click)="dismissBanner()">Ahora no</button>
+        <button mat-raised-button color="primary" (click)="installApp()">Instalar</button>
+      </div>
+    </div>
+  </mat-card>
+</div>
+
+<!-- Indicador de estado offline -->
+<div class="offline-indicator" *ngIf="isOffline" [@slideDown]>
+  <mat-icon>wifi_off</mat-icon>
+  <span>Sin conexión - Modo offline</span>
+</div>
+
+<!-- Notificación de nueva versión -->
+<div class="update-indicator" *ngIf="updateAvailable" [@slideDown]>
+  <mat-icon>system_update</mat-icon>
+  <span>Nueva versión disponible</span>
+  <button mat-button color="accent" (click)="updateApp()">Actualizar</button>
+</div>

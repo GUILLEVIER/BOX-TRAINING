@@ -1,0 +1,30 @@
+<mat-card class="activity-card" [class]="cardClass">
+  <mat-card-content>
+    <!-- Lista con elementos -->
+    <mat-list *ngIf="items.length > 0">
+      <mat-list-item *ngFor="let item of items">
+        <mat-icon 
+          matListIcon 
+          *ngIf="item.icon" 
+          [class]="item.iconClass"
+        >
+          {{ item.icon }}
+        </mat-icon>
+        <div matLine>{{ item.title }}</div>
+        <div matLine *ngIf="item.subtitle" class="activity-subtitle">{{ item.subtitle }}</div>
+        <div matLine *ngIf="item.timestamp" class="activity-time">
+          {{ formatTimestamp(item.timestamp) }}
+        </div>
+      </mat-list-item>
+    </mat-list>
+    
+    <!-- Mensaje cuando está vacío -->
+    <mat-list *ngIf="items.length === 0">
+      <mat-list-item>
+        <mat-icon matListIcon>{{ emptyIcon }}</mat-icon>
+        <div matLine>{{ emptyMessage }}</div>
+        <div matLine class="activity-time">{{ emptySubtitle }}</div>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>

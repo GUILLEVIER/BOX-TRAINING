@@ -1,0 +1,45 @@
+.reservas-section h2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.no-reservas {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.no-reservas mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+}
+
+.no-reservas p {
+  margin: 0 0 8px 0;
+}
+
+.reservas-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--box-training-black);
+}
+
+mat-list-item {
+  border-bottom: 1px solid var(--box-training-white);
+}
+
+mat-list-item:last-child {
+  border-bottom: none;
+}
+
+@media (max-width: 768px) {
+  .reservas-actions {
+    flex-direction: column;
+  }
+}

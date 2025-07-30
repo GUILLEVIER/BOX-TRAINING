@@ -1,0 +1,16 @@
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* 12px -> REM para espaciado */
+  margin-bottom: 1.5rem; /* 24px -> REM para espaciado */
+  font-size: 1.5rem; /* REM para escalabilidad */
+  font-weight: 500;
+  color: var(--box-training-text-primary);
+}
+
+.section-header mat-icon {
+  font-size: 1.5rem; /* REM para escalabilidad */
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--box-training-primary);
+}

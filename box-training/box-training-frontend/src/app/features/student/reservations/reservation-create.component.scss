@@ -1,0 +1,83 @@
+.no-schedules {
+  text-align: center;
+  padding: 2.5rem; /* 40px -> REM para espaciado */
+}
+
+.no-schedules mat-icon {
+  font-size: 3rem; /* 48px -> REM para escalabilidad */
+  width: 3rem; /* 48px -> REM para escalabilidad */
+  height: 3rem; /* 48px -> REM para escalabilidad */
+  margin-bottom: 1rem; /* 16px -> REM para espaciado */
+}
+
+.schedules-selection {
+  width: 100%;
+}
+
+.schedules-grid {
+  display: grid;
+  gap: 0.75rem; /* 12px -> REM para espaciado */
+}
+
+.schedule-item {
+  border: 1px solid var(--box-training-black); /* PX para bordes ✓ */
+  border-radius: 8px; /* PX para bordes específicos ✓ */
+  padding: 1rem; /* 16px -> REM para espaciado */
+  transition: all 0.2s ease;
+}
+
+.schedule-info {
+  margin-left: 2rem; /* 32px -> REM para espaciado */
+}
+
+.schedule-time {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem; /* 4px -> REM para espaciado */
+  margin-bottom: 0.5rem; /* 8px -> REM para espaciado */
+}
+
+.schedule-details {
+  display: flex;
+  gap: 1rem; /* 16px -> REM para espaciado */
+  align-items: center;
+  font-size: 0.75rem; /* 12px -> REM para tipografía */
+  margin-bottom: 0.25rem; /* 4px -> REM para espaciado */
+}
+
+.capacity {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem; /* 4px -> REM para espaciado */
+}
+
+.capacity mat-icon {
+  font-size: 1rem; /* 16px -> REM para escalabilidad */
+  width: 1rem; /* 16px -> REM para escalabilidad */
+  height: 1rem; /* 16px -> REM para escalabilidad */
+}
+
+.schedule-description {
+  font-size: 0.75rem; /* 12px -> REM para tipografía */
+  font-style: italic;
+}
+
+.selected-summary {
+  margin-top: 1.5rem; /* 24px -> REM para espaciado */
+  padding-top: 1rem; /* 16px -> REM para espaciado */
+  border-top: 1px solid var(--box-training-black); /* PX para bordes ✓ */
+}
+
+.loading-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.schedule-details {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem; /* 4px -> REM para espaciado */
+}

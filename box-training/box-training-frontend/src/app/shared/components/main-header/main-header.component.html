@@ -1,0 +1,12 @@
+<div class="main-header">
+  <h1>
+    <mat-icon>dashboard</mat-icon>
+    {{ title }}
+  </h1>
+  <p class="main-header-subtitle" *ngIf='userRole && userRole !== "ADMINISTRATOR" && userName'>
+    ¡Hola {{ userName }}! Bienvenido a tu dashboard
+  </p>
+  <p class="main-header-subtitle" *ngIf='userRole && userRole === "ADMINISTRATOR"'>
+    Bienvenido al panel de control de Box Training
+  </p>
+</div>
