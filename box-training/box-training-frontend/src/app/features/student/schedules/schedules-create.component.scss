@@ -1,0 +1,132 @@
+/* Estilos para el componente de selección de horarios del estudiante */
+
+.schedules-create-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.date-selection-card {
+  margin-bottom: 1rem;
+}
+
+.date-range-field {
+  width: 100%;
+}
+
+.schedules-grid-card {
+  width: 100%;
+  overflow: hidden;
+}
+
+.schedules-grid {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding: 0.5rem;
+}
+
+.time-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  min-width: 90px; /* Aumentado ligeramente para mejor legibilidad */
+  margin-right: 0.25rem; /* Separación adicional de las columnas de días */
+}
+
+.time-header {
+  font-weight: bold;
+  padding: 0.5rem;
+  text-align: center;
+  background: var(--mat-sys-surface-variant);
+  border-radius: 4px;
+  min-height: 60px; /* Igual altura que day-header */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.time-slot {
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--mat-sys-on-surface);
+  background: var(--mat-sys-surface);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 4px;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.day-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  min-width: 140px;
+}
+
+.day-header {
+  font-weight: bold;
+  padding: 0.5rem;
+  text-align: center;
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+  border-radius: 4px;
+  min-height: 60px; /* Altura consistente */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.schedule-slot {
+  min-height: 200px;
+  display: flex;
+  align-items: stretch;
+}
+
+.schedule-slot app-schedule-block {
+  width: 100%;
+  display: block;
+}
+
+.empty-slot {
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+  border: 1px dashed var(--mat-sys-outline-variant);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  width: 100%;
+}
+
+.no-schedules-card {
+  text-align: center;
+  padding: 2rem;
+}
+
+.no-schedules-message mat-icon {
+  font-size: 3rem;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 1rem;
+}
+
+.action-buttons {
+  position: sticky;
+  bottom: 1rem;
+  z-index: 10;
+}
+
+.selected-summary {
+  text-align: center;
+  font-weight: 500;
+}

@@ -1,0 +1,146 @@
+<div class="schedules-create-container">
+  <!-- Selector de rango de fechas -->
+  <mat-card class="date-selection-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>date_range</mat-icon>
+        Seleccionar Rango de Fechas
+      </mat-card-title>
+      <mat-card-subtitle> Elige el período para ver los horarios disponibles </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <mat-form-field class="date-range-field">
+        <mat-label>Selecciona un rango de fechas</mat-label>
+        <mat-date-range-input [formGroup]="dateRangeForm" [rangePicker]="picker">
+          <input matStartDate formControlName="start" placeholder="Fecha inicio" />
+          <input matEndDate formControlName="end" placeholder="Fecha fin" />
+        </mat-date-range-input>
+        <mat-hint>Selecciona desde qué día hasta qué día quieres ver los horarios</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+
+        @if (dateRangeForm.controls.start.hasError('matStartDateInvalid')) {
+        <mat-error>Fecha de inicio inválida</mat-error>
+        } @if (dateRangeForm.controls.end.hasError('matEndDateInvalid')) {
+        <mat-error>Fecha de fin inválida</mat-error>
+        }
+      </mat-form-field>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="confirmDateSelection($event)"
+        [disabled]="!dateRangeForm.value.start || !dateRangeForm.value.end || loading()"
+      >
+        <mat-icon>search</mat-icon>
+        Buscar Horarios
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <!-- Loading -->
+  @if (loading()) {
+  <app-loading message="Cargando horarios disponibles..."></app-loading>
+  }
+
+  <!-- Horarios disponibles -->
+  @if (!loading() && selectedDays().length > 0 && scheduleBlocks().length > 0) {
+  <mat-card class="schedules-grid-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>schedule</mat-icon>
+        Horarios Disponibles
+      </mat-card-title>
+      <mat-card-subtitle> Selecciona los horarios que deseas reservar </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="schedules-grid">
+        <!-- Encabezados de días -->
+        <div class="time-column">
+          <div class="time-header">Horario</div>
+          @for (timeSlot of timeSlots; track timeSlot) {
+          <div class="time-slot">{{ timeSlot }}</div>
+          }
+        </div>
+
+        <!-- Columnas de días -->
+        @for (day of selectedDays(); track getDayKey(day)) {
+        <div class="day-column">
+          <div class="day-header">{{ getDayName(day) }}</div>
+          @for (timeSlot of timeSlots; track timeSlot) {
+          <div class="schedule-slot">
+            @if (getBlockForDayAndTime(day, timeSlot); as block) {
+            <app-schedule-block
+              [block]="block"
+              [selected]="isScheduleSelected(block.id)"
+              (click)="onBlockClick(block)"
+              (selectionChange)="toggleScheduleSelection(block)"
+            ></app-schedule-block>
+            } @else {
+            <div class="empty-slot">
+              <span>Sin clase</span>
+            </div>
+            }
+          </div>
+          }
+        </div>
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
+  }
+
+  <!-- Sin horarios disponibles -->
+  @if (!loading() && selectedDays().length > 0 && scheduleBlocks().length === 0) {
+  <mat-card class="no-schedules-card">
+    <mat-card-content>
+      <div class="no-schedules-message">
+        <mat-icon>schedule_off</mat-icon>
+        <h3>No hay horarios disponibles</h3>
+        <p>No se encontraron horarios para el rango de fechas seleccionado.</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  }
+
+  <!-- Botones de acción -->
+  @if (selectedSchedules().length > 0) {
+  <div class="action-buttons">
+    <mat-card>
+      <mat-card-content>
+        <div class="selected-summary">
+          <span>{{ selectedSchedules().length }} horarios seleccionados</span>
+        </div>
+      </mat-card-content>
+      <mat-card-actions align="end">
+        <button mat-button (click)="clearSelections()">
+          <mat-icon>clear</mat-icon>
+          Limpiar Selección
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="reserveSelectedSchedules()"
+          [disabled]="reserving()"
+        >
+          @if (reserving()) {
+          <ng-container>
+            <mat-icon>hourglass_empty</mat-icon>
+            Reservando...
+          </ng-container>
+          } @else {
+          <ng-container>
+            <mat-icon>book_online</mat-icon>
+            Reservar Horarios
+          </ng-container>
+          }
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  }
+</div>

@@ -18,8 +18,8 @@ export const studentRoutes: Routes = [
         loadComponent: () => import('./dashboard/student-dashboard.component').then(c => c.StudentDashboardComponent)
       },
       {
-        path: 'reservation/create',
-        loadComponent: () => import('./reservations/reservation-create.component').then(c => c.ReservationCreateComponent)
+        path: 'schedules',
+        loadComponent: () => import('./schedules/schedules-create.component').then(c => c.SchedulesCreateComponent)
       }
     ]
   }

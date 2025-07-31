@@ -1,0 +1,95 @@
+/* Estilos para el componente de bloque de horario */
+
+.schedule-block-card {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 60px;
+  border: 1px solid var(--mat-sys-outline-variant);
+}
+
+.schedule-block-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--mat-sys-elevation-2);
+}
+
+.schedule-block-card.available {
+  border-color: var(--mat-sys-primary);
+  background-color: var(--mat-sys-primary-container);
+}
+
+.schedule-block-card.full {
+  border-color: var(--mat-sys-error);
+  background-color: var(--mat-sys-error-container);
+}
+
+.schedule-block-card.selected {
+  border-color: var(--mat-sys-secondary);
+  background-color: var(--mat-sys-secondary-container);
+  box-shadow: var(--mat-sys-elevation-2);
+}
+
+mat-card-content {
+  padding: 0.5rem !important;
+}
+
+.block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.capacity-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.capacity-indicator mat-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+}
+
+.block-info {
+  text-align: center;
+}
+
+.class-type {
+  font-weight: 500;
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+}
+
+.room {
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+  margin-bottom: 0.5rem;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  padding: 0.25rem;
+  border-radius: 4px;
+}
+
+.status-indicator.available {
+  color: var(--mat-sys-primary);
+  background-color: var(--mat-sys-primary-container);
+}
+
+.status-indicator.full {
+  color: var(--mat-sys-error);
+  background-color: var(--mat-sys-error-container);
+}
+
+.status-indicator mat-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+}

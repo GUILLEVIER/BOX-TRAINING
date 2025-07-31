@@ -17,7 +17,7 @@ Aplicación web frontend desarrollada en Angular para la gestión y agendamiento
 
 ### 1. Gestión de Planes
 
-#### 1.1 Crear Plan
+#### 1.1 Crear Plan (LISTO)
 
 **Descripción**: Permite crear nuevos planes de entrenamiento con configuraciones específicas.
 
@@ -25,7 +25,6 @@ Aplicación web frontend desarrollada en Angular para la gestión y agendamiento
 
 - Formulario con validaciones obligatorias
 - Campos requeridos: Nombre del Plan, Tipo de Plan, Descripción
-- Selección múltiple de horarios disponibles
 - Configuración de duración del plan (días/meses)
 - Definición de número máximo de clases por período
 - Precio del plan
@@ -34,7 +33,6 @@ Aplicación web frontend desarrollada en Angular para la gestión y agendamiento
 **Validaciones**:
 
 - Nombre del plan único
-- Al menos un horario debe ser seleccionado
 - Duración mayor a 0
 - Precio mayor o igual a 0
 
@@ -233,17 +231,17 @@ Aplicación web frontend desarrollada en Angular para la gestión y agendamiento
 
 ```typescript
 interface Plan {
-  id: string;
-  nombre: string;
-  tipo: "PERSONALIZADO" | "CROSSFIT" | "ZUMBA";
-  descripcion: string;
-  duracionDias: number;
-  numeroClases: number;
-  precio: number;
-  estado: "ACTIVO" | "INACTIVO";
-  horariosDisponibles: string[]; // IDs de horarios
-  fechaCreacion: Date;
-  fechaModificacion: Date;
+  id: string
+  nombre: string
+  tipo: 'PERSONALIZADO' | 'CROSSFIT' | 'ZUMBA'
+  descripcion: string
+  duracionDias: number
+  numeroClases: number
+  precio: number
+  estado: 'ACTIVO' | 'INACTIVO'
+  horariosDisponibles: string[] // IDs de horarios
+  fechaCreacion: Date
+  fechaModificacion: Date
 }
 ```
 
@@ -251,15 +249,15 @@ interface Plan {
 
 ```typescript
 interface Horario {
-  id: string;
-  diaSemana: number; // 0-6 (Domingo-Sábado)
-  horaInicio: string; // HH:mm
-  horaFin: string; // HH:mm
-  capacidadMaxima: number;
-  instructorId: string;
-  tipoClase: "PERSONALIZADO" | "CROSSFIT" | "ZUMBA";
-  salon: string;
-  descripcion: string;
+  id: string
+  diaSemana: number // 0-6 (Domingo-Sábado)
+  horaInicio: string // HH:mm
+  horaFin: string // HH:mm
+  capacidadMaxima: number
+  instructorId: string
+  tipoClase: 'PERSONALIZADO' | 'CROSSFIT' | 'ZUMBA'
+  salon: string
+  descripcion: string
 }
 ```
 
@@ -267,15 +265,15 @@ interface Horario {
 
 ```typescript
 interface PlanAlumno {
-  id: string;
-  alumnoId: string;
-  planId: string;
-  fechaInicio: Date;
-  fechaVencimiento: Date;
-  clasesRestantes: number;
-  estado: "ACTIVO" | "CONGELADO" | "ANULADO" | "VENCIDO";
-  motivoAnulacion?: string;
-  fechasCongelamiento?: { inicio: Date; fin: Date }[];
+  id: string
+  alumnoId: string
+  planId: string
+  fechaInicio: Date
+  fechaVencimiento: Date
+  clasesRestantes: number
+  estado: 'ACTIVO' | 'CONGELADO' | 'ANULADO' | 'VENCIDO'
+  motivoAnulacion?: string
+  fechasCongelamiento?: { inicio: Date; fin: Date }[]
 }
 ```
 
@@ -283,13 +281,13 @@ interface PlanAlumno {
 
 ```typescript
 interface Reserva {
-  id: string;
-  alumnoId: string;
-  horarioId: string;
-  fecha: Date;
-  estado: "AGENDADA" | "CANCELADA" | "COMPLETADA" | "NO_ASISTIO";
-  fechaReserva: Date;
-  fechaCancelacion?: Date;
+  id: string
+  alumnoId: string
+  horarioId: string
+  fecha: Date
+  estado: 'AGENDADA' | 'CANCELADA' | 'COMPLETADA' | 'NO_ASISTIO'
+  fechaReserva: Date
+  fechaCancelacion?: Date
 }
 ```
 
@@ -297,15 +295,15 @@ interface Reserva {
 
 ```typescript
 interface Alumno {
-  id: string;
-  nombre: string;
-  apellido: string;
-  email: string;
-  telefono: string;
-  documento: string;
-  fechaNacimiento: Date;
-  fechaRegistro: Date;
-  estado: "ACTIVO" | "INACTIVO";
+  id: string
+  nombre: string
+  apellido: string
+  email: string
+  telefono: string
+  documento: string
+  fechaNacimiento: Date
+  fechaRegistro: Date
+  estado: 'ACTIVO' | 'INACTIVO'
 }
 ```
 
@@ -313,15 +311,15 @@ interface Alumno {
 
 ```typescript
 interface Instructor {
-  id: string;
-  nombre: string;
-  apellido: string;
-  email: string;
-  telefono: string;
-  especialidades: string[];
-  biografia: string;
-  foto?: string;
-  estado: "ACTIVO" | "INACTIVO";
+  id: string
+  nombre: string
+  apellido: string
+  email: string
+  telefono: string
+  especialidades: string[]
+  biografia: string
+  foto?: string
+  estado: 'ACTIVO' | 'INACTIVO'
 }
 ```
 
@@ -329,15 +327,15 @@ interface Instructor {
 
 ```typescript
 interface Notificacion {
-  id: string;
-  alumnoId: string;
-  tipo: "CUPO_LIBERADO" | "RECORDATORIO" | "PLAN_VENCIMIENTO" | "CANCELACION";
-  titulo: string;
-  mensaje: string;
-  fechaCreacion: Date;
-  fechaEnvio?: Date;
-  leida: boolean;
-  accionRequerida?: boolean;
+  id: string
+  alumnoId: string
+  tipo: 'CUPO_LIBERADO' | 'RECORDATORIO' | 'PLAN_VENCIMIENTO' | 'CANCELACION'
+  titulo: string
+  mensaje: string
+  fechaCreacion: Date
+  fechaEnvio?: Date
+  leida: boolean
+  accionRequerida?: boolean
 }
 ```
 
@@ -447,8 +445,8 @@ src/
 2. Navegar a "Gestión de Planes"
 3. Hacer clic en "Crear Nuevo Plan"
 4. Completar formulario con datos del plan
-6. Guardar plan
-7. Confirmación de creación exitosa
+5. Guardar plan
+6. Confirmación de creación exitosa
 
 ### Flujo Alumno - Agendar Clase
 

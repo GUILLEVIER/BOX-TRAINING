@@ -8,17 +8,17 @@
         <mat-card-header>
           <mat-card-title>
             <mat-icon>schedule</mat-icon>
-            Horarios Disponibles
+            Horarios Reservados
           </mat-card-title>
           <mat-card-subtitle>
-            Selecciona los horarios donde estará disponible este plan
+            Selecciona los horarios reservados. Puedes seleccionar múltiples horarios.
           </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
           @if (filteredSchedules().length === 0) {
           <div class="no-schedules">
             <mat-icon>schedule_off</mat-icon>
-            <p>No hay horarios disponibles para el tipo de plan activado</p>
+            <p>No hay horarios reservados</p>
           </div>
           } @else {
           <div class="schedules-selection">
@@ -90,11 +90,11 @@
             @if (creating()) {
             <ng-container>
               <mat-icon>hourglass_empty</mat-icon>
-              Reservando...
+              Eliminando...
             </ng-container>
             } @else {
             <ng-container>
-              Reservar
+              Eliminar Reservas
             </ng-container>
             }
           </button>
