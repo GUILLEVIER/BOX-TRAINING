@@ -1,0 +1,221 @@
+<div class="main-container">
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-container">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      <p>Cargando detalles del plan...</p>
+    </div>
+  }
+
+  <!-- Plan Details -->
+  @if (!loading() && plan()) {
+    <!-- Page Header -->
+    <app-page-header
+      [title]="plan()!.name"
+      titleIcon="fitness_center"
+      [actions]="headerActionsTemplate"
+    >
+    </app-page-header>
+
+    <!-- Header Actions Template -->
+    <ng-template #headerActionsTemplate>
+      <button mat-raised-button color="primary" (click)="editPlan()">
+        <mat-icon>edit</mat-icon>
+        Editar Plan
+      </button>
+      <button mat-raised-button [color]="plan()!.status === 'ACTIVE' ? 'warn' : 'primary'" 
+              (click)="togglePlanStatus()">
+        <mat-icon>{{ plan()!.status === 'ACTIVE' ? 'pause' : 'play_arrow' }}</mat-icon>
+        {{ plan()!.status === 'ACTIVE' ? 'Desactivar' : 'Activar' }}
+      </button>
+      <button mat-raised-button color="accent" (click)="assignToStudent()">
+        <mat-icon>person_add</mat-icon>
+        Asignar a Estudiante
+      </button>
+      <button mat-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Volver
+      </button>
+    </ng-template>
+
+    <!-- Plan Information Cards -->
+    <div class="plan-details-grid">
+      <!-- Basic Information Card -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>info</mat-icon>
+            Información Básica
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Nombre:</label>
+              <span>{{ plan()!.name }}</span>
+            </div>
+            <div class="info-item">
+              <label>Estado:</label>
+              <mat-chip [color]="getStatusChipColor(plan()!.status)">
+                {{ plan()!.status }}
+              </mat-chip>
+            </div>
+            <div class="info-item">
+              <label>Descripción:</label>
+              <p>{{ plan()!.description }}</p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Plan Types Card -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>category</mat-icon>
+            Tipos de Plan
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="plan-types">
+            @for (type of plan()!.type; track type.id) {
+              <mat-chip [color]="getChipTypeColor(type)">
+                <mat-icon>{{ type.format === 'ONLINE' ? 'play_circle' : 'fitness_center' }}</mat-icon>
+                {{ getTypeDisplayName(type) }}
+              </mat-chip>
+            }
+          </div>
+          @if (hasActiveStudents()) {
+            <div class="warning-message">
+              <mat-icon color="warn">warning</mat-icon>
+              <span>Este plan tiene estudiantes activos. Los tipos no se pueden modificar.</span>
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Configuration Card -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>settings</mat-icon>
+            Configuración
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Duración:</label>
+              <span>{{ plan()!.durationDays }} días</span>
+            </div>
+            <div class="info-item">
+              <label>Clases Incluidas:</label>
+              <span>{{ plan()!.includedClasses === 999 ? 'Ilimitadas' : plan()!.includedClasses }}</span>
+            </div>
+            <div class="info-item">
+              <label>Precio:</label>
+              <span class="price">{{ formatCurrency(plan()!.price) }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Media Card -->
+      @if (plan()!.images?.length || plan()!.documents?.length) {
+        <mat-card class="info-card media-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>folder</mat-icon>
+              Archivos y Documentos
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <!-- Images Section -->
+            @if (plan()!.images?.length) {
+              <div class="media-section">
+                <h4>Imágenes</h4>
+                <div class="images-grid">
+                  @for (image of plan()!.images; track image) {
+                    <div class="image-item">
+                      <img [src]="'/assets/images/plans/' + image" 
+                           [alt]="plan()!.name"
+                           class="plan-image">
+                      <span class="image-name">{{ image }}</span>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+
+            <!-- Documents Section -->
+            @if (plan()!.documents?.length) {
+              <div class="media-section">
+                <h4>Documentos</h4>
+                <div class="documents-list">
+                  @for (document of plan()!.documents; track document) {
+                    <div class="document-item">
+                      <mat-icon>description</mat-icon>
+                      <span class="document-name">{{ document }}</span>
+                      <button mat-icon-button matTooltip="Descargar">
+                        <mat-icon>download</mat-icon>
+                      </button>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </mat-card-content>
+        </mat-card>
+      }
+
+      <!-- Metadata Card -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>schedule</mat-icon>
+            Metadatos
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Fecha de Creación:</label>
+              <span>{{ plan()!.creationDate | date:'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+            <div class="info-item">
+              <label>Última Modificación:</label>
+              <span>{{ plan()!.lastModifiedDate | date:'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Danger Zone -->
+    <mat-card class="danger-zone">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon color="warn">warning</mat-icon>
+          Zona de Peligro
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Las siguientes acciones son irreversibles. Proceda con precaución.</p>
+        <div class="danger-actions">
+          <button mat-raised-button color="warn" 
+                  (click)="deletePlan()"
+                  [disabled]="hasActiveStudents()">
+            <mat-icon>delete</mat-icon>
+            Eliminar Plan
+          </button>
+          @if (hasActiveStudents()) {
+            <div class="warning-text">
+              <mat-icon>info</mat-icon>
+              <span>No se puede eliminar un plan con estudiantes activos</span>
+            </div>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

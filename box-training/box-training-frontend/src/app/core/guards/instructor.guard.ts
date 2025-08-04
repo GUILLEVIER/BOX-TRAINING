@@ -1,38 +1,34 @@
 import { Injectable } from '@angular/core'
-import { CanActivate, Router } from '@angular/router'
-import { Observable } from 'rxjs'
+import { UserRole } from '../models'
 import { AuthService } from '../services/auth.service'
-import { UserRole } from '../models/auth.model'
+import { Router } from '@angular/router'
+import { Observable } from 'rxjs'
 
-/**
- * Guard que protege las rutas de administrador
- * Solo permite acceso a usuarios con rol ADMINISTRADOR
- */
 @Injectable({
   providedIn: 'root',
 })
-export class AdminGuard implements CanActivate {
+export class InstructorGuard {
   constructor(private authService: AuthService, private router: Router) {}
 
   /**
-   * Verifica si el usuario puede activar rutas de administrador
-   * @returns true si es administrador, false y redirige si no
+   * Verifica si el usuario puede activar rutas de instructor
+   * @returns true si es instructor, false y redirige si no
    */
   canActivate(): Observable<boolean> | Promise<boolean> | boolean {
-    if (this.authService.isAuthenticated() && this.authService.hasRole(UserRole.ADMINISTRATOR)) {
+    if (this.authService.isAuthenticated() && this.authService.hasRole(UserRole.INSTRUCTOR)) {
       return true
     }
 
     // Redirigir según el rol del usuario
     const user = this.authService.getCurrentUser()
     if (user) {
-      // Si está autenticado pero no es admin, redirigir a su dashboard
+      // Si está autenticado pero no es instructor, redirigir a su dashboard
       switch (user.role) {
         case UserRole.STUDENT:
           this.router.navigate(['/student/dashboard'])
           break
-        case UserRole.INSTRUCTOR:
-          this.router.navigate(['/instructor/dashboard'])
+        case UserRole.ADMINISTRATOR:
+          this.router.navigate(['/admin/dashboard'])
           break
         default:
           this.router.navigate(['/'])

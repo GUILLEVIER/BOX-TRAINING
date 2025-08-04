@@ -4,31 +4,28 @@
  */
 export interface Student {
   /** Identificador único del alumno */
-  id: string;
+  id: string
 
   /** Nombre del alumno */
-  firstName: string;
+  firstName: string
 
   /** Apellido del alumno */
-  lastName: string;
+  lastName: string
 
   /** Email de contacto */
-  email: string;
+  email: string
 
   /** Número de teléfono */
-  phone: string;
-
-  /** Documento de identidad */
-  document: string;
+  phone: string
 
   /** Fecha de nacimiento */
-  birthDate: Date;
+  birthDate: Date
 
   /** Fecha de registro en el sistema */
-  registrationDate: Date;
+  registrationDate: Date
 
   /** Estado actual del alumno */
-  status: StudentStatus;
+  status: StudentStatus
 }
 
 /**
@@ -36,36 +33,35 @@ export interface Student {
  */
 export enum StudentStatus {
   ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE'
+  INACTIVE = 'INACTIVE',
 }
 
 /**
  * DTO para crear un nuevo alumno
  */
 export interface CreateStudentDto {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  document: string;
-  birthDate: Date;
+  firstName: string
+  lastName: string
+  email: string
+  phone: string
+  birthDate: Date
 }
 
 /**
  * DTO para actualizar datos de un alumno
  */
 export interface UpdateStudentDto extends Partial<CreateStudentDto> {
-  id: string;
+  id: string
 }
 
 /**
  * Alumno con información extendida (incluye plan activo)
  */
 export interface DetailedStudent extends Student {
-  activePlan?: StudentPlan;
-  upcomingReservations?: Reservation[];
+  activePlan?: StudentPlan
+  upcomingReservations?: Reservation[]
 }
 
 // Importaciones necesarias
-import { StudentPlan } from './student-plan.model';
-import { Reservation } from './reservation.model';
+import { StudentPlan } from './student-plan.model'
+import { Reservation } from './reservation.model'

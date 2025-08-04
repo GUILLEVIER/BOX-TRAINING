@@ -5,26 +5,160 @@
 @include mat.core();
 
 :root {
-  --box-training-primary: #00bcd4;
-  --box-training-accent: #ff9800;
-  --box-training-warn: #f44336;
-  --box-training-black: #0f0f12;
-  --box-training-white: #fffdfe;
-  --box-training-background: #f5f5f5;
+  --box-training-primary: #3c6e71;
+  --box-training-accent: #284b63;
+  --box-training-error: #ff3c38;
+  --box-training-warn: #ff3c38;
+  --box-training-black: #353535;
+  --box-training-white: #fff;
+  --box-training-background: #d9d9d9;
 }
 
-// Definir paletas de colores personalizadas
-$box-training-primary: mat.define-palette(mat.$cyan-palette, 300);
-$box-training-accent: mat.define-palette(mat.$orange-palette, A200);
-$box-training-warn: mat.define-palette(mat.$red-palette);
+// Definir paletas de colores personalizadas para Angular Material
+$box-training-primary-palette: (
+  50: #e8f4f5,
+  100: #c6e3e6,
+  200: #a0d0d5,
+  300: #7abdc4,
+  400: #5eb0b7,
+  500: #3c6e71,
+  // Color principal
+  600: #366267,
+  700: #2e535a,
+  800: #26444d,
+  900: #1a2e33,
+  A100: #a0d0d5,
+  A200: #7abdc4,
+  A400: #5eb0b7,
+  A700: #2e535a,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: rgba(black, 0.87),
+    400: rgba(black, 0.87),
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba(black, 0.87),
+    A200: rgba(black, 0.87),
+    A400: white,
+    A700: white,
+  ),
+);
 
-// Crear el tema personalizado
+$box-training-accent-palette: (
+  50: #e7ebef,
+  100: #c4cdd6,
+  200: #9dacbb,
+  300: #758ba0,
+  400: #57728b,
+  500: #284b63,
+  // Color accent
+  600: #24445b,
+  700: #1e3b51,
+  800: #183247,
+  900: #0f2135,
+  A100: #9dacbb,
+  A200: #758ba0,
+  A400: #57728b,
+  A700: #1e3b51,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: white,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba(black, 0.87),
+    A200: white,
+    A400: white,
+    A700: white,
+  ),
+);
+
+$box-training-warn-palette: (
+  50: #ffebea,
+  100: #ffcdca,
+  200: #ff9c97,
+  300: #ff6b64,
+  400: #ff473e,
+  500: #ff3c38,
+  // Color error
+  600: #ff2418,
+  700: #e8170d,
+  800: #d40b02,
+  900: #b80000,
+  A100: #ff9c97,
+  A200: #ff6b64,
+  A400: #ff473e,
+  A700: #e8170d,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: white,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba(black, 0.87),
+    A200: white,
+    A400: white,
+    A700: white,
+  ),
+);
+
+$box-training-error-palette: (
+  50: #ffebea,
+  100: #ffcdca,
+  200: #ff9c97,
+  300: #ff6b64,
+  400: #ff473e,
+  500: #ff3c38,
+  // Color error
+  600: #ff2418,
+  700: #e8170d,
+  800: #d40b02,
+  900: #b80000,
+  A100: #ff9c97,
+  A200: #ff6b64,
+  A400: #ff473e,
+  A700: #e8170d,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: white,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: rgba(black, 0.87),
+    A200: white,
+    A400: white,
+    A700: white,
+  ),
+);
+
+// Crear el tema personalizado con las paletas definidas
 $box-training-theme: mat.define-light-theme(
   (
     color: (
-      primary: $box-training-primary,
-      accent: $box-training-accent,
-      warn: $box-training-warn,
+      primary: mat.define-palette($box-training-primary-palette),
+      accent: mat.define-palette($box-training-accent-palette),
+      warn: mat.define-palette($box-training-warn-palette),
+      error: mat.define-palette($box-training-error-palette),
     ),
     typography:
       mat.define-typography-config(
@@ -84,7 +218,7 @@ body {
 /* Estilos PWA específicos */
 .update-snackbar {
   background-color: var(--box-training-primary) !important;
-  color: white !important;
+  color: var(--box-training-white) !important;
 }
 
 .update-snackbar .mat-mdc-snack-bar-action {
@@ -125,12 +259,12 @@ body {
 
 /* Estilos para modo offline */
 .offline-mode {
-  filter: grayscale(0.3);
+  filter: grayscale(0.4);
 }
 
 .offline-banner {
-  background: linear-gradient(45deg, #f44336, #d32f2f);
-  color: white;
+  background: linear-gradient(45deg, var(--box-training-error), var(--box-training-warn));
+  color: var(--box-training-white);
   text-align: center;
   padding: 0.5rem; /* 8px -> REM para espaciado */
   font-size: 0.875rem; /* 14px -> REM para tipografía */
@@ -372,18 +506,18 @@ body {
 
 /* Snackbar personalizado */
 .success-snackbar .mdc-snackbar__surface {
-  background-color: #4caf50 !important;
-  color: white !important;
+  background-color: var(--box-training-primary) !important;
+  color: var(--box-training-white) !important;
 }
 
 .error-snackbar .mdc-snackbar__surface {
-  background-color: #f44336 !important;
-  color: white !important;
+  background-color: var(--box-training-error) !important;
+  color: var(--box-training-white) !important;
 }
 
 .warning-snackbar .mdc-snackbar__surface {
-  background-color: #ff9800 !important;
-  color: white !important;
+  background-color: var(--box-training-warn) !important;
+  color: var(--box-training-white) !important;
 }
 
 /* Smooth transitions */
@@ -411,7 +545,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--box-training-background);
   border-radius: 4px; /* PX para bordes pequeños */
 }
 
@@ -421,7 +555,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #00acc1;
+  background: var(--box-training-primary);
 }
 
 /* Tipografía - REM para escalabilidad */

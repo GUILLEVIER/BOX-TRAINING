@@ -4,46 +4,57 @@
  */
 export interface Plan {
   /** Identificador único del plan */
-  id: string;
+  id: string
 
   /** Nombre descriptivo del plan */
-  name: string;
+  name: string
 
   /** Tipo de entrenamiento del plan */
-  type: PlanType;
+  type: PlanType[]
 
   /** Descripción detallada del plan */
-  description: string;
+  description: string
 
   /** Duración del plan en días */
-  durationDays: number;
+  durationDays: number
 
   /** Número máximo de clases incluidas en el plan */
-  includedClasses: number;
+  includedClasses: number
 
   /** Precio del plan */
-  price: number;
+  price: number
 
   /** Estado actual del plan */
-  status: PlanStatus;
-
-  /** Array de IDs de horarios disponibles para este plan */
-  availableSchedules: string[];
+  status: PlanStatus
 
   /** Fecha de creación del plan */
-  creationDate: Date;
+  creationDate: Date
 
   /** Fecha de última modificación */
-  lastModifiedDate: Date;
+  lastModifiedDate: Date
+
+  /** Documentos asociados al plan */
+  documents?: string[]
+
+  /** Imagenes representativas del plan */
+  images?: string[]
 }
 
-/**
- * Tipos de planes disponibles en el box
- */
-export enum PlanType {
-  PERSONALIZED = 'PERSONALIZED',
-  CROSSFIT = 'CROSSFIT',
-  ZUMBA = 'ZUMBA'
+export interface PlanType {
+  /** Identificador único del tipo de plan */
+  id: string
+
+  /** Nombre descriptivo del tipo de plan */
+  // ZUMBA, CROSSFIT, PERSONALIZADO, BOX LIBRE, FUNCIONAL
+  name: string
+
+  /** Tipo de formato de entrenamiento */
+  format: PlanFormat
+}
+
+export enum PlanFormat {
+  ONLINE = 'ONLINE',
+  IN_PERSON = 'IN_PERSON',
 }
 
 /**
@@ -51,26 +62,50 @@ export enum PlanType {
  */
 export enum PlanStatus {
   ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE'
+  INACTIVE = 'INACTIVE',
 }
 
 /**
  * DTO para crear un nuevo plan
  */
 export interface CreatePlanDto {
-  name: string;
-  type: PlanType;
-  description: string;
-  durationDays: number;
-  includedClasses: number;
-  price: number;
-  availableSchedules: string[];
+  name: string
+  type: PlanType[]
+  description: string
+  durationDays: number
+  includedClasses: number
+  price: number
+  documents?: string[]
+  images?: string[]
+}
+
+/**
+ * DTO para crear un nuevo tipo de plan
+ */
+export interface CreatePlanTypeDto {
+  name: string
+  format: PlanFormat
 }
 
 /**
  * DTO para actualizar un plan existente
  */
 export interface UpdatePlanDto extends Partial<CreatePlanDto> {
-  id: string;
-  status?: PlanStatus;
+  id: string
+  status?: PlanStatus
+}
+
+/**
+ * DTO para eliminar un plan existente
+ */
+export interface DeletePlanDto {
+  id: string
+}
+
+/**
+ * DTO para duplicar un plan existente
+ */
+export interface DuplicatePlanDto {
+  id: string
+  newName: string // Nombre del nuevo plan duplicado
 }

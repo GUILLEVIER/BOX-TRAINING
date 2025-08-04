@@ -40,28 +40,34 @@
                   <mat-error>El nombre debe tener al menos 3 caracteres</mat-error>
                   } @if (basicInfoGroup.get('name')?.hasError('maxlength')) {
                   <mat-error>El nombre no puede superar los 100 caracteres</mat-error>
+                  } @if (basicInfoGroup.get('name')?.hasError('uniqueName')) {
+                  <mat-error>{{ basicInfoGroup.get('name')?.errors?.['uniqueName']?.message }}</mat-error>
                   }
                 </mat-form-field>
               </app-form-row>
               <app-form-row [fullWidth]="true">
                 <mat-form-field appearance="outline">
                   <mat-label>Tipo de Plan</mat-label>
-                  <mat-select formControlName="type">
-                    @for (planType of planTypes; track planType.value) {
+                  <mat-select formControlName="type" multiple>
+                    @for (planType of planTypes; track planType.value.id) {
                     <mat-option [value]="planType.value">
-                      <div>
-                        <div>
-                          <div>{{ planType.label }}</div>
-                          <div>{{ planType.description }}</div>
+                      <div class="plan-type-option">
+                        <div class="plan-type-header">
+                          <mat-icon>{{ planType.icon }}</mat-icon>
+                          <span class="plan-type-label">{{ planType.label }}</span>
+                          <mat-chip class="format-chip" [class.online]="planType.value.format === 'ONLINE'">
+                            {{ planType.value.format }}
+                          </mat-chip>
                         </div>
+                        <div class="plan-type-description">{{ planType.description }}</div>
                       </div>
                     </mat-option>
                     }
                   </mat-select>
-                  <mat-hint>Seleccione el tipo de entrenamiento</mat-hint>
+                  <mat-hint>Seleccione uno o más tipos de entrenamiento</mat-hint>
                   @if (basicInfoGroup.get('type')?.hasError('required') &&
                   basicInfoGroup.get('type')?.touched) {
-                  <mat-error>El tipo de plan es obligatorio</mat-error>
+                  <mat-error>Debe seleccionar al menos un tipo de plan</mat-error>
                   }
                 </mat-form-field>
               </app-form-row>
@@ -84,6 +90,48 @@
                   <mat-error>La descripción debe tener al menos 10 caracteres</mat-error>
                   }
                 </mat-form-field>
+              </app-form-row>
+              
+              <!-- Imagen del Plan -->
+              <app-form-row [fullWidth]="true">
+                <div class="image-upload-section">
+                  <h4>
+                    <mat-icon>image</mat-icon>
+                    Imagen Característica del Plan
+                  </h4>
+                  <div class="upload-area" 
+                       [class.has-image]="selectedImage()"
+                       (click)="imageInput.click()">
+                    @if (selectedImage()) {
+                      <div class="image-preview">
+                        <img [src]="selectedImage()" alt="Vista previa de la imagen del plan">
+                        <div class="image-overlay">
+                          <mat-icon>edit</mat-icon>
+                          <span>Cambiar imagen</span>
+                        </div>
+                      </div>
+                    } @else {
+                      <div class="upload-placeholder">
+                        <mat-icon>cloud_upload</mat-icon>
+                        <span>Subir imagen del plan</span>
+                        <small>Formatos: JPG, PNG, WEBP (máx. 5MB)</small>
+                      </div>
+                    }
+                  </div>
+                  <input #imageInput
+                         type="file"
+                         accept="image/*"
+                         (change)="onImageSelected($event)"
+                         style="display: none;">
+                  @if (selectedImage()) {
+                    <button mat-stroked-button color="warn" 
+                            type="button"
+                            (click)="removeImage()">
+                      <mat-icon>delete</mat-icon>
+                      Eliminar imagen
+                    </button>
+                  }
+                </div>
               </app-form-row>
             </mat-card-content>
             <mat-card-actions align="end">
@@ -170,17 +218,17 @@
               </app-form-row>
               <!-- Vista previa de configuración -->
               @if (configPreview()) {
-              <div>
+              <div class="config-preview">
                 <h4>Vista Previa</h4>
-                <div>
+                <div class="preview-item">
                   <mat-icon>schedule</mat-icon>
                   <span>{{ getDurationText() }}</span>
                 </div>
-                <div>
+                <div class="preview-item">
                   <mat-icon>fitness_center</mat-icon>
                   <span>{{ getClassesText() }}</span>
                 </div>
-                <div>
+                <div class="preview-item">
                   <mat-icon>monetization_on</mat-icon>
                   <span>{{ formatCurrency(configGroup.get('price')?.value) }}</span>
                 </div>
@@ -200,6 +248,70 @@
           </mat-card>
         </div>
       </mat-step>
+
+      <!-- Paso 3: Documentos (solo para planes ONLINE) -->
+      @if (hasOnlinePlanType()) {
+      <mat-step [stepControl]="documentsGroup" label="Documentos">
+        <div formGroupName="documents">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>cloud_upload</mat-icon>
+                Documentos del Plan Online
+              </mat-card-title>
+              <mat-card-subtitle>
+                Sube los documentos que estarán disponibles para los usuarios
+              </mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="documents-upload-section">
+                <div class="upload-area" (click)="documentsInput.click()">
+                  <mat-icon>file_upload</mat-icon>
+                  <span>Seleccionar documentos</span>
+                  <small>Formatos: PDF, DOC, DOCX, XLS, XLSX (máx. 10MB cada uno)</small>
+                </div>
+                <input #documentsInput
+                       type="file"
+                       multiple
+                       accept=".pdf,.doc,.docx,.xls,.xlsx"
+                       (change)="onDocumentsSelected($event)"
+                       style="display: none;">
+                
+                @if (selectedDocuments().length > 0) {
+                  <div class="documents-list">
+                    <h4>Documentos seleccionados:</h4>
+                    @for (doc of selectedDocuments(); track doc.name) {
+                      <div class="document-item">
+                        <mat-icon>description</mat-icon>
+                        <span class="document-name">{{ doc.name }}</span>
+                        <span class="document-size">{{ formatFileSize(doc.size) }}</span>
+                        <button mat-icon-button 
+                                color="warn"
+                                type="button"
+                                (click)="removeDocument(doc)"
+                                matTooltip="Eliminar documento">
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </mat-card-content>
+            <mat-card-actions align="end">
+              <button mat-button matStepperPrevious>
+                <mat-icon>navigate_before</mat-icon>
+                Anterior
+              </button>
+              <button mat-raised-button color="primary" matStepperNext>
+                Siguiente
+                <mat-icon>navigate_next</mat-icon>
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </mat-step>
+      }
       <!-- Paso 4: Confirmación -->
       <mat-step label="Confirmación">
         <mat-card>
@@ -211,36 +323,68 @@
             <mat-card-subtitle> Revisa la información antes de crear el plan </mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
-            <div>
+            <div class="confirmation-section">
               <h4>Información Básica</h4>
-              <div>
-                <span>Nombre:</span>
-                <span>{{ basicInfoGroup.get('name')?.value }}</span>
-              </div>
-              <div>
-                <span>Tipo:</span>
-                <span>{{ getPlanTypeLabel(basicInfoGroup.get('type')?.value) }}</span>
-              </div>
-              <div>
-                <span>Descripción:</span>
-                <span>{{ basicInfoGroup.get('description')?.value }}</span>
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="label">Nombre:</span>
+                  <span class="value">{{ basicInfoGroup.get('name')?.value }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Tipos:</span>
+                  <div class="plan-types">
+                    @for (type of basicInfoGroup.get('type')?.value; track type.id) {
+                      <mat-chip class="type-chip">{{ getPlanTypeLabel(type) }}</mat-chip>
+                    }
+                  </div>
+                </div>
+                <div class="info-item">
+                  <span class="label">Descripción:</span>
+                  <span class="value">{{ basicInfoGroup.get('description')?.value }}</span>
+                </div>
+                @if (selectedImage()) {
+                  <div class="info-item">
+                    <span class="label">Imagen:</span>
+                    <div class="image-thumbnail">
+                      <img [src]="selectedImage()" alt="Imagen del plan">
+                    </div>
+                  </div>
+                }
               </div>
             </div>
-            <div>
+            
+            <div class="confirmation-section">
               <h4>Configuración</h4>
-              <div>
-                <span>Duración:</span>
-                <span>{{ getDurationText() }}</span>
-              </div>
-              <div>
-                <span>Clases Incluidas:</span>
-                <span>{{ getClassesText() }}</span>
-              </div>
-              <div>
-                <span>Precio:</span>
-                <span>{{ formatCurrency(configGroup.get('price')?.value) }}</span>
+              <div class="info-grid">
+                <div class="info-item">
+                  <span class="label">Duración:</span>
+                  <span class="value">{{ getDurationText() }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Clases Incluidas:</span>
+                  <span class="value">{{ getClassesText() }}</span>
+                </div>
+                <div class="info-item">
+                  <span class="label">Precio:</span>
+                  <span class="value">{{ formatCurrency(configGroup.get('price')?.value) }}</span>
+                </div>
               </div>
             </div>
+
+            @if (hasOnlinePlanType() && selectedDocuments().length > 0) {
+              <div class="confirmation-section">
+                <h4>Documentos</h4>
+                <div class="documents-summary">
+                  @for (doc of selectedDocuments(); track doc.name) {
+                    <div class="document-summary-item">
+                      <mat-icon>description</mat-icon>
+                      <span>{{ doc.name }}</span>
+                      <small>({{ formatFileSize(doc.size) }})</small>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
           </mat-card-content>
           <mat-card-actions align="end">
             <button mat-button matStepperPrevious>

@@ -28,7 +28,8 @@
         "esbenp.prettier-vscode",
         "Gruntfuggly.todo-tree",
         "Angular.ng-template",
-        "Mikael.Angular-BeastCode"
+        "Mikael.Angular-BeastCode",
+        "BracketPairColorDLW.bracket-pair-color-dlw"
       ]
       // Uncomment to set a specific version of VS Code to use.
       // "vscodeVersion": "1.60.0"

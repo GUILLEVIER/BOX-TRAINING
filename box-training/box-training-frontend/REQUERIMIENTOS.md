@@ -4,31 +4,42 @@
 
 ### Descripción
 
-Aplicación web frontend desarrollada en Angular para la gestión y agendamiento de horarios de clases en un box de entrenamiento. El sistema maneja diferentes tipos de planes (Personalizado, CrossFit, Zumba) y permite la administración completa de horarios, planes y reservas.
+Aplicación web frontend desarrollada en Angular para la gestión y agendamiento de horarios de clases en un box de entrenamiento. El sistema maneja diferentes tipos de planes (Personalizado, CrossFit, Zumba, etc) y permite la administración completa de horarios, planes y reservas.
 
 ### Roles de Usuario
 
 - **Administrador del Sistema**: Gestión completa de planes y horarios
 - **Alumno**: Visualización y agendamiento de clases según su plan activo
 
----
-
 ## Funcionalidades del Administrador
 
 ### 1. Gestión de Planes
 
-#### 1.1 Crear Plan (LISTO)
+#### 1.0 Crear Tipos de Plan (LISTO)
+
+**Descripción**: Permite crear nuevos tipos de planes de entrenamientos.
+
+**Criterios de Aceptación**:
+
+- Formulario con validaciones obligatorias.
+- Selector de Tipo de formato (ONLINE, PRESENCIAL).
+- Ingreso del Nombre del Tipo de Plan (ZUMBA, CROSSFIT, PERSONALIZADO, BOX LIBRE, FUNCIONAL, ETC).
+
+#### 1.1 Crear Plan
 
 **Descripción**: Permite crear nuevos planes de entrenamiento con configuraciones específicas.
 
 **Criterios de Aceptación**:
 
-- Formulario con validaciones obligatorias
-- Campos requeridos: Nombre del Plan, Tipo de Plan, Descripción
-- Configuración de duración del plan (días/meses)
-- Definición de número máximo de clases por período
-- Precio del plan
-- Estado del plan (Activo/Inactivo)
+- Formulario con validaciones obligatorias.
+- Campos requeridos: Nombre del Plan, Tipo de Plan, Descripción, etc.
+- Configuración de duración del plan (días/meses).
+- Definición de número máximo de clases por período.
+- Documentos asignados al Tipo de Plan (En caso de ser ONLINE).
+- Espacio de subida de documentos (En caso de ser ONLINE).
+- Descripción del Tipo de Plan.
+- Imágen del Tipo de Plan Caracteristico.
+- Precio del plan.
 
 **Validaciones**:
 
@@ -46,6 +57,8 @@ Aplicación web frontend desarrollada en Angular para la gestión y agendamiento
 - Permitir modificación de todos los campos excepto el tipo de plan si hay alumnos activos
 - Mostrar advertencia si hay alumnos con el plan activo
 - Validar que los cambios no afecten negativamente a usuarios activos
+- Permitir modificar imagenes al Plan
+- Permitir modificar documentos del Plan
 
 #### 1.3 Eliminar Plan
 
@@ -60,12 +73,13 @@ Aplicación web frontend desarrollada en Angular para la gestión y agendamiento
 
 #### 1.4 Activar Plan a Alumno
 
-**Descripción**: Asignar un plan específico a un alumno.
+**Descripción**: Activar el plan comprado a un alumno.
 
 **Criterios de Aceptación**:
 
-- Buscador de alumnos por nombre/email/documento
-- Selección de plan disponible
+- Planes de alumnos pendientes de activar
+- Buscador de alumnos por nombre/email
+- Selección del plan
 - Configuración de fecha de inicio
 - Cálculo automático de fecha de vencimiento
 - Definición de número de clases incluidas
@@ -77,7 +91,9 @@ Aplicación web frontend desarrollada en Angular para la gestión y agendamiento
 
 **Criterios de Aceptación**:
 
-- Búsqueda del alumno con plan activo
+- Congelamientos de Planes pendientes de realizar
+- Búsqueda del alumno con plan activo por nombre/email
+- Selección del plan
 - Selección de período de congelamiento
 - Extensión automática de fecha de vencimiento
 - Cancelación automática de clases agendadas durante el período
@@ -89,32 +105,80 @@ Aplicación web frontend desarrollada en Angular para la gestión y agendamiento
 
 **Criterios de Aceptación**:
 
+- Anulaciones de Planes pendientes de realizar
 - Confirmación de anulación con motivo
 - Cancelación de todas las clases futuras agendadas
 - Liberación de cupos para otros alumnos
 - Registro de motivo de anulación
 - Notificación al alumno
 
+#### 1.7 Gestionar Alumnos
+
+- Visualizar Plan Activo.
+- Visualizar Información Básica del Alumno.
+- Visualizar Agendamientos futuros.
+- Filtrar por Tipo de Plan.
+- Filtrar por Nombre del Alumno.
+- Visualizar Tabla de Alumnos.
+
+#### 1.8 Duplicar Plan (Tabla y Detalle)
+
+- Duplicar la información de un Plan.
+- Duplicarlo en estado Inactivo.
+- No puede existir un Plan con un mismo nombre.
+
+#### 1.9 Activar/Desactivar Plan (Tabla y Detalle)
+
+#### 1.10 Visualizar el detalle de un Plan
+
+- Filtrar por nombre del Plan.
+- Seleccionar Plan.
+- Ingresar al detalle del Plan.
+- Tenga opción de Eliminar.
+- Tenga opción de Editar.
+- Tenga opción de Activar/Desactivar.
+- Tenga opción de Duplicar.
+- Tenga opción de Visualizar Alumnos del Plan.
+
+**Descripción**:
+
 ### 2. Gestión de Horarios
 
-#### 2.1 Disponibilizar Horarios al Plan
+#### 2.1 Disponibilizar Horarios al tipo de Plan y por Instructor
 
-**Descripción**: Asignar horarios específicos a cada tipo de plan.
+**Descripción**: Asignar horarios específicos a cada tipo de plan (CROSSFIT, ZUMBA, PERSONALIZADO, ETC).
 
 **Criterios de Aceptación**:
 
-- Selección de plan existente
+- Selección de tipo plan existente
 - Calendario semanal para seleccionar horarios
 - Definición de capacidad máxima por horario
 - Asignación de instructor
 - Configuración de duración de la clase
-- Vista previa de horarios asignados
 
----
+### 3. Gestión de Instructores
+
+#### 3.1 Creación de Instructores
+
+**Descripción**: Crear Instructor
+
+**Criterios de Aceptación**:
+
+- Campo Nombre.
+- Campo Apellido.
+- Campo Email.
+- Campo Phone.
+- Campo Especialidades.
+- Campo Biografia.
+- Campo Photo.
 
 ## Funcionalidades del Alumno
 
 ### 1. Dashboard Personal
+
+#### 1.0 Visualizar el detalle del Plan Activo
+
+- Botón de ir al detalle del Plan Activo.
 
 #### 1.1 Información del Plan Activo
 
@@ -127,7 +191,6 @@ Aplicación web frontend desarrollada en Angular para la gestión y agendamiento
 - Días restantes hasta el vencimiento
 - Indicador visual de estado (Activo/Por vencer/Vencido)
 - Descripción del plan
-- Beneficios incluidos
 
 #### 1.2 Contador de Clases
 
@@ -141,22 +204,32 @@ Aplicación web frontend desarrollada en Angular para la gestión y agendamiento
 - Gráfico de progreso visual
 - Filtros por período (último mes, últimos 3 meses, etc.)
 
-### 2. Visualización de Horarios
+#### 1.3 Solicitud de Congelamiento
 
-#### 2.1 Catálogo de Horarios
-
-**Descripción**: Mostrar todos los horarios disponibles en el box.
+**Descripción**: Solicitud de Congelamiento del plan.
 
 **Criterios de Aceptación**:
 
-- Vista de calendario semanal/mensual
-- Filtros por tipo de plan (Personalizado, CrossFit, Zumba)
-- Filtros por día de la semana
-- Filtros por horario (mañana, tarde, noche)
-- Indicador visual de disponibilidad de cupos
-- Resaltado de horarios disponibles para el plan del alumno
+- Ingresar al detalle del Plan Activo.
+- Días/Meses requeridos para congelamiento.
+- Ingresar la razón del Congelamiento del Plan.
+- Botón de Solicitar Congelamiento del Plan.
+- Aprobación del Administrador.
 
-#### 2.2 Detalle de Horario
+#### 1.4 Solicitud de Anulación
+
+**Descripción**: Solicitud de Anulación del plan.
+
+**Criterios de Aceptación**:
+
+- Ingresar al detalle del Plan Activo.
+- Ingresar la razón de la Anulación del plan.
+- Botón de Solicitar Anulación del Plan.
+- Aprobación del Administrador.
+
+### 2. Visualización de Horarios
+
+#### 2.1 Detalle de Horario
 
 **Descripción**: Información detallada de cada clase.
 
@@ -168,7 +241,6 @@ Aplicación web frontend desarrollada en Angular para la gestión y agendamiento
 - Duración de la clase
 - Descripción de la actividad
 - Ubicación/sala
-- Botón de agendamiento (solo si corresponde al plan)
 
 ### 3. Gestión de Reservas
 
@@ -178,7 +250,7 @@ Aplicación web frontend desarrollada en Angular para la gestión y agendamiento
 
 **Criterios de Aceptación**:
 
-- Solo mostrar horarios del plan activo del alumno
+- Solo mostrar horarios correspondientes a los tipos o tipo de plan activo del alumno (CROSSFIT, PERSONALIZADO, ZUMBA, ETC)
 - Verificar disponibilidad de cupos
 - Verificar que el alumno tenga clases disponibles
 - Confirmación de agendamiento
@@ -191,12 +263,12 @@ Aplicación web frontend desarrollada en Angular para la gestión y agendamiento
 
 **Criterios de Aceptación**:
 
-- Lista de clases agendadas futuras
+- Ir a Mis Reservas
+- Listar clases agendadas futuras
 - Confirmación de cancelación
-- Políticas de cancelación (tiempo mínimo antes de la clase)
+- Políticas de cancelación (tiempo mínimo antes de la clase 1 hr)
 - Liberación automática del cupo
 - Recuperación de clase al contador disponible
-- Notificación a lista de espera si existe
 
 ### 4. Sistema de Notificaciones
 
@@ -206,11 +278,8 @@ Aplicación web frontend desarrollada en Angular para la gestión y agendamiento
 
 **Criterios de Aceptación**:
 
-- Sistema de lista de espera automática
 - Notificación en tiempo real (push notification)
-- Tiempo limitado para tomar el cupo liberado
-- Prioridad por orden de solicitud
-- Notificación por email/SMS
+- Solo para clases diarias Próximas.
 
 #### 4.2 Recordatorios
 
@@ -222,124 +291,6 @@ Aplicación web frontend desarrollada en Angular para la gestión y agendamiento
 - Recordatorio 2 horas antes
 - Recordatorio de vencimiento de plan (7 días antes)
 - Configuración personalizable de recordatorios
-
----
-
-## Estructura de Datos
-
-### Plan
-
-```typescript
-interface Plan {
-  id: string
-  nombre: string
-  tipo: 'PERSONALIZADO' | 'CROSSFIT' | 'ZUMBA'
-  descripcion: string
-  duracionDias: number
-  numeroClases: number
-  precio: number
-  estado: 'ACTIVO' | 'INACTIVO'
-  horariosDisponibles: string[] // IDs de horarios
-  fechaCreacion: Date
-  fechaModificacion: Date
-}
-```
-
-### Horario
-
-```typescript
-interface Horario {
-  id: string
-  diaSemana: number // 0-6 (Domingo-Sábado)
-  horaInicio: string // HH:mm
-  horaFin: string // HH:mm
-  capacidadMaxima: number
-  instructorId: string
-  tipoClase: 'PERSONALIZADO' | 'CROSSFIT' | 'ZUMBA'
-  salon: string
-  descripcion: string
-}
-```
-
-### PlanAlumno
-
-```typescript
-interface PlanAlumno {
-  id: string
-  alumnoId: string
-  planId: string
-  fechaInicio: Date
-  fechaVencimiento: Date
-  clasesRestantes: number
-  estado: 'ACTIVO' | 'CONGELADO' | 'ANULADO' | 'VENCIDO'
-  motivoAnulacion?: string
-  fechasCongelamiento?: { inicio: Date; fin: Date }[]
-}
-```
-
-### Reserva
-
-```typescript
-interface Reserva {
-  id: string
-  alumnoId: string
-  horarioId: string
-  fecha: Date
-  estado: 'AGENDADA' | 'CANCELADA' | 'COMPLETADA' | 'NO_ASISTIO'
-  fechaReserva: Date
-  fechaCancelacion?: Date
-}
-```
-
-### Alumno
-
-```typescript
-interface Alumno {
-  id: string
-  nombre: string
-  apellido: string
-  email: string
-  telefono: string
-  documento: string
-  fechaNacimiento: Date
-  fechaRegistro: Date
-  estado: 'ACTIVO' | 'INACTIVO'
-}
-```
-
-### Instructor
-
-```typescript
-interface Instructor {
-  id: string
-  nombre: string
-  apellido: string
-  email: string
-  telefono: string
-  especialidades: string[]
-  biografia: string
-  foto?: string
-  estado: 'ACTIVO' | 'INACTIVO'
-}
-```
-
-### Notificacion
-
-```typescript
-interface Notificacion {
-  id: string
-  alumnoId: string
-  tipo: 'CUPO_LIBERADO' | 'RECORDATORIO' | 'PLAN_VENCIMIENTO' | 'CANCELACION'
-  titulo: string
-  mensaje: string
-  fechaCreacion: Date
-  fechaEnvio?: Date
-  leida: boolean
-  accionRequerida?: boolean
-}
-```
-
----
 
 ## Consideraciones Técnicas
 
@@ -435,70 +386,6 @@ src/
 - Coverage mínimo del 80%
 - Tests de accesibilidad
 
----
-
-## Flujos de Usuario
-
-### Flujo Administrador - Crear Plan
-
-1. Login como administrador
-2. Navegar a "Gestión de Planes"
-3. Hacer clic en "Crear Nuevo Plan"
-4. Completar formulario con datos del plan
-5. Guardar plan
-6. Confirmación de creación exitosa
-
-### Flujo Alumno - Agendar Clase
-
-1. Login como alumno
-2. Ver dashboard con información del plan
-3. Navegar a "Horarios Disponibles"
-4. Filtrar por tipo de clase
-5. Seleccionar horario deseado
-6. Ver detalles de la clase
-7. Confirmar agendamiento
-8. Recibir confirmación
-
-### Flujo Alumno - Cancelar Clase
-
-1. Navegar a "Mis Reservas"
-2. Ver lista de clases agendadas
-3. Seleccionar clase a cancelar
-4. Confirmar cancelación
-5. Recibir confirmación
-6. Actualización automática de contadores
-
----
-
-## Wireframes y Diseño
-
-### Pantallas Principales
-
-1. **Dashboard Administrador**
-
-   - Resumen de estadísticas
-   - Accesos rápidos a funciones principales
-   - Notificaciones importantes
-
-2. **Dashboard Alumno**
-
-   - Información del plan activo
-   - Contadores de clases
-   - Próximas clases agendadas
-   - Accesos rápidos
-
-3. **Calendario de Horarios**
-
-   - Vista semanal/mensual
-   - Filtros laterales
-   - Indicadores de disponibilidad
-   - Modal de detalles
-
-4. **Gestión de Planes (Admin)**
-   - Lista de planes existentes
-   - Formularios de creación/edición
-   - Asignación de horarios
-
 ### Componentes Reutilizables
 
 - Calendar component
@@ -508,40 +395,6 @@ src/
 - Notification component
 - Search component
 - Filter component
-
----
-
-## Roadmap de Desarrollo
-
-### Fase 1 - Funcionalidades Básicas (4 semanas)
-
-- Autenticación y autorización
-- Gestión básica de planes
-- Dashboard alumno
-- Agendamiento básico
-
-### Fase 2 - Funcionalidades Avanzadas (3 semanas)
-
-- Sistema de notificaciones
-- Gestión completa de horarios
-- Congelamiento y anulación de planes
-- Filtros avanzados
-
-### Fase 3 - Optimización y PWA (2 semanas)
-
-- Performance optimization
-- PWA capabilities
-- Push notifications
-- Offline support
-
-### Fase 4 - Testing y Deploy (1 semana)
-
-- Testing completo
-- Bug fixes
-- Deployment
-- Documentación
-
----
 
 ## Criterios de Finalización
 

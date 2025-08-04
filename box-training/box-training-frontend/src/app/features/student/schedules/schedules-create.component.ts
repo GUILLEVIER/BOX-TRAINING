@@ -62,7 +62,7 @@ export class SchedulesCreateComponent {
   // Signals para el estado del componente
   protected readonly loading = signal(false)
   protected readonly currentUser = signal<User | null>(null)
-  protected readonly userPlanType = signal<PlanType | null>(null)
+  protected readonly userPlanTypes = signal<PlanType[] | null>(null)
   protected readonly scheduleBlocks = signal<ScheduleBlock[]>([])
   protected readonly selectedSchedules = signal<string[]>([])
   protected readonly reserving = signal(false)
@@ -152,7 +152,7 @@ export class SchedulesCreateComponent {
       if (activePlan) {
         const planInfo = this.mockDataService.getPlanById(activePlan.planId)
         if (planInfo) {
-          this.userPlanType.set(planInfo.type)
+          this.userPlanTypes.set(planInfo.type)
         }
       }
     }
@@ -166,8 +166,8 @@ export class SchedulesCreateComponent {
     console.log('Form válido:', this.dateRangeForm.valid)
     console.log('Form value completo:', this.dateRangeForm.value)
 
-    const start = this.dateRangeForm.get('start')?.value;
-    const end = this.dateRangeForm.get('end')?.value;
+    const start = this.dateRangeForm.get('start')?.value
+    const end = this.dateRangeForm.get('end')?.value
 
     if (!start || !end) {
       this.showErrorMessage('Por favor selecciona un rango de fechas válido')
@@ -189,12 +189,12 @@ export class SchedulesCreateComponent {
     console.log('Iniciando loadSchedules')
     this.loading.set(true)
     const days = this.selectedDays()
-    const planType = this.userPlanType()
+    const planTypes = this.userPlanTypes()
 
-    console.log("PLAN: ", planType)
-    console.log("DAYS: ", days)
+    console.log('PLAN: ', planTypes)
+    console.log('DAYS: ', days)
 
-    if (!planType || days.length === 0) {
+    if (!planTypes || days.length === 0) {
       this.showErrorMessage('Por favor selecciona un plan y un rango de fechas válido')
       this.loading.set(false)
       return
@@ -219,9 +219,15 @@ export class SchedulesCreateComponent {
               endTime: endTime,
               maxCapacity: 15,
               instructorId: '1',
-              classType: planType,
+              classType: {
+                id: planTypes[Math.floor(Math.random() * planTypes.length)].id,
+                name: planTypes[Math.floor(Math.random() * planTypes.length)].name,
+                format: planTypes[Math.floor(Math.random() * planTypes.length)].format,
+              },
               room: 'Sala Principal',
-              description: `Clase de ${planType} - ${timeSlot}`,
+              description: `Clase de ${
+                planTypes[Math.floor(Math.random() * planTypes.length)].name
+              } - ${timeSlot}`,
               available: Math.random() > 0.2, // 80% disponible
               currentReservations: Math.floor(Math.random() * 15),
               isSelected: false,

@@ -7,25 +7,25 @@
  */
 export interface User {
   /** Identificador único del usuario */
-  id: string;
+  id: string
 
   /** Email del usuario */
-  email: string;
+  email: string
 
   /** Nombre del usuario */
-  name: string;
+  name: string
 
   /** Apellido del usuario */
-  lastName: string;
+  lastName: string
 
   /** Rol del usuario en el sistema */
-  role: UserRole;
+  role: UserRole
 
   /** Token de autenticación */
-  token?: string;
+  token?: string
 
   /** Fecha de último acceso */
-  lastAccess?: Date;
+  lastAccess?: Date
 }
 
 /**
@@ -34,45 +34,44 @@ export interface User {
 export enum UserRole {
   ADMINISTRATOR = 'ADMINISTRATOR',
   STUDENT = 'STUDENT',
-  INSTRUCTOR = 'INSTRUCTOR'
+  INSTRUCTOR = 'INSTRUCTOR',
 }
 
 /**
  * DTO para login
  */
 export interface LoginDto {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }
 
 /**
  * DTO para registro de nuevo usuario
  */
 export interface RegisterDto {
-  email: string;
-  password: string;
-  name: string;
-  lastName: string;
-  phone: string;
-  document: string;
-  birthDate: Date;
+  email: string
+  password: string
+  name: string
+  lastName: string
+  phone: string
+  birthDate: Date
 }
 
 /**
  * Respuesta del login
  */
 export interface LoginResponse {
-  user: User;
-  token: string;
-  expiresIn: number;
+  user: User
+  token: string
+  expiresIn: number
 }
 
 /**
  * Estado de autenticación
  */
 export interface AuthState {
-  user: User | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  error: string | null;
+  user: User | null
+  isAuthenticated: boolean
+  isLoading: boolean
+  error: string | null
 }

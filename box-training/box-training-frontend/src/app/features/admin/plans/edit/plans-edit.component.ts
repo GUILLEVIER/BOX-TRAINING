@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal, computed } from '@angular/core'
+import { ChangeDetectionStrategy, Component, inject, signal, computed, OnInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import {
   FormBuilder,
@@ -8,7 +8,7 @@ import {
   AbstractControl,
   ValidationErrors,
 } from '@angular/forms'
-import { Router } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import { MatButtonModule } from '@angular/material/button'
 import { MatCardModule } from '@angular/material/card'
 import { MatFormFieldModule } from '@angular/material/form-field'
@@ -21,18 +21,24 @@ import { MatStepperModule } from '@angular/material/stepper'
 import { MatChipsModule } from '@angular/material/chips'
 import { MatCheckboxModule } from '@angular/material/checkbox'
 import { MatTooltipModule } from '@angular/material/tooltip'
+import { MatDialogModule, MatDialog } from '@angular/material/dialog'
 import { Observable, of, timer } from 'rxjs'
 import { map, switchMap, catchError } from 'rxjs/operators'
-import { PlanType, CreatePlanDto, PlanFormat } from '../../../../core/models/plan.model'
+import { Plan, PlanType, UpdatePlanDto, PlanFormat } from '../../../../core/models/plan.model'
 import { PlansService } from '../../../../core/services/plans.service'
 import { PageHeaderComponent, FormRowComponent } from '../../../../shared/components'
+import {
+  ConfirmDialogComponent,
+  ConfirmDialogData,
+} from '../../../../shared/components/confirm-dialog/confirm-dialog.component'
+import { MatProgressSpinner } from '@angular/material/progress-spinner'
 
 /**
- * Componente para crear nuevos planes de entrenamiento
- * Incluye formulario con validaciones y soporte para documentos e imágenes
+ * Componente para editar planes de entrenamiento existentes
+ * Cumple con los criterios de aceptación para la edición de planes
  */
 @Component({
-  selector: 'app-plans-create',
+  selector: 'app-plans-edit',
   standalone: true,
   imports: [
     CommonModule,
@@ -49,28 +55,36 @@ import { PageHeaderComponent, FormRowComponent } from '../../../../shared/compon
     MatChipsModule,
     MatCheckboxModule,
     MatTooltipModule,
+    MatDialogModule,
     PageHeaderComponent,
     FormRowComponent,
+    MatProgressSpinner,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: './plans-create.component.html',
-  styleUrls: ['./plans-create.component.scss'],
+  templateUrl: './plans-edit.component.html',
+  styleUrls: ['./plans-edit.component.scss'],
 })
-export class PlansCreateComponent {
+export class PlansEditComponent implements OnInit {
   private readonly fb = inject(FormBuilder)
+  private readonly route = inject(ActivatedRoute)
   private readonly router = inject(Router)
   private readonly snackBar = inject(MatSnackBar)
+  private readonly dialog = inject(MatDialog)
   private readonly plansService = inject(PlansService)
 
   // Signals
-  protected readonly creating = signal(false)
+  protected readonly loading = signal(true)
+  protected readonly saving = signal(false)
+  protected readonly originalPlan = signal<Plan | null>(null)
+  protected readonly planId = signal<string | null>(null)
   protected readonly selectedImage = signal<string | null>(null)
   protected readonly selectedDocuments = signal<File[]>([])
   private readonly selectedImageFile = signal<File | null>(null)
+  protected readonly hasActiveStudents = signal(false)
 
   // Form groups
   protected readonly planForm: FormGroup
-  protected basicInfoGroup: FormGroup
+  protected readonly basicInfoGroup: FormGroup
   protected readonly configGroup: FormGroup
   protected readonly documentsGroup: FormGroup
 
@@ -86,10 +100,16 @@ export class PlansCreateComponent {
   })
 
   protected readonly hasOnlinePlanType = computed(() => {
-    console.log('Checking for online plan types')
     const selectedTypes = this.selectedPlanTypes()
-    console.log('Selected types:', selectedTypes)
     return selectedTypes?.some(type => type.format === PlanFormat.ONLINE) || false
+  })
+
+  protected readonly canEditPlanType = computed(() => {
+    return !this.hasActiveStudents()
+  })
+
+  protected readonly showWarningMessage = computed(() => {
+    return this.hasActiveStudents() && this.hasFormChanges()
   })
 
   // Plan types configuration
@@ -147,7 +167,7 @@ export class PlansCreateComponent {
   ]
 
   /**
-   * Validador asíncrono para verificar nombres únicos de planes
+   * Validador asíncrono para verificar nombres únicos de planes (excluyendo el plan actual)
    */
   private uniquePlanNameValidator = (
     control: AbstractControl
@@ -156,11 +176,13 @@ export class PlansCreateComponent {
       return of(null)
     }
 
+    const currentPlanId = this.planId()
     return timer(500).pipe(
       switchMap(() => this.plansService.getPlans()),
       map(response => {
         const existingPlan = response.data.find(
-          plan => plan.name.toLowerCase() === control.value.toLowerCase()
+          plan =>
+            plan.name.toLowerCase() === control.value.toLowerCase() && plan.id !== currentPlanId
         )
         return existingPlan
           ? { uniqueName: { message: 'Ya existe un plan con este nombre' } }
@@ -203,6 +225,107 @@ export class PlansCreateComponent {
     this.basicInfoGroup.get('type')?.valueChanges.subscribe(value => {
       this.selectedPlanTypes.set(value || [])
     })
+  }
+
+  ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      const id = params['id']
+      if (id) {
+        this.planId.set(id)
+        this.loadPlan(id)
+      }
+    })
+  }
+
+  /**
+   * Carga los datos del plan a editar
+   */
+  private loadPlan(id: string): void {
+    this.loading.set(true)
+
+    this.plansService.getPlanById(id).subscribe({
+      next: plan => {
+        this.originalPlan.set(plan)
+        this.populateForm(plan)
+        this.checkActiveStudents(id)
+        this.loading.set(false)
+      },
+      error: error => {
+        console.error('Error al cargar plan:', error)
+        this.showErrorMessage('Error al cargar el plan')
+        this.loading.set(false)
+        this.router.navigate(['/admin/plans'])
+      },
+    })
+  }
+
+  /**
+   * Verifica si el plan tiene estudiantes activos
+   */
+  private checkActiveStudents(planId: string): void {
+    this.plansService.hasActiveStudents(planId).subscribe({
+      next: hasActive => {
+        this.hasActiveStudents.set(hasActive)
+      },
+      error: error => {
+        console.error('Error verificando estudiantes activos:', error)
+        // En caso de error, asumimos que no hay estudiantes activos
+        this.hasActiveStudents.set(false)
+      },
+    })
+  }
+
+  /**
+   * Puebla el formulario con los datos del plan
+   */
+  private populateForm(plan: Plan): void {
+    this.basicInfoGroup.patchValue({
+      name: plan.name,
+      type: plan.type,
+      description: plan.description,
+    })
+
+    this.configGroup.patchValue({
+      durationDays: plan.durationDays,
+      includedClasses: plan.includedClasses,
+      price: plan.price,
+    })
+
+    this.selectedPlanTypes.set(plan.type)
+
+    // Load existing images
+    if (plan.images && plan.images.length > 0) {
+      this.selectedImage.set(`/assets/images/plans/${plan.images[0]}`)
+    }
+
+    // Load existing documents
+    if (plan.documents && plan.documents.length > 0) {
+      // Convert document names to File objects for display purposes
+      // In a real implementation, you might want to handle this differently
+      this.documentsGroup.patchValue({
+        documents: plan.documents,
+      })
+    }
+  }
+
+  /**
+   * Verifica si hay cambios en el formulario
+   */
+  private hasFormChanges(): boolean {
+    const original = this.originalPlan()
+    if (!original) return false
+
+    const current = this.planForm.value
+    return (
+      current.basicInfo.name !== original.name ||
+      current.basicInfo.description !== original.description ||
+      JSON.stringify(current.basicInfo.type) !== JSON.stringify(original.type) ||
+      current.config.durationDays !== original.durationDays ||
+      current.config.includedClasses !== original.includedClasses ||
+      current.config.price !== original.price ||
+      this.selectedImageFile() !== null ||
+      this.selectedDocuments().length > 0
+    )
   }
 
   /**
@@ -353,6 +476,28 @@ export class PlansCreateComponent {
   }
 
   /**
+   * Shows confirmation dialog if there are active students
+   */
+  private showActiveStudentsConfirmation(): Observable<boolean> {
+    if (!this.hasActiveStudents()) {
+      return of(true)
+    }
+
+    const dialogData: ConfirmDialogData = {
+      title: 'Plan con Estudiantes Activos',
+      message: `Este plan tiene estudiantes activos. Los cambios no afectarán a los estudiantes actuales, pero se aplicarán a nuevas asignaciones. ¿Desea continuar?`,
+      confirmText: 'Sí, Continuar',
+      cancelText: 'Cancelar',
+      type: 'warning',
+    }
+
+    return this.dialog
+      .open(ConfirmDialogComponent, { data: dialogData })
+      .afterClosed()
+      .pipe(map(result => !!result))
+  }
+
+  /**
    * Handles form submission
    */
   protected onSubmit(): void {
@@ -362,37 +507,56 @@ export class PlansCreateComponent {
       return
     }
 
-    this.creating.set(true)
+    // Show confirmation if needed
+    this.showActiveStudentsConfirmation().subscribe(confirmed => {
+      if (confirmed) {
+        this.updatePlan()
+      }
+    })
+  }
+
+  /**
+   * Updates the plan
+   */
+  private updatePlan(): void {
+    this.saving.set(true)
 
     const formValue = this.planForm.value
-    const createPlanDto: CreatePlanDto = {
+    const originalPlan = this.originalPlan()!
+
+    const updatePlanDto: UpdatePlanDto = {
+      id: originalPlan.id,
       name: formValue.basicInfo.name,
-      type: formValue.basicInfo.type,
       description: formValue.basicInfo.description,
       durationDays: formValue.config.durationDays,
       includedClasses: formValue.config.includedClasses,
       price: formValue.config.price,
     }
 
+    // Only include type changes if there are no active students
+    if (!this.hasActiveStudents()) {
+      updatePlanDto.type = formValue.basicInfo.type
+    }
+
     // Add image if selected
     if (this.selectedImageFile()) {
-      createPlanDto.images = [this.selectedImageFile()!.name]
+      updatePlanDto.images = [this.selectedImageFile()!.name]
     }
 
     // Add documents if any
     if (this.selectedDocuments().length > 0) {
-      createPlanDto.documents = this.selectedDocuments().map(doc => doc.name)
+      updatePlanDto.documents = this.selectedDocuments().map(doc => doc.name)
     }
 
-    this.plansService.createPlan(createPlanDto).subscribe({
+    this.plansService.updatePlan(updatePlanDto).subscribe({
       next: response => {
-        this.creating.set(false)
-        this.showSuccessMessage('Plan creado exitosamente')
-        this.router.navigate(['/admin/plans'])
+        this.saving.set(false)
+        this.showSuccessMessage(response.message || 'Plan actualizado exitosamente')
+        this.router.navigate(['/admin/plans', originalPlan.id])
       },
       error: error => {
-        this.creating.set(false)
-        const errorMessage = error?.message || 'Error al crear el plan'
+        this.saving.set(false)
+        const errorMessage = error?.message || 'Error al actualizar el plan'
         this.showErrorMessage(errorMessage)
       },
     })
@@ -413,10 +577,15 @@ export class PlansCreateComponent {
   }
 
   /**
-   * Navigates back to plans list
+   * Navigates back to plan details
    */
   protected goBack(): void {
-    this.router.navigate(['/admin/plans'])
+    const planId = this.planId()
+    if (planId) {
+      this.router.navigate(['/admin/plans', planId])
+    } else {
+      this.router.navigate(['/admin/plans'])
+    }
   }
 
   /**

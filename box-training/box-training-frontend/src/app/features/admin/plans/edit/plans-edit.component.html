@@ -1,0 +1,422 @@
+<div class="main-container">
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-container">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      <p>Cargando datos del plan...</p>
+    </div>
+  }
+
+  <!-- Edit Form -->
+  @if (!loading() && originalPlan()) {
+    <!-- Page Header -->
+    <app-page-header
+      title="Editar Plan"
+      [subtitle]="originalPlan()!.name"
+      titleIcon="edit"
+      [actions]="headerActionsTemplate"
+    >
+    </app-page-header>
+
+    <!-- Header Actions Template -->
+    <ng-template #headerActionsTemplate>
+      <button mat-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Volver
+      </button>
+    </ng-template>
+
+    <!-- Active Students Warning -->
+    @if (hasActiveStudents()) {
+      <mat-card class="warning-card">
+        <mat-card-content>
+          <div class="warning-content">
+            <mat-icon color="warn">warning</mat-icon>
+            <div class="warning-text">
+              <h4>Plan con Estudiantes Activos</h4>
+              <p>
+                Este plan tiene estudiantes activos. Tenga en cuenta lo siguiente:
+              </p>
+              <ul>
+                <li>Los tipos de plan no se pueden modificar</li>
+                <li>Los cambios no afectarán a estudiantes actuales</li>
+                <li>Las modificaciones se aplicarán solo a nuevas asignaciones</li>
+              </ul>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+
+    <!-- Edit Form -->
+    <form [formGroup]="planForm" (ngSubmit)="onSubmit()" class="plan-form">
+      <mat-vertical-stepper linear="false" class="plan-stepper">
+        <!-- Step 1: Basic Information -->
+        <mat-step [stepControl]="basicInfoGroup" label="Información Básica">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>info</mat-icon>
+                Información Básica del Plan
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div formGroupName="basicInfo" class="form-section">
+                <!-- Plan Name -->
+                <app-form-row>
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Nombre del Plan</mat-label>
+                    <input
+                      matInput
+                      formControlName="name"
+                      placeholder="Ej: Plan CrossFit Básico"
+                      maxlength="100"
+                    />
+                    <mat-hint align="end">{{ basicInfoGroup.get('name')?.value?.length || 0 }}/100</mat-hint>
+                    @if (basicInfoGroup.get('name')?.hasError('required') && basicInfoGroup.get('name')?.touched) {
+                      <mat-error>El nombre es requerido</mat-error>
+                    }
+                    @if (basicInfoGroup.get('name')?.hasError('minlength')) {
+                      <mat-error>El nombre debe tener al menos 3 caracteres</mat-error>
+                    }
+                    @if (basicInfoGroup.get('name')?.hasError('uniqueName')) {
+                      <mat-error>{{ basicInfoGroup.get('name')?.errors?.['uniqueName']?.message }}</mat-error>
+                    }
+                  </mat-form-field>
+                </app-form-row>
+
+                <!-- Plan Types -->
+                <app-form-row>
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Tipos de Plan</mat-label>
+                    <mat-select 
+                      formControlName="type" 
+                      multiple
+                      [disabled]="!canEditPlanType()"
+                    >
+                      <mat-select-trigger>
+                        @if (selectedPlanTypes().length) {
+                          {{ selectedPlanTypes().length }} tipo(s) seleccionado(s)
+                        }
+                      </mat-select-trigger>
+                      @for (planType of planTypes; track planType.value.id) {
+                        <mat-option [value]="planType.value">
+                          <div class="plan-type-option">
+                            <mat-icon>{{ planType.icon }}</mat-icon>
+                            <div class="plan-type-info">
+                              <span class="plan-type-label">{{ planType.label }}</span>
+                              <small class="plan-type-description">{{ planType.description }}</small>
+                            </div>
+                          </div>
+                        </mat-option>
+                      }
+                    </mat-select>
+                    @if (!canEditPlanType()) {
+                      <mat-hint>Los tipos no se pueden modificar porque el plan tiene estudiantes activos</mat-hint>
+                    }
+                    @if (basicInfoGroup.get('type')?.hasError('required') && basicInfoGroup.get('type')?.touched) {
+                      <mat-error>Debe seleccionar al menos un tipo de plan</mat-error>
+                    }
+                  </mat-form-field>
+                </app-form-row>
+
+                <!-- Selected Plan Types Preview -->
+                @if (selectedPlanTypes().length > 0) {
+                  <app-form-row>
+                    <div class="selected-types">
+                      <label>Tipos seleccionados:</label>
+                      <div class="types-chips">
+                        @for (type of selectedPlanTypes(); track type.id) {
+                          <mat-chip>
+                            <mat-icon>{{ type.format === 'ONLINE' ? 'play_circle' : 'fitness_center' }}</mat-icon>
+                            {{ getPlanTypeLabel(type) }}
+                          </mat-chip>
+                        }
+                      </div>
+                    </div>
+                  </app-form-row>
+                }
+
+                <!-- Plan Description -->
+                <app-form-row>
+                  <mat-form-field appearance="outline" class="full-width">
+                    <mat-label>Descripción</mat-label>
+                    <textarea
+                      matInput
+                      formControlName="description"
+                      rows="4"
+                      placeholder="Describe los beneficios y características del plan..."
+                      maxlength="500"
+                    ></textarea>
+                    <mat-hint align="end">{{ basicInfoGroup.get('description')?.value?.length || 0 }}/500</mat-hint>
+                    @if (basicInfoGroup.get('description')?.hasError('required') && basicInfoGroup.get('description')?.touched) {
+                      <mat-error>La descripción es requerida</mat-error>
+                    }
+                    @if (basicInfoGroup.get('description')?.hasError('minlength')) {
+                      <mat-error>La descripción debe tener al menos 10 caracteres</mat-error>
+                    }
+                  </mat-form-field>
+                </app-form-row>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </mat-step>
+
+        <!-- Step 2: Configuration -->
+        <mat-step [stepControl]="configGroup" label="Configuración">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>settings</mat-icon>
+                Configuración del Plan
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div formGroupName="config" class="form-section">
+                <div class="config-grid">
+                  <!-- Duration -->
+                  <app-form-row>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Duración (días)</mat-label>
+                      <input
+                        matInput
+                        type="number"
+                        formControlName="durationDays"
+                        min="1"
+                        max="365"
+                        placeholder="30"
+                      />
+                      <mat-hint>{{ getDurationText() }}</mat-hint>
+                      @if (configGroup.get('durationDays')?.hasError('required') && configGroup.get('durationDays')?.touched) {
+                        <mat-error>La duración es requerida</mat-error>
+                      }
+                      @if (configGroup.get('durationDays')?.hasError('min')) {
+                        <mat-error>La duración mínima es 1 día</mat-error>
+                      }
+                      @if (configGroup.get('durationDays')?.hasError('max')) {
+                        <mat-error>La duración máxima es 365 días</mat-error>
+                      }
+                    </mat-form-field>
+                  </app-form-row>
+
+                  <!-- Included Classes -->
+                  <app-form-row>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Clases Incluidas</mat-label>
+                      <input
+                        matInput
+                        type="number"
+                        formControlName="includedClasses"
+                        min="1"
+                        max="999"
+                        placeholder="12"
+                      />
+                      <mat-hint>{{ getClassesText() }}</mat-hint>
+                      @if (configGroup.get('includedClasses')?.hasError('required') && configGroup.get('includedClasses')?.touched) {
+                        <mat-error>El número de clases es requerido</mat-error>
+                      }
+                      @if (configGroup.get('includedClasses')?.hasError('min')) {
+                        <mat-error>Mínimo 1 clase</mat-error>
+                      }
+                      @if (configGroup.get('includedClasses')?.hasError('max')) {
+                        <mat-error>Máximo 999 clases</mat-error>
+                      }
+                    </mat-form-field>
+                  </app-form-row>
+
+                  <!-- Price -->
+                  <app-form-row>
+                    <mat-form-field appearance="outline">
+                      <mat-label>Precio (CLP)</mat-label>
+                      <input
+                        matInput
+                        type="number"
+                        formControlName="price"
+                        min="0"
+                        placeholder="50000"
+                      />
+                      <mat-hint>{{ formatCurrency(configGroup.get('price')?.value) }}</mat-hint>
+                      @if (configGroup.get('price')?.hasError('required') && configGroup.get('price')?.touched) {
+                        <mat-error>El precio es requerido</mat-error>
+                      }
+                      @if (configGroup.get('price')?.hasError('min')) {
+                        <mat-error>El precio debe ser mayor o igual a 0</mat-error>
+                      }
+                    </mat-form-field>
+                  </app-form-row>
+                </div>
+
+                <!-- Configuration Preview -->
+                @if (configPreview()) {
+                  <div class="config-preview">
+                    <h4>Vista Previa de la Configuración</h4>
+                    <div class="preview-items">
+                      <div class="preview-item">
+                        <mat-icon>schedule</mat-icon>
+                        <span>{{ getDurationText() }}</span>
+                      </div>
+                      <div class="preview-item">
+                        <mat-icon>fitness_center</mat-icon>
+                        <span>{{ getClassesText() }}</span>
+                      </div>
+                      <div class="preview-item">
+                        <mat-icon>attach_money</mat-icon>
+                        <span>{{ formatCurrency(configGroup.get('price')?.value) }}</span>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </mat-step>
+
+        <!-- Step 3: Documents and Images -->
+        <mat-step [stepControl]="documentsGroup" label="Archivos">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon>folder</mat-icon>
+                Documentos e Imágenes
+              </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div formGroupName="documents" class="form-section">
+                <!-- Image Upload -->
+                <app-form-row>
+                  <div class="upload-section">
+                    <h4>Imagen del Plan</h4>
+                    <p class="upload-description">Sube una imagen representativa del plan (máximo 5MB)</p>
+                    
+                    <div class="image-upload">
+                      @if (selectedImage()) {
+                        <div class="image-preview">
+                          <img [src]="selectedImage()" alt="Preview" class="preview-image">
+                          <button mat-icon-button 
+                                  type="button" 
+                                  class="remove-image-btn"
+                                  (click)="removeImage()"
+                                  matTooltip="Eliminar imagen">
+                            <mat-icon>close</mat-icon>
+                          </button>
+                        </div>
+                      } @else {
+                        <div class="upload-placeholder">
+                          <mat-icon>image</mat-icon>
+                          <span>No hay imagen seleccionada</span>
+                        </div>
+                      }
+                      
+                      <input
+                        type="file"
+                        accept="image/*"
+                        (change)="onImageSelected($event)"
+                        #imageInput
+                        style="display: none"
+                      />
+                      
+                      <div class="upload-actions">
+                        <button mat-raised-button 
+                                type="button" 
+                                (click)="imageInput.click()"
+                                color="primary">
+                          <mat-icon>upload</mat-icon>
+                          {{ selectedImage() ? 'Cambiar Imagen' : 'Seleccionar Imagen' }}
+                        </button>
+                        @if (selectedImage()) {
+                          <button mat-button 
+                                  type="button" 
+                                  (click)="removeImage()">
+                            Eliminar
+                          </button>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </app-form-row>
+
+                <!-- Documents Upload -->
+                <app-form-row>
+                  <div class="upload-section">
+                    <h4>Documentos del Plan</h4>
+                    <p class="upload-description">
+                      Sube documentos relacionados (PDF, Word, Excel - máximo 10MB cada uno)
+                    </p>
+                    
+                    <input
+                      type="file"
+                      multiple
+                      accept=".pdf,.doc,.docx,.xls,.xlsx"
+                      (change)="onDocumentsSelected($event)"
+                      #documentsInput
+                      style="display: none"
+                    />
+                    
+                    <button mat-raised-button 
+                            type="button" 
+                            (click)="documentsInput.click()"
+                            color="primary">
+                      <mat-icon>upload</mat-icon>
+                      Seleccionar Documentos
+                    </button>
+                    
+                    @if (selectedDocuments().length > 0) {
+                      <div class="documents-list">
+                        <h5>Documentos Seleccionados:</h5>
+                        @for (document of selectedDocuments(); track document.name) {
+                          <div class="document-item">
+                            <mat-icon>description</mat-icon>
+                            <div class="document-info">
+                              <span class="document-name">{{ document.name }}</span>
+                              <small class="document-size">{{ formatFileSize(document.size) }}</small>
+                            </div>
+                            <button mat-icon-button 
+                                    type="button" 
+                                    (click)="removeDocument(document)"
+                                    matTooltip="Eliminar documento">
+                              <mat-icon>close</mat-icon>
+                            </button>
+                          </div>
+                        }
+                      </div>
+                    }
+                  </div>
+                </app-form-row>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </mat-step>
+      </mat-vertical-stepper>
+
+      <!-- Form Actions -->
+      <div class="form-actions">
+        @if (showWarningMessage()) {
+          <div class="final-warning">
+            <mat-icon color="warn">info</mat-icon>
+            <span>Los cambios no afectarán a estudiantes con planes activos</span>
+          </div>
+        }
+        
+        <div class="action-buttons">
+          <button mat-button type="button" (click)="goBack()">
+            Cancelar
+          </button>
+          <button mat-raised-button 
+                  color="primary" 
+                  type="submit"
+                  [disabled]="planForm.invalid || saving()">
+            @if (saving()) {
+              <mat-progress-spinner diameter="20" mode="indeterminate"></mat-progress-spinner>
+              Guardando...
+            } @else {
+              <ng-container>
+                <mat-icon>save</mat-icon>
+                Guardar Cambios
+              </ng-container>
+            }
+          </button>
+        </div>
+      </div>
+    </form>
+  }
+</div>

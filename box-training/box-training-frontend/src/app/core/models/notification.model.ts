@@ -4,34 +4,34 @@
  */
 export interface Notification {
   /** Identificador único de la notificación */
-  id: string;
+  id: string
 
   /** ID del alumno destinatario */
-  studentId: string;
+  studentId: string
 
   /** Tipo de notificación */
-  type: NotificationType;
+  type: NotificationType
 
   /** Título de la notificación */
-  title: string;
+  title: string
 
   /** Mensaje de la notificación */
-  message: string;
+  message: string
 
   /** Fecha de creación de la notificación */
-  creationDate: Date;
+  creationDate: Date
 
   /** Fecha de envío (si ya fue enviada) */
-  sendingDate?: Date;
+  sendingDate?: Date
 
   /** Indica si la notificación fue leída */
-  read: boolean;
+  read: boolean
 
   /** Indica si requiere alguna acción del usuario */
-  actionRequired?: boolean;
+  actionRequired?: boolean
 
   /** Datos adicionales relacionados con la notificación */
-  data?: any;
+  data?: any
 }
 
 /**
@@ -45,29 +45,30 @@ export enum NotificationType {
   RESERVATION_CONFIRMATION = 'RESERVATION_CONFIRMATION',
   PLAN_ACTIVATED = 'PLAN_ACTIVATED',
   PLAN_FROZEN = 'PLAN_FROZEN',
-  PLAN_CANCELED = 'PLAN_CANCELED'
+  PLAN_CANCELED = 'PLAN_CANCELED',
+  LIBERATED_SPOT = 'LIBERATED_SPOT',
 }
 
 /**
  * DTO para crear una nueva notificación
  */
 export interface CreateNotificationDto {
-  studentId: string;
-  type: NotificationType;
-  title: string;
-  message: string;
-  actionRequired?: boolean;
-  data?: any;
+  studentId: string
+  type: NotificationType
+  title: string
+  message: string
+  actionRequired?: boolean
+  data?: any
 }
 
 /**
  * Configuración de recordatorios del usuario
  */
 export interface UserReminderSettings {
-  studentId: string;
-  reminder24h: boolean;
-  reminder2h: boolean;
-  reminderExpiration: boolean;
-  pushNotifications: boolean;
-  emailNotifications: boolean;
+  studentId: string
+  reminder24h: boolean
+  reminder2h: boolean
+  reminderExpiration: boolean
+  pushNotifications: boolean
+  emailNotifications: boolean
 }

@@ -1,80 +1,83 @@
 /**
  * Modelo de datos para un Horario de clase
  * Define la programación de clases en el box
+ * Al momento de crear un horario, se debe especificar el día de la semana,
+ * la hora de inicio y fin, la capacidad máxima de alumnos, el instructor asignado,
+ * el tipo de clase y el salón donde se dicta.
  */
 export interface Schedule {
   /** Identificador único del horario */
-  id: string;
+  id: string
 
   /** Día de la semana (0-6, donde 0 es Domingo) */
-  dayOfWeek: number;
+  dayOfWeek: number
 
   /** Hora de inicio en formato HH:mm */
-  startTime: string;
+  startTime: string
 
   /** Hora de finalización en formato HH:mm */
-  endTime: string;
+  endTime: string
 
   /** Capacidad máxima de alumnos para esta clase */
-  maxCapacity: number;
+  maxCapacity: number
 
   /** ID del instructor asignado */
-  instructorId: string;
+  instructorId: string
 
   /** Tipo de clase que se dicta en este horario */
-  classType: PlanType;
+  classType: PlanType
 
   /** Salon o área donde se dicta la clase */
-  room: string;
+  room: string
 
   /** Descripción adicional del horario */
-  description: string;
+  description: string
 
   /** Ocupación actual del horario */
-  currentOccupancy?: number;
+  currentOccupancy?: number
 }
 
 /**
  * Importamos TipoPlan desde el modelo de plan
  */
-import { PlanType } from './plan.model';
+import { PlanType } from './plan.model'
 
 /**
  * DTO para crear un nuevo horario
  */
 export interface CreateScheduleDto {
-  dayOfWeek: number;
-  startTime: string;
-  endTime: string;
-  maxCapacity: number;
-  instructorId: string;
-  classType: PlanType;
-  room: string;
-  description: string;
+  dayOfWeek: number
+  startTime: string
+  endTime: string
+  maxCapacity: number
+  instructorId: string
+  classType: PlanType
+  room: string
+  description: string
 }
 
 /**
  * DTO para actualizar un horario existente
  */
 export interface UpdateScheduleDto extends Partial<CreateScheduleDto> {
-  id: string;
+  id: string
 }
 
 /**
  * Horario con información extendida (incluye datos del instructor)
  */
 export interface ScheduleDetail extends Schedule {
-  instructorFirstName: string;
-  instructorLastName: string;
-  studentsReserved: StudentReservation[];
-  available: boolean;
+  instructorFirstName: string
+  instructorLastName: string
+  studentsReserved: StudentReservation[]
+  available: boolean
 }
 
 /**
  * Información básica de un alumno en una reserva
  */
 export interface StudentReservation {
-  id: string;
-  firstName: string;
-  lastName: string;
+  id: string
+  firstName: string
+  lastName: string
 }

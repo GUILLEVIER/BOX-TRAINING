@@ -1,0 +1,107 @@
+<div class="main-container">
+  <!-- Page Header Component -->
+  <app-page-header
+    title="Crear Nuevo Tipo de Plan"
+    titleIcon="category"
+    [showBackButton]="true"
+    backTooltip="Volver"
+  >
+  </app-page-header>
+
+  <!-- Formulario -->
+  <form [formGroup]="planTypeForm" (ngSubmit)="onSubmit()">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>info</mat-icon>
+          Información del Tipo de Plan
+        </mat-card-title>
+        <mat-card-subtitle>
+          Define un nuevo tipo de entrenamiento disponible en el box
+        </mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <app-form-row [fullWidth]="true">
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre del Tipo de Plan</mat-label>
+            <input
+              matInput
+              formControlName="name"
+              placeholder="Ej: CROSSFIT, ZUMBA, BOX LIBRE, FUNCIONAL"
+              maxlength="50"
+            />
+            <mat-hint>Nombre único para el tipo de entrenamiento (será convertido a mayúsculas)</mat-hint>
+            @if (planTypeForm.get('name')?.hasError('required') && planTypeForm.get('name')?.touched) {
+              <mat-error>El nombre es obligatorio</mat-error>
+            }
+            @if (planTypeForm.get('name')?.hasError('minlength')) {
+              <mat-error>El nombre debe tener al menos 3 caracteres</mat-error>
+            }
+            @if (planTypeForm.get('name')?.hasError('maxlength')) {
+              <mat-error>El nombre no puede superar los 50 caracteres</mat-error>
+            }
+          </mat-form-field>
+        </app-form-row>
+
+        <app-form-row [fullWidth]="true">
+          <mat-form-field appearance="outline">
+            <mat-label>Formato de Entrenamiento</mat-label>
+            <mat-select formControlName="format">
+              @for (format of planFormats; track format.value) {
+                <mat-option [value]="format.value">
+                  <div class="format-option">
+                    <mat-icon>{{ format.icon }}</mat-icon>
+                    <div class="format-details">
+                      <span class="format-label">{{ format.label }}</span>
+                      <span class="format-description">{{ format.description }}</span>
+                    </div>
+                  </div>
+                </mat-option>
+              }
+            </mat-select>
+            <mat-hint>Seleccione si el entrenamiento es presencial o virtual</mat-hint>
+            @if (planTypeForm.get('format')?.hasError('required') && planTypeForm.get('format')?.touched) {
+              <mat-error>El formato es obligatorio</mat-error>
+            }
+          </mat-form-field>
+        </app-form-row>
+      </mat-card-content>
+
+      <mat-card-actions align="end">
+        <button 
+          mat-button 
+          type="button" 
+          (click)="goBack()"
+          [disabled]="creating()"
+        >
+          <mat-icon>arrow_back</mat-icon>
+          Cancelar
+        </button>
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="planTypeForm.invalid || creating()"
+        >
+          @if (creating()) {
+            <ng-container>
+              <mat-icon>hourglass_empty</mat-icon>
+              Creando...
+            </ng-container>
+          } @else {
+            <ng-container>
+              <mat-icon>add</mat-icon>
+              Crear Tipo de Plan
+            </ng-container>
+          }
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </form>
+
+  <!-- Indicador de progreso -->
+  @if (creating()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+</div>
