@@ -1,0 +1,195 @@
+<div class="main-container">
+  <!-- Page Header Component -->
+  <app-page-header
+    title="Crear Nuevo Alumno"
+    titleIcon="person_add"
+    [showBackButton]="true"
+    backTooltip="Volver a la lista de alumnos"
+  >
+  </app-page-header>
+
+  <!-- Formulario -->
+  <form [formGroup]="studentForm" (ngSubmit)="onSubmit()">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>info</mat-icon>
+          Información del Alumno
+        </mat-card-title>
+        <mat-card-subtitle>
+          Completa los datos básicos del nuevo alumno
+        </mat-card-subtitle>
+      </mat-card-header>
+      
+      <mat-card-content>
+        <!-- Imagen del Alumno -->
+        <app-form-row [fullWidth]="true">
+          <div class="image-upload-section">
+            <h4>
+              <mat-icon>account_circle</mat-icon>
+              Imagen del Alumno (Opcional)
+            </h4>
+            
+            <div 
+              class="upload-area" 
+              [class.has-image]="selectedImage()"
+              (click)="imageInput.click()"
+            >
+              @if (!selectedImage()) {
+                <div class="upload-placeholder">
+                  <mat-icon>add_a_photo</mat-icon>
+                  <span>Agregar imagen de perfil</span>
+                  <small>Formatos soportados: JPG, PNG, GIF (Máx. 5MB)</small>
+                </div>
+              } @else {
+                <div class="image-preview">
+                  <img [src]="selectedImage()" alt="Vista previa de la imagen del alumno">
+                  <div class="image-overlay" (click)="$event.stopPropagation(); removeImage()">
+                    <mat-icon>delete</mat-icon>
+                    <span>Eliminar imagen</span>
+                  </div>
+                </div>
+              }
+            </div>
+            
+            <input
+              #imageInput
+              id="imageInput"
+              type="file"
+              accept="image/*"
+              style="display: none"
+              (change)="onImageSelected($event)"
+            />
+          </div>
+        </app-form-row>
+
+        <!-- Nombre y Apellido -->
+        <app-form-row>
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre *</mat-label>
+            <input 
+              matInput 
+              formControlName="firstName"
+              placeholder="Ingresa el nombre"
+              autocomplete="given-name"
+            />
+            <mat-icon matSuffix>person</mat-icon>
+            @if (hasFieldError('firstName')) {
+              <mat-error>{{ getFieldError('firstName') }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Apellido *</mat-label>
+            <input 
+              matInput 
+              formControlName="lastName"
+              placeholder="Ingresa el apellido"
+              autocomplete="family-name"
+            />
+            <mat-icon matSuffix>person</mat-icon>
+            @if (hasFieldError('lastName')) {
+              <mat-error>{{ getFieldError('lastName') }}</mat-error>
+            }
+          </mat-form-field>
+        </app-form-row>
+
+        <!-- Email -->
+        <app-form-row [fullWidth]="true">
+          <mat-form-field appearance="outline">
+            <mat-label>Email *</mat-label>
+            <input 
+              matInput 
+              formControlName="email"
+              type="email"
+              placeholder="alumno@ejemplo.com"
+              autocomplete="email"
+            />
+            <mat-icon matSuffix>email</mat-icon>
+            @if (hasFieldError('email')) {
+              <mat-error>{{ getFieldError('email') }}</mat-error>
+            }
+          </mat-form-field>
+        </app-form-row>
+
+        <!-- Teléfono -->
+        <app-form-row [fullWidth]="true">
+          <mat-form-field appearance="outline">
+            <mat-label>Teléfono *</mat-label>
+            <input 
+              matInput 
+              formControlName="phone"
+              type="tel"
+              placeholder="+56 9 1234 5678"
+              autocomplete="tel"
+            />
+            <mat-icon matSuffix>phone</mat-icon>
+            @if (hasFieldError('phone')) {
+              <mat-error>{{ getFieldError('phone') }}</mat-error>
+            }
+          </mat-form-field>
+        </app-form-row>
+
+        <!-- Fecha de Nacimiento -->
+        <app-form-row [fullWidth]="true">
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha de Nacimiento *</mat-label>
+            <input 
+              matInput 
+              [matDatepicker]="birthDatePicker"
+              formControlName="birthDate"
+              [min]="minDate"
+              [max]="maxDate"
+              placeholder="Selecciona la fecha de nacimiento"
+              readonly
+            />
+            <mat-datepicker-toggle matIconSuffix [for]="birthDatePicker">
+              <mat-icon matDatepickerToggleIcon>calendar_today</mat-icon>
+            </mat-datepicker-toggle>
+            <mat-datepicker #birthDatePicker></mat-datepicker>
+            @if (hasFieldError('birthDate')) {
+              <mat-error>{{ getFieldError('birthDate') }}</mat-error>
+            }
+            <mat-hint>El alumno debe ser mayor de 18 años</mat-hint>
+          </mat-form-field>
+        </app-form-row>
+      </mat-card-content>
+
+      <mat-card-actions align="end">
+        <button 
+          mat-button 
+          type="button"
+          (click)="goBack()"
+          [disabled]="creating()"
+        >
+          <mat-icon>arrow_back</mat-icon>
+          Cancelar
+        </button>
+        
+        <button 
+          mat-raised-button 
+          color="primary" 
+          type="submit"
+          [disabled]="studentForm.invalid || creating()"
+        >
+          @if (creating()) {
+            <ng-container>
+              <mat-icon>hourglass_empty</mat-icon>
+              Creando...
+            </ng-container>
+          } @else {
+            <ng-container>
+              <mat-icon>save</mat-icon>
+              Crear Alumno
+            </ng-container>
+          }
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </form>
+
+  <!-- Indicador de progreso -->
+  @if (creating()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+</div>

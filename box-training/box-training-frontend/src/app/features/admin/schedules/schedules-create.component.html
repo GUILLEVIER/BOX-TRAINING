@@ -1,0 +1,156 @@
+<div class="admin-schedules-container">
+  <!-- Selector de rango de fechas -->
+  <mat-card class="date-selection-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>admin_panel_settings</mat-icon>
+        Administrar Horarios de Clases
+      </mat-card-title>
+      <mat-card-subtitle> 
+        Selecciona el período para administrar los horarios disponibles 
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <mat-form-field class="date-range-field">
+        <mat-label>Selecciona un rango de fechas</mat-label>
+        <mat-date-range-input [formGroup]="dateRangeForm" [rangePicker]="picker">
+          <input matStartDate formControlName="start" placeholder="Fecha inicio" />
+          <input matEndDate formControlName="end" placeholder="Fecha fin" />
+        </mat-date-range-input>
+        <mat-hint>Selecciona desde qué día hasta qué día quieres administrar los horarios</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+
+        @if (dateRangeForm.controls.start.hasError('matStartDateInvalid')) {
+        <mat-error>Fecha de inicio inválida</mat-error>
+        } @if (dateRangeForm.controls.end.hasError('matEndDateInvalid')) {
+        <mat-error>Fecha de fin inválida</mat-error>
+        }
+      </mat-form-field>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="confirmDateSelection($event)"
+        [disabled]="!dateRangeForm.value.start || !dateRangeForm.value.end || loading()"
+      >
+        <mat-icon>search</mat-icon>
+        Cargar Horarios
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <!-- Loading -->
+  @if (loading()) {
+  <app-loading message="Cargando grilla de horarios..."></app-loading>
+  }
+
+  <!-- Grilla de horarios -->
+  @if (!loading() && selectedDays().length > 0) {
+  <mat-card class="schedules-grid-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>calendar_view_week</mat-icon>
+        Grilla de Horarios
+      </mat-card-title>
+      <mat-card-subtitle> 
+        Haz clic en un horario vacío para crear una clase o en uno existente para editarlo 
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="schedules-grid">
+        <!-- Encabezados de tiempo -->
+        <div class="time-column">
+          <div class="time-header">Horario</div>
+          @for (timeSlot of timeSlots; track timeSlot) {
+          <div class="time-slot">{{ timeSlot }}</div>
+          }
+        </div>
+
+        <!-- Columnas de días -->
+        @for (day of selectedDays(); track getDayKey(day)) {
+        <div class="day-column">
+          <div class="day-header">{{ getDayName(day) }}</div>
+          @for (timeSlot of timeSlots; track timeSlot) {
+          <div class="schedule-slot">
+            @if (getBlockForDayAndTime(day, timeSlot); as block) {
+              @if (block.exists) {
+                <!-- Horario existente -->
+                <div 
+                  class="existing-schedule-block"
+                  (click)="onBlockClick(block)"
+                >
+                  <div class="class-info">
+                    <div class="class-type">{{ block.classType.name }}</div>
+                    <div class="class-room">{{ block.room }}</div>
+                    <div class="instructor-info">
+                      {{ getInstructorName(block.instructorId) }}
+                    </div>
+                    <div class="capacity-info">
+                      <mat-icon>group</mat-icon>
+                      {{ block.currentReservations || 0 }}/{{ block.maxCapacity }}
+                    </div>
+                  </div>
+                  <div class="edit-indicator">
+                    <mat-icon>edit</mat-icon>
+                  </div>
+                </div>
+              } @else {
+                <!-- Horario vacío -->
+                <div 
+                  class="empty-schedule-block"
+                  (click)="onBlockClick(block)"
+                >
+                  <mat-icon>add_circle_outline</mat-icon>
+                  <span>Crear Clase</span>
+                </div>
+              }
+            }
+          </div>
+          }
+        </div>
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
+  
+  <!-- Información de ayuda -->
+  @if (!loading() && selectedDays().length > 0) {
+  <mat-card class="help-card">
+    <mat-card-content>
+      <div class="help-content">
+        <div class="help-item">
+          <mat-icon>add_circle_outline</mat-icon>
+          <span>Haz clic en un horario vacío para <strong>crear una nueva clase</strong></span>
+        </div>
+        <div class="help-item">
+          <mat-icon>edit</mat-icon>
+          <span>Haz clic en un horario existente para <strong>editarlo o eliminarlo</strong></span>
+        </div>
+        <div class="help-item">
+          <mat-icon>info</mat-icon>
+          <span>Los horarios van desde las <strong>06:00 hasta las 20:00</strong>, cada bloque es de 1 hora</span>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  }
+  }
+
+  <!-- Sin fechas seleccionadas -->
+  @if (!loading() && selectedDays().length === 0) {
+  <mat-card class="no-dates-card">
+    <mat-card-content>
+      <div class="no-dates-message">
+        <mat-icon>date_range</mat-icon>
+        <h3>Selecciona un rango de fechas</h3>
+        <p>Para comenzar a administrar horarios, selecciona un período de fechas arriba.</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  }
+</div>

@@ -1,0 +1,329 @@
+<!-- Page Header -->
+<app-page-header
+  [title]="'Editar Instructor'"
+  [subtitle]="instructorFullName()"
+  [showBackButton]="true"
+  (onBack)="goBack()">
+</app-page-header>
+
+<!-- Loading State -->
+@if (loading()) {
+  <div class="loading-container">
+    <mat-progress-spinner diameter="50" mode="indeterminate"></mat-progress-spinner>
+    <p class="loading-text">Cargando información del instructor...</p>
+  </div>
+} @else {
+  <!-- Main Content -->
+  <div class="edit-instructor-container">
+    <!-- Form Card -->
+    <mat-card class="form-card">
+      <mat-card-header>
+        <mat-card-title>Información del Instructor</mat-card-title>
+        <mat-card-subtitle>
+          Modifique los datos del instructor según sea necesario
+        </mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <!-- Progress Bar for Saving -->
+        @if (saving()) {
+          <mat-progress-bar mode="indeterminate" class="saving-progress"></mat-progress-bar>
+        }
+
+        <form [formGroup]="instructorForm" (ngSubmit)="onSubmit()" class="instructor-form">
+          <!-- Image Section -->
+          <div class="image-section">
+            <h3 class="section-title">
+              <mat-icon>photo_camera</mat-icon>
+              Foto del Instructor (Opcional)
+            </h3>
+            
+            <div class="image-upload-container">
+              @if (selectedImage()) {
+                <div class="image-preview">
+                  <img [src]="selectedImage()" alt="Foto del instructor" class="preview-image">
+                  <button
+                    type="button"
+                    mat-icon-button
+                    color="warn"
+                    class="remove-image-btn"
+                    (click)="removeImage()"
+                    matTooltip="Eliminar imagen">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              } @else {
+                <div class="image-placeholder">
+                  <mat-icon class="placeholder-icon">person</mat-icon>
+                  <p>Sin imagen</p>
+                </div>
+              }
+              
+              <div class="image-actions">
+                <input
+                  type="file"
+                  #fileInput
+                  accept="image/*"
+                  (change)="onFileSelect($event)"
+                  style="display: none;">
+                <button
+                  type="button"
+                  mat-stroked-button
+                  (click)="fileInput.click()"
+                  [disabled]="saving()">
+                  <mat-icon>upload</mat-icon>
+                  {{ selectedImage() ? 'Cambiar Imagen' : 'Subir Imagen' }}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Basic Information Section -->
+          <div class="form-section">
+            <h3 class="section-title">
+              <mat-icon>person</mat-icon>
+              Información Básica
+            </h3>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Nombre</mat-label>
+                <input
+                  matInput
+                  formControlName="name"
+                  placeholder="Ingrese el nombre"
+                  maxlength="50">
+                <mat-icon matSuffix>person</mat-icon>
+                @if (instructorForm.get('name')?.hasError('required') && instructorForm.get('name')?.touched) {
+                  <mat-error>El nombre es requerido</mat-error>
+                }
+                @if (instructorForm.get('name')?.hasError('minlength')) {
+                  <mat-error>El nombre debe tener al menos 2 caracteres</mat-error>
+                }
+                @if (instructorForm.get('name')?.hasError('maxlength')) {
+                  <mat-error>El nombre no puede exceder 50 caracteres</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Apellido</mat-label>
+                <input
+                  matInput
+                  formControlName="lastName"
+                  placeholder="Ingrese el apellido"
+                  maxlength="50">
+                <mat-icon matSuffix>person</mat-icon>
+                @if (instructorForm.get('lastName')?.hasError('required') && instructorForm.get('lastName')?.touched) {
+                  <mat-error>El apellido es requerido</mat-error>
+                }
+                @if (instructorForm.get('lastName')?.hasError('minlength')) {
+                  <mat-error>El apellido debe tener al menos 2 caracteres</mat-error>
+                }
+                @if (instructorForm.get('lastName')?.hasError('maxlength')) {
+                  <mat-error>El apellido no puede exceder 50 caracteres</mat-error>
+                }
+              </mat-form-field>
+            </div>
+
+            <div class="form-row">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Email</mat-label>
+                <input
+                  matInput
+                  type="email"
+                  formControlName="email"
+                  placeholder="instructor@email.com">
+                <mat-icon matSuffix>email</mat-icon>
+                @if (instructorForm.get('email')?.hasError('required') && instructorForm.get('email')?.touched) {
+                  <mat-error>El email es requerido</mat-error>
+                }
+                @if (instructorForm.get('email')?.hasError('email')) {
+                  <mat-error>Ingrese un email válido</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Teléfono</mat-label>
+                <input
+                  matInput
+                  formControlName="phone"
+                  placeholder="+56912345678"
+                  maxlength="15">
+                <mat-icon matSuffix>phone</mat-icon>
+                @if (instructorForm.get('phone')?.hasError('required') && instructorForm.get('phone')?.touched) {
+                  <mat-error>El teléfono es requerido</mat-error>
+                }
+                @if (instructorForm.get('phone')?.hasError('pattern')) {
+                  <mat-error>Ingrese un número de teléfono válido</mat-error>
+                }
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Professional Information Section -->
+          <div class="form-section">
+            <h3 class="section-title">
+              <mat-icon>work</mat-icon>
+              Información Profesional
+            </h3>
+
+            <!-- Specialties -->
+            <div class="specialties-section">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Agregar Especialidad</mat-label>
+                <mat-select 
+                  placeholder="Seleccione una especialidad"
+                  (selectionChange)="addSpecialty($event.value)"
+                  [value]="null">
+                  <mat-option 
+                    *ngFor="let specialty of getAvailableSpecialtiesForSelection()" 
+                    [value]="specialty">
+                    {{ specialty }}
+                  </mat-option>
+                </mat-select>
+                <mat-icon matSuffix>add</mat-icon>
+              </mat-form-field>
+
+              <!-- Selected Specialties -->
+              @if (selectedSpecialties.length > 0) {
+                <div class="selected-specialties">
+                  <h4>Especialidades Seleccionadas:</h4>
+                  <div class="specialty-chips">
+                    @for (specialty of selectedSpecialties; track specialty) {
+                      <mat-chip-row 
+                        (removed)="removeSpecialty(specialty)"
+                        [removable]="true"
+                        class="specialty-chip">
+                        {{ specialty }}
+                        <mat-icon matChipRemove>cancel</mat-icon>
+                      </mat-chip-row>
+                    }
+                  </div>
+                </div>
+              }
+
+              @if (selectedSpecialties.length === 0) {
+                <div class="no-specialties-warning">
+                  <mat-icon color="warn">warning</mat-icon>
+                  <span>Debe seleccionar al menos una especialidad</span>
+                </div>
+              }
+            </div>
+
+            <!-- Biography -->
+            <mat-form-field appearance="outline" class="form-field full-width">
+              <mat-label>Biografía</mat-label>
+              <textarea
+                matInput
+                formControlName="biography"
+                placeholder="Describe la experiencia y certificaciones del instructor"
+                rows="4"
+                maxlength="500"></textarea>
+              <mat-icon matSuffix>description</mat-icon>
+              <mat-hint align="end">{{ instructorForm.get('biography')?.value?.length || 0 }}/500</mat-hint>
+              @if (instructorForm.get('biography')?.hasError('required') && instructorForm.get('biography')?.touched) {
+                <mat-error>La biografía es requerida</mat-error>
+              }
+              @if (instructorForm.get('biography')?.hasError('minlength')) {
+                <mat-error>La biografía debe tener al menos 10 caracteres</mat-error>
+              }
+              @if (instructorForm.get('biography')?.hasError('maxlength')) {
+                <mat-error>La biografía no puede exceder 500 caracteres</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <button
+              type="button"
+              mat-stroked-button
+              color="basic"
+              (click)="goBack()"
+              [disabled]="saving()">
+              <mat-icon>arrow_back</mat-icon>
+              Cancelar
+            </button>
+
+            <div class="action-buttons">
+              @if (hasFormChanges()) {
+                <div class="changes-indicator">
+                  <mat-icon color="warn">edit</mat-icon>
+                  <span>Hay cambios sin guardar</span>
+                </div>
+              }
+
+              <button
+                type="submit"
+                mat-raised-button
+                color="primary"
+                [disabled]="instructorForm.invalid || saving() || !hasFormChanges() || selectedSpecialties.length === 0">
+                @if (saving()) {
+                  <mat-progress-spinner diameter="20" mode="indeterminate"></mat-progress-spinner>
+                } @else {
+                  <mat-icon>save</mat-icon>
+                }
+                {{ saving() ? 'Guardando...' : 'Guardar Cambios' }}
+              </button>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Information Cards -->
+    <div class="info-cards">
+      <!-- Form Status Card -->
+      <mat-card class="status-card">
+        <mat-card-header>
+          <mat-card-title>Estado del Formulario</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="status-item">
+            <mat-icon [color]="instructorForm.valid ? 'primary' : 'warn'">
+              {{ instructorForm.valid ? 'check_circle' : 'error' }}
+            </mat-icon>
+            <span>{{ instructorForm.valid ? 'Formulario válido' : 'Formulario inválido' }}</span>
+          </div>
+          <div class="status-item">
+            <mat-icon [color]="hasFormChanges() ? 'accent' : 'basic'">
+              {{ hasFormChanges() ? 'edit' : 'check' }}
+            </mat-icon>
+            <span>{{ hasFormChanges() ? 'Cambios pendientes' : 'Sin cambios' }}</span>
+          </div>
+          <div class="status-item">
+            <mat-icon [color]="selectedSpecialties.length > 0 ? 'primary' : 'warn'">
+              {{ selectedSpecialties.length > 0 ? 'check_circle' : 'error' }}
+            </mat-icon>
+            <span>Especialidades: {{ selectedSpecialties.length }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Help Card -->
+      <mat-card class="help-card">
+        <mat-card-header>
+          <mat-card-title>Información de Ayuda</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="help-item">
+            <mat-icon>info</mat-icon>
+            <span>Solo se guardarán los campos que hayan sido modificados</span>
+          </div>
+          <div class="help-item">
+            <mat-icon>warning</mat-icon>
+            <span>El instructor debe tener al menos una especialidad</span>
+          </div>
+          <div class="help-item">
+            <mat-icon>email</mat-icon>
+            <span>El email debe ser único en el sistema</span>
+          </div>
+          <div class="help-item">
+            <mat-icon>phone</mat-icon>
+            <span>El formato de teléfono debe incluir código de país</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+}

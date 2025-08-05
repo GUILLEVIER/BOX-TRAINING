@@ -1,0 +1,169 @@
+/* Estilos para el diálogo de editar horario */
+
+.edit-schedule-dialog {
+  min-width: 600px;
+  max-width: 700px;
+  max-height: 80vh;
+  overflow: hidden;
+}
+
+.tab-content {
+  padding: 1rem 0;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.schedule-info {
+  margin-bottom: 1.5rem;
+
+  h3 {
+    color: var(--mat-sys-primary);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
+
+.time-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  background: var(--mat-sys-surface-variant);
+  border-radius: 8px;
+
+  mat-icon {
+    color: var(--mat-sys-primary);
+    flex-shrink: 0;
+  }
+
+  span {
+    font-size: 0.875rem;
+  }
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+
+  h3 {
+    color: var(--mat-sys-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+/* Estilo especial para la opción de instructor */
+.instructor-option {
+  display: flex;
+  flex-direction: column;
+  padding: 0.25rem 0;
+
+  .instructor-name {
+    font-weight: 500;
+    font-size: 0.875rem;
+  }
+
+  .instructor-specialties {
+    font-size: 0.75rem;
+    color: var(--mat-sys-on-surface-variant);
+    font-style: italic;
+  }
+}
+
+/* Estilo para mostrar el formato del plan */
+.plan-format {
+  font-size: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+  margin-left: 0.5rem;
+}
+
+/* Tab de estudiantes */
+.students-info {
+  h3 {
+    color: var(--mat-sys-primary);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
+
+.no-students {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+
+  mat-icon {
+    font-size: 3rem;
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+}
+
+/* Estilos para las acciones del diálogo */
+mat-dialog-actions {
+  padding: 1rem 1.5rem;
+  gap: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .edit-schedule-dialog {
+    min-width: 300px;
+    max-width: 95vw;
+    max-height: 90vh;
+  }
+
+  .tab-content {
+    padding: 0.5rem 0;
+    max-height: 50vh;
+  }
+
+  .time-info {
+    gap: 0.25rem;
+  }
+
+  .info-item {
+    padding: 0.375rem;
+
+    span {
+      font-size: 0.8rem;
+    }
+  }
+
+  .edit-form {
+    gap: 0.75rem;
+  }
+
+  mat-dialog-actions {
+    padding: 0.75rem;
+    flex-wrap: wrap;
+
+    button {
+      margin: 0.25rem;
+    }
+  }
+}

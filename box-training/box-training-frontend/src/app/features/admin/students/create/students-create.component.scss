@@ -1,0 +1,279 @@
+.main-container {
+  padding: 1rem;
+}
+
+// Image upload section
+.image-upload-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  h4 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+  }
+
+  .upload-area {
+    border: 2px dashed #ccc;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    max-width: 300px;
+    margin: 0 auto;
+
+    &:hover {
+      border-color: #1976d2;
+      background-color: rgba(25, 118, 210, 0.05);
+    }
+
+    &.has-image {
+      padding: 0;
+      border: none;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .upload-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      color: #666;
+
+      mat-icon {
+        font-size: 3rem;
+        width: 3rem;
+        height: 3rem;
+        color: #999;
+      }
+
+      span {
+        font-size: 1rem;
+        font-weight: 500;
+      }
+
+      small {
+        font-size: 0.75rem;
+        opacity: 0.7;
+        text-align: center;
+        line-height: 1.4;
+      }
+    }
+
+    .image-preview {
+      position: relative;
+      width: 100%;
+      height: 250px;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 12px;
+      }
+
+      .image-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        border-radius: 12px;
+        cursor: pointer;
+
+        &:hover {
+          opacity: 1;
+        }
+
+        mat-icon {
+          font-size: 2.5rem;
+          width: 2.5rem;
+          height: 2.5rem;
+          margin-bottom: 0.5rem;
+        }
+
+        span {
+          font-size: 0.9rem;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}
+
+// Form styling
+mat-card {
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+
+  mat-card-header {
+    padding-bottom: 1rem;
+
+    mat-card-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #333;
+
+      mat-icon {
+        color: #1976d2;
+      }
+    }
+
+    mat-card-subtitle {
+      margin-top: 0.5rem;
+      color: #666;
+      font-size: 0.9rem;
+    }
+  }
+
+  mat-card-content {
+    padding-top: 1rem;
+  }
+
+  mat-card-actions {
+    padding: 1.5rem 1rem 1rem 1rem;
+    gap: 1rem;
+
+    button {
+      min-width: 120px;
+      height: 44px;
+      font-weight: 500;
+
+      mat-icon {
+        margin-right: 0.5rem;
+      }
+    }
+  }
+}
+
+// Form fields
+mat-form-field {
+  width: 100%;
+
+  &.mat-form-field-appearance-outline {
+    .mat-mdc-form-field-outline {
+      border-radius: 8px;
+    }
+  }
+
+  mat-label {
+    font-weight: 500;
+  }
+
+  mat-icon[matSuffix] {
+    color: #666;
+  }
+
+  mat-hint {
+    font-size: 0.75rem;
+    color: #666;
+  }
+}
+
+// Progress bar
+mat-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+// Form validation styles
+.mat-mdc-form-field.mat-form-field-invalid {
+  .mat-mdc-form-field-outline-thick {
+    color: #f44336;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .main-container {
+    padding: 0.5rem;
+  }
+
+  .image-upload-section {
+    .upload-area {
+      max-width: 100%;
+      padding: 1.5rem;
+
+      .upload-placeholder {
+        mat-icon {
+          font-size: 2.5rem;
+          width: 2.5rem;
+          height: 2.5rem;
+        }
+      }
+
+      .image-preview {
+        height: 200px;
+      }
+    }
+  }
+
+  mat-card {
+    margin-bottom: 1rem;
+
+    mat-card-actions {
+      flex-direction: column-reverse;
+      align-items: stretch;
+
+      button {
+        width: 100%;
+        margin: 0;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .image-upload-section {
+    .upload-area {
+      padding: 1rem;
+
+      .upload-placeholder {
+        gap: 0.5rem;
+
+        mat-icon {
+          font-size: 2rem;
+          width: 2rem;
+          height: 2rem;
+        }
+
+        span {
+          font-size: 0.9rem;
+        }
+
+        small {
+          font-size: 0.7rem;
+        }
+      }
+
+      .image-preview {
+        height: 180px;
+      }
+    }
+  }
+}

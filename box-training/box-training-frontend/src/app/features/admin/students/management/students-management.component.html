@@ -1,0 +1,85 @@
+<div class="main-container">
+  <!-- Page Header Component -->
+  <app-page-header
+    title="Gestión de Alumnos"
+    titleIcon="school"
+    [actions]="headerActionsTemplate"
+  >
+  </app-page-header>
+
+  <!-- Header Actions Template -->
+  <ng-template #headerActionsTemplate>
+    <div>
+      <button mat-raised-button color="primary" (click)="openCreateStudentDialog()">
+        <mat-icon>add</mat-icon>
+        Crear Alumno
+      </button>
+    </div>
+  </ng-template>
+
+  <!-- Data Table Component -->
+  <app-data-table
+    [columns]="tableColumns"
+    [dataSource]="dataSource"
+    [filters]="tableFilters"
+    [loading]="loading"
+    loadingMessage="Cargando alumnos..."
+    tableClass="students-table"
+    [pageSizeOptions]="[5, 10, 20]"
+    [showFirstLastButtons]="true"
+    noDataMessage="No se encontraron alumnos"
+    noDataIcon="info"
+    [actionsTemplate]="actionsTemplate"
+    [noDataActions]="noDataActionsTemplate"
+    (filterChange)="onFilterChange($event)"
+    (filtersCleared)="clearFilters()"
+  >
+  </app-data-table>
+
+  <!-- Column Templates -->
+  <ng-template #nameTemplate let-student>
+    <div>
+      <strong>{{ getFullName(student) }}</strong>
+      <div class="email-text">{{ student.email }}</div>
+    </div>
+  </ng-template>
+
+  <ng-template #planTemplate let-student>
+    <div *ngIf="student.activePlan; else noPlan">
+      <mat-chip color="primary">
+        {{ getActivePlanName(student) }}
+      </mat-chip>
+      <div class="plan-details">
+        Clases restantes: {{ student.activePlan.remainingClasses }}
+      </div>
+    </div>
+    <ng-template #noPlan>
+      <mat-chip color="warn">
+        Sin plan activo
+      </mat-chip>
+    </ng-template>
+  </ng-template>
+
+  <ng-template #statusTemplate let-student>
+    <mat-chip [color]="getStatusChipColor(student.status)">
+      {{ student.status === 'ACTIVE' ? 'Activo' : 'Inactivo' }}
+    </mat-chip>
+  </ng-template>
+
+  <!-- Actions Template -->
+  <ng-template #actionsTemplate let-student>
+    <app-action-buttons
+      [actionButtons]="getActionButtons(student)"
+      [menuActions]="getMenuActions(student)"
+      (actionClicked)="onActionClicked($event, student)"
+    >
+    </app-action-buttons>
+  </ng-template>
+
+  <!-- No Data Actions Template -->
+  <ng-template #noDataActionsTemplate>
+    <button mat-raised-button color="primary" (click)="openCreateStudentDialog()">
+      Crear Primer Alumno
+    </button>
+  </ng-template>
+</div>

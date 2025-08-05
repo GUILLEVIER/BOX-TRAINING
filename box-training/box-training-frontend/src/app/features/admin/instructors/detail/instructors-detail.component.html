@@ -1,0 +1,160 @@
+<div class="main-container">
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-container">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      <p>Cargando detalles del instructor...</p>
+    </div>
+  }
+
+  <!-- Instructor Details -->
+  @if (!loading() && instructor()) {
+    <!-- Page Header -->
+    <app-page-header
+      [title]="instructorFullName()"
+      titleIcon="person"
+      [actions]="headerActionsTemplate"
+    >
+    </app-page-header>
+
+    <!-- Header Actions Template -->
+    <ng-template #headerActionsTemplate>
+      <button mat-raised-button color="primary" (click)="editInstructor()">
+        <mat-icon>edit</mat-icon>
+        Editar Instructor
+      </button>
+      <button mat-raised-button [color]="instructor()!.status === 'ACTIVE' ? 'warn' : 'primary'" 
+              (click)="toggleInstructorStatus()">
+        <mat-icon>{{ instructor()!.status === 'ACTIVE' ? 'pause' : 'play_arrow' }}</mat-icon>
+        {{ instructor()!.status === 'ACTIVE' ? 'Desactivar' : 'Activar' }}
+      </button>
+      <button mat-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Volver
+      </button>
+    </ng-template>
+
+    <!-- Instructor Information Cards -->
+    <div class="instructor-details-grid">
+      <!-- Basic Information Card -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>info</mat-icon>
+            Información Personal
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          @if (instructor()!.photo) {
+            <div class="instructor-photo">
+              <img [src]="instructor()!.photo" [alt]="instructorFullName()" />
+            </div>
+          }
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Nombre Completo:</label>
+              <span>{{ instructorFullName() }}</span>
+            </div>
+            <div class="info-item">
+              <label>Email:</label>
+              <span>{{ instructor()!.email }}</span>
+            </div>
+            <div class="info-item">
+              <label>Teléfono:</label>
+              <span>{{ instructor()!.phone }}</span>
+            </div>
+            <div class="info-item">
+              <label>Estado:</label>
+              <mat-chip [color]="getInstructorStatusChipColor(instructor()!.status)">
+                {{ getInstructorStatusText(instructor()!.status) }}
+              </mat-chip>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Specialties Card -->
+      <mat-card class="info-card specialties-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>fitness_center</mat-icon>
+            Especialidades
+          </mat-card-title>
+          <mat-card-subtitle>
+            Áreas de experticia del instructor
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          @if (instructor()!.specialties && instructor()!.specialties.length > 0) {
+            <div class="specialties-container">
+              @for (specialty of instructor()!.specialties; track specialty) {
+                <mat-chip class="specialty-chip">
+                  {{ specialty }}
+                </mat-chip>
+              }
+            </div>
+          } @else {
+            <p class="no-specialties">No se han definido especialidades para este instructor.</p>
+          }
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Biography Card -->
+      @if (instructor()!.biography) {
+        <mat-card class="info-card biography-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>description</mat-icon>
+              Biografía
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p class="biography-text">{{ instructor()!.biography }}</p>
+          </mat-card-content>
+        </mat-card>
+      }
+
+      <!-- Schedule Information Card - Placeholder for future functionality -->
+      <mat-card class="info-card schedule-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>schedule</mat-icon>
+            Horarios Asignados
+          </mat-card-title>
+          <mat-card-subtitle>
+            Clases programadas para este instructor
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="schedule-placeholder">
+            <mat-icon>event_note</mat-icon>
+            <p>Los horarios y clases asignadas se mostrarán aquí cuando se implemente la gestión de horarios.</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Danger Zone -->
+    <mat-card class="danger-zone">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon color="warn">warning</mat-icon>
+          Zona de Peligro
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Las siguientes acciones son irreversibles. Proceda con precaución.</p>
+        <div class="danger-actions">
+          <button mat-raised-button color="warn" (click)="deleteInstructor()">
+            <mat-icon>delete</mat-icon>
+            Eliminar Instructor
+          </button>
+          <div class="warning-text">
+            <mat-icon>info</mat-icon>
+            <span>Asegúrese de que el instructor no tenga clases programadas antes de eliminarlo</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

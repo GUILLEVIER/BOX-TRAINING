@@ -117,13 +117,13 @@ export class AdminDashboardComponent implements OnInit {
         icon: 'schedule',
         title: 'Configurar Horarios',
         description: 'Gestionar horarios de clases',
-        action: () => this.navigateTo('/admin/schedules/create'),
+        action: () => this.openCreateScheduleDialog(),
       },
       {
         icon: 'person_add',
-        title: 'Activar Plan',
-        description: 'Asignar plan a un alumno',
-        action: () => this.navigateTo('/admin/students/activate-plan'),
+        title: 'Crear Alumno',
+        description: 'Crear un nuevo alumno',
+        action: () => this.openCreateStudentDialog(),
       },
       {
         icon: 'assessment',
@@ -282,5 +282,21 @@ export class AdminDashboardComponent implements OnInit {
   openCreatePlanDialog(): void {
     console.log('Redireccionando a crear plan: /admin/plans/create')
     this.router.navigate(['/admin/plans/create'])
+  }
+
+  /**
+   * Abre el diálogo para crear un nuevo alumno
+   */
+  openCreateStudentDialog(): void {
+    console.log('Redireccionando a crear alumno: /admin/students/create')
+    this.router.navigate(['/admin/students/create'])
+  }
+
+  /**
+   * Abre el diálogo para crear un nuevo horario
+   */
+  openCreateScheduleDialog(): void {
+    console.log('Redireccionando a crear horario: /admin/schedules')
+    this.router.navigate(['/admin/schedules'])
   }
 }

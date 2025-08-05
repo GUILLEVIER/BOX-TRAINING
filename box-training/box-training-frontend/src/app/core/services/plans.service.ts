@@ -15,6 +15,7 @@ import {
   CancelPlanDto,
   CreatePlanTypeDto,
   PlanType,
+  PlanStatus,
 } from '../models'
 import { MockDataService } from './mock-data.service'
 
@@ -447,6 +448,65 @@ export class PlansService {
         return studentPlans.filter(sp => sp.status === StudentPlanStatus.ACTIVE)
       })
     )
+  }
+
+  /**
+   * Duplica un plan existente
+   * @param id ID del plan a duplicar
+   */
+  duplicatePlan(id: string): Observable<ApiResponse<Plan>> {
+    return of(null).pipe(
+      delay(1000),
+      map(() => {
+        const originalPlan = this.mockDataService.getPlanById(id)
+        if (!originalPlan) {
+          throw new Error('Plan no encontrado')
+        }
+
+        // Generar un nombre único para el plan duplicado
+        const plans = this.mockDataService.getPlans()
+        const newName = this.generateUniquePlanName(originalPlan.name, plans)
+
+        // Crear el plan duplicado con estado INACTIVE
+        const duplicatedPlanData: Omit<Plan, 'id' | 'creationDate' | 'lastModifiedDate'> = {
+          name: newName,
+          type: [...originalPlan.type], // Copiar array de tipos
+          description: originalPlan.description,
+          durationDays: originalPlan.durationDays,
+          includedClasses: originalPlan.includedClasses,
+          price: originalPlan.price,
+          status: PlanStatus.INACTIVE, // Crear en estado inactivo
+          documents: originalPlan.documents ? [...originalPlan.documents] : undefined,
+          images: originalPlan.images ? [...originalPlan.images] : undefined,
+        }
+
+        const duplicatedPlan = this.mockDataService.addPlan(duplicatedPlanData)
+
+        return {
+          success: true,
+          data: duplicatedPlan,
+          message: `Plan "${originalPlan.name}" duplicado exitosamente como "${newName}"`,
+        }
+      })
+    )
+  }
+
+  /**
+   * Genera un nombre único para un plan duplicado
+   * @param originalName Nombre original del plan
+   * @param existingPlans Lista de planes existentes
+   */
+  private generateUniquePlanName(originalName: string, existingPlans: Plan[]): string {
+    let newName = `${originalName} 2`
+    let counter = 2
+
+    // Verificar si el nombre ya existe y generar uno único
+    while (existingPlans.some(plan => plan.name.toLowerCase() === newName.toLowerCase())) {
+      counter++
+      newName = `${originalName} ${counter}`
+    }
+
+    return newName
   }
 
   /**

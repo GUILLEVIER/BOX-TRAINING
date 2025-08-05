@@ -183,18 +183,6 @@ export class PlansDetailComponent implements OnInit {
   }
 
   /**
-   * Asigna el plan a un estudiante
-   */
-  protected assignToStudent(): void {
-    const currentPlan = this.plan()
-    if (currentPlan) {
-      this.router.navigate(['/admin/students/activate-plan'], {
-        queryParams: { planId: currentPlan.id },
-      })
-    }
-  }
-
-  /**
    * Navega de vuelta a la lista de planes
    */
   protected goBack(): void {

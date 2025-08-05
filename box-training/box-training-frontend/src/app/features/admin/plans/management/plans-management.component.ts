@@ -335,21 +335,34 @@ export class PlansManagementComponent implements OnInit {
   }
 
   /**
-   * Asigna un plan a un estudiante
-   */
-  assignToStudent(plan: Plan): void {
-    console.log('Redireccionando a asignar plan a estudiante: /admin/students/activate-plan')
-    this.router.navigate(['/admin/students/activate-plan'], {
-      queryParams: { planId: plan.id },
-    })
-  }
-
-  /**
    * Duplica un plan
    */
   duplicatePlan(plan: Plan): void {
-    // Implementar duplicación de plan
-    console.log('Duplicar plan:', plan)
+    const dialogData: ConfirmDialogData = {
+      title: 'Duplicar Plan',
+      message: `¿Está seguro que desea duplicar el plan "${plan.name}"? El nuevo plan se creará en estado inactivo.`,
+      confirmText: 'Duplicar',
+      type: 'info',
+    }
+
+    this.dialog
+      .open(ConfirmDialogComponent, { data: dialogData })
+      .afterClosed()
+      .subscribe(confirmed => {
+        if (confirmed) {
+          this.loading = true
+          this.plansService.duplicatePlan(plan.id).subscribe({
+            next: response => {
+              this.showSuccessMessage(response.message || 'Plan duplicado exitosamente')
+              this.loadPlanes()
+            },
+            error: error => {
+              this.showErrorMessage(error.message || 'Error al duplicar el plan')
+              this.loading = false
+            },
+          })
+        }
+      })
   }
 
   /**
@@ -406,11 +419,6 @@ export class PlansManagementComponent implements OnInit {
   getMenuActions(plan: Plan): MenuAction[] {
     return [
       {
-        icon: 'person_add',
-        label: 'Asignar a Estudiante',
-        action: 'assign-student',
-      },
-      {
         icon: 'content_copy',
         label: 'Duplicar Plan',
         action: 'duplicate',
@@ -434,9 +442,6 @@ export class PlansManagementComponent implements OnInit {
         break
       case 'delete':
         this.deletePlan(plan)
-        break
-      case 'assign-student':
-        this.assignToStudent(plan)
         break
       case 'duplicate':
         this.duplicatePlan(plan)

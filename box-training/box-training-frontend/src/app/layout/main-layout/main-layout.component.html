@@ -37,7 +37,6 @@
         <mat-nav-list>
           <!-- Menú para Administradores -->
           <ng-container *ngIf="isAdmin()">
-            <h2 matSubheader>Panel de Administración</h2>
             <a mat-list-item routerLink="/admin/dashboard" routerLinkActive="active">
               <span>Dashboard</span>
             </a>
@@ -50,10 +49,8 @@
             <a mat-list-item routerLink="/admin/students" routerLinkActive="active">
               <span>Gestión de Estudiantes</span>
             </a>
-            <mat-divider></mat-divider>
-            <h3 matSubheader>Reportes</h3>
-            <a mat-list-item routerLink="/admin/reports" routerLinkActive="active">
-              <span>Reportes y Estadísticas</span>
+            <a mat-list-item routerLink="/admin/instructors" routerLinkActive="active">
+              <span>Gestión de Instructores</span>
             </a>
           </ng-container>
 

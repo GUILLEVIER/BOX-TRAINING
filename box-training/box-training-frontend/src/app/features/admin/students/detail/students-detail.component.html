@@ -1,0 +1,341 @@
+<div class="main-container">
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-container">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      <p>Cargando detalles del estudiante...</p>
+    </div>
+  }
+
+  <!-- Student Details -->
+  @if (!loading() && student()) {
+    <!-- Page Header -->
+    <app-page-header
+      [title]="studentFullName()"
+      titleIcon="person"
+      [actions]="headerActionsTemplate"
+    >
+    </app-page-header>
+
+    <!-- Header Actions Template -->
+    <ng-template #headerActionsTemplate>
+      <button mat-raised-button color="primary" (click)="editStudent()">
+        <mat-icon>edit</mat-icon>
+        Editar Estudiante
+      </button>
+      <button mat-raised-button [color]="student()!.status === 'ACTIVE' ? 'warn' : 'primary'" 
+              (click)="toggleStudentStatus()">
+        <mat-icon>{{ student()!.status === 'ACTIVE' ? 'pause' : 'play_arrow' }}</mat-icon>
+        {{ student()!.status === 'ACTIVE' ? 'Desactivar' : 'Activar' }}
+      </button>
+      <button mat-button (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Volver
+      </button>
+    </ng-template>
+
+    <!-- Student Information Cards -->
+    <div class="student-details-grid">
+      <!-- Basic Information Card -->
+      <mat-card class="info-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>info</mat-icon>
+            Información Personal
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          @if (student()!.photo) {
+            <div class="student-photo">
+              <img [src]="student()!.photo" [alt]="studentFullName()" />
+            </div>
+          }
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Nombre Completo:</label>
+              <span>{{ studentFullName() }}</span>
+            </div>
+            <div class="info-item">
+              <label>Email:</label>
+              <span>{{ student()!.email }}</span>
+            </div>
+            <div class="info-item">
+              <label>Teléfono:</label>
+              <span>{{ student()!.phone }}</span>
+            </div>
+            <div class="info-item">
+              <label>Fecha de Nacimiento:</label>
+              <span>{{ formatDate(student()!.birthDate) }} ({{ calculateAge(student()!.birthDate) }} años)</span>
+            </div>
+            <div class="info-item">
+              <label>Estado:</label>
+              <mat-chip [color]="getStudentStatusChipColor(student()!.status)">
+                {{ student()!.status === 'ACTIVE' ? 'Activo' : 'Inactivo' }}
+              </mat-chip>
+            </div>
+            <div class="info-item">
+              <label>Fecha de Registro:</label>
+              <span>{{ formatDate(student()!.registrationDate) }}</span>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Active Plan Card -->
+      @if (student()!.activePlan) {
+        <mat-card class="info-card plan-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>fitness_center</mat-icon>
+              Plan Activo
+            </mat-card-title>
+            <mat-card-subtitle>
+              Información del plan asignado al estudiante
+            </mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="info-grid">
+              <div class="info-item">
+                <label>Plan:</label>
+                <span>Plan Base</span>
+              </div>
+              <div class="info-item">
+                <label>Estado del Plan:</label>
+                <mat-chip [color]="getPlanStatusChipColor(student()!.activePlan!.status)">
+                  {{ getPlanStatusText(student()!.activePlan!.status) }}
+                </mat-chip>
+              </div>
+              <div class="info-item">
+                <label>Fecha de Inicio:</label>
+                <span>{{ formatDate(student()!.activePlan!.startDate) }}</span>
+              </div>
+              <div class="info-item">
+                <label>Fecha de Vencimiento:</label>
+                <span>{{ formatDate(student()!.activePlan!.endDate) }}</span>
+              </div>
+              <div class="info-item">
+                <label>Clases Restantes:</label>
+                <span>{{ student()!.activePlan!.remainingClasses === 999 ? 'Ilimitadas' : student()!.activePlan!.remainingClasses }}</span>
+              </div>
+            </div>
+
+            <!-- Plan Actions -->
+            <div class="plan-actions">
+              <h4>Acciones del Plan</h4>
+              <div class="actions-grid">
+                @if (canActivatePlan()) {
+                  <button mat-raised-button color="primary" (click)="showActivatePlanForm()">
+                    <mat-icon>play_arrow</mat-icon>
+                    Activar Plan
+                  </button>
+                }
+                
+                @if (hasActivePlan()) {
+                  <button mat-raised-button color="accent" (click)="showFreezePlanForm()">
+                    <mat-icon>pause</mat-icon>
+                    Congelar Plan
+                  </button>
+                }
+                
+                @if (student()!.activePlan) {
+                  <button mat-raised-button color="warn" (click)="showCancelPlanForm()">
+                    <mat-icon>cancel</mat-icon>
+                    Anular Plan
+                  </button>
+                }
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      } @else {
+        <!-- No Active Plan Card -->
+        <mat-card class="info-card no-plan-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>info</mat-icon>
+              Sin Plan Activo
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <p>Este estudiante no tiene un plan activo asignado.</p>
+            <button mat-raised-button color="primary" (click)="showActivatePlanForm()">
+              <mat-icon>add</mat-icon>
+              Asignar Plan
+            </button>
+          </mat-card-content>
+        </mat-card>
+      }
+
+      <!-- Upcoming Reservations Card -->
+      @if (student()!.upcomingReservations && student()!.upcomingReservations!.length > 0) {
+        <mat-card class="info-card reservations-card">
+          <mat-card-header>
+            <mat-card-title>
+              <mat-icon>event</mat-icon>
+              Próximas Reservas
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="reservations-list">
+              @for (reservation of student()!.upcomingReservations; track reservation.id) {
+                <div class="reservation-item">
+                  <div class="reservation-info">
+                    <span class="reservation-date">{{ formatDate(reservation.date) }}</span>
+                    <span class="reservation-time">{{ reservation.startTime || 'Hora no definida' }}</span>
+                    <span class="reservation-plan">{{ reservation.classType || 'Clase' }}</span>
+                  </div>
+                  <mat-chip [color]="reservation.status === 'SCHEDULED' ? 'primary' : 'accent'">
+                    {{ reservation.status === 'SCHEDULED' ? 'Programada' : reservation.status }}
+                  </mat-chip>
+                </div>
+              }
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+
+    <!-- Action Forms -->
+    
+    <!-- Activate Plan Form -->
+    @if (showActivatePlan()) {
+      <mat-card class="action-form-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>play_arrow</mat-icon>
+            Activar Plan
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="activatePlanForm" (ngSubmit)="activatePlan()">
+            <div class="form-grid">
+              <mat-form-field appearance="outline">
+                <mat-label>Plan a Activar</mat-label>
+                <mat-select formControlName="planId">
+                  @for (plan of availablePlans(); track plan.id) {
+                    <mat-option [value]="plan.id">{{ plan.name }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Fecha de Inicio</mat-label>
+                <input matInput [matDatepicker]="startPicker" formControlName="startDate" readonly>
+                <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+                <mat-datepicker #startPicker></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </form>
+        </mat-card-content>
+        <mat-card-actions align="end">
+          <button mat-button (click)="cancelAction()">Cancelar</button>
+          <button mat-raised-button color="primary" (click)="activatePlan()" [disabled]="activatePlanForm.invalid">
+            Activar Plan
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    }
+
+    <!-- Freeze Plan Form -->
+    @if (showFreezePlan()) {
+      <mat-card class="action-form-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>pause</mat-icon>
+            Congelar Plan
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="freezePlanForm" (ngSubmit)="freezePlan()">
+            <div class="form-grid">
+              <mat-form-field appearance="outline">
+                <mat-label>Fecha de Inicio del Congelamiento</mat-label>
+                <input matInput [matDatepicker]="freezeStartPicker" formControlName="startDate" readonly>
+                <mat-datepicker-toggle matIconSuffix [for]="freezeStartPicker"></mat-datepicker-toggle>
+                <mat-datepicker #freezeStartPicker></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Fecha de Fin del Congelamiento</mat-label>
+                <input matInput [matDatepicker]="freezeEndPicker" formControlName="endDate" readonly>
+                <mat-datepicker-toggle matIconSuffix [for]="freezeEndPicker"></mat-datepicker-toggle>
+                <mat-datepicker #freezeEndPicker></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Motivo del Congelamiento (Opcional)</mat-label>
+                <textarea matInput formControlName="reason" rows="3" placeholder="Ingrese el motivo del congelamiento"></textarea>
+              </mat-form-field>
+            </div>
+          </form>
+        </mat-card-content>
+        <mat-card-actions align="end">
+          <button mat-button (click)="cancelAction()">Cancelar</button>
+          <button mat-raised-button color="accent" (click)="freezePlan()" [disabled]="freezePlanForm.invalid">
+            Congelar Plan
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    }
+
+    <!-- Cancel Plan Form -->
+    @if (showCancelPlan()) {
+      <mat-card class="action-form-card danger-form">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>cancel</mat-icon>
+            Anular Plan
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="cancelPlanForm" (ngSubmit)="cancelPlan()">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Motivo de Anulación *</mat-label>
+              <textarea 
+                matInput 
+                formControlName="reason" 
+                rows="4" 
+                placeholder="Ingrese el motivo detallado de la anulación del plan"
+                required
+              ></textarea>
+              <mat-hint>Mínimo 10 caracteres</mat-hint>
+            </mat-form-field>
+          </form>
+        </mat-card-content>
+        <mat-card-actions align="end">
+          <button mat-button (click)="cancelAction()">Cancelar</button>
+          <button mat-raised-button color="warn" (click)="cancelPlan()" [disabled]="cancelPlanForm.invalid">
+            Anular Plan
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    }
+
+    <!-- Danger Zone -->
+    <mat-card class="danger-zone">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon color="warn">warning</mat-icon>
+          Zona de Peligro
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Las siguientes acciones son irreversibles. Proceda con precaución.</p>
+        <div class="danger-actions">
+          <button mat-raised-button color="warn" 
+                  (click)="deleteStudent()"
+                  [disabled]="hasActivePlan()">
+            <mat-icon>delete</mat-icon>
+            Eliminar Estudiante
+          </button>
+          @if (hasActivePlan()) {
+            <div class="warning-text">
+              <mat-icon>info</mat-icon>
+              <span>No se puede eliminar un estudiante con plan activo</span>
+            </div>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>

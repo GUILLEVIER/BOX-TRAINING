@@ -1,0 +1,292 @@
+<!-- Page Header -->
+<app-page-header
+  [title]="'Editar Alumno'"
+  [subtitle]="studentFullName()"
+  [showBackButton]="true"
+  (onBack)="goBack()">
+</app-page-header>
+
+<!-- Loading State -->
+@if (loading()) {
+  <div class="loading-container">
+    <mat-progress-spinner diameter="50" mode="indeterminate"></mat-progress-spinner>
+    <p class="loading-text">Cargando información del alumno...</p>
+  </div>
+} @else {
+  <!-- Main Content -->
+  <div class="edit-student-container">
+    <!-- Form Card -->
+    <mat-card class="form-card">
+      <mat-card-header>
+        <mat-card-title>Información del Alumno</mat-card-title>
+        <mat-card-subtitle>
+          Modifique los datos del alumno según sea necesario
+        </mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <!-- Progress Bar for Saving -->
+        @if (saving()) {
+          <mat-progress-bar mode="indeterminate" class="saving-progress"></mat-progress-bar>
+        }
+
+        <form [formGroup]="studentForm" (ngSubmit)="onSubmit()" class="student-form">
+          <!-- Image Section -->
+          <div class="image-section">
+            <h3 class="section-title">
+              <mat-icon>photo_camera</mat-icon>
+              Foto del Alumno (Opcional)
+            </h3>
+            
+            <div class="image-upload-container">
+              @if (selectedImage()) {
+                <div class="image-preview">
+                  <img [src]="selectedImage()" alt="Foto del alumno" class="preview-image">
+                  <button
+                    type="button"
+                    mat-icon-button
+                    color="warn"
+                    class="remove-image-btn"
+                    (click)="removeImage()"
+                    matTooltip="Eliminar imagen">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              } @else {
+                <div class="image-placeholder">
+                  <mat-icon class="placeholder-icon">person</mat-icon>
+                  <p>Sin imagen</p>
+                </div>
+              }
+              
+              <div class="image-actions">
+                <input
+                  #imageInput
+                  type="file"
+                  accept="image/*"
+                  (change)="onImageSelected($event)"
+                  class="file-input"
+                  id="image-upload">
+                <label for="image-upload" mat-raised-button color="primary">
+                  <mat-icon>upload</mat-icon>
+                  {{ selectedImage() ? 'Cambiar Imagen' : 'Subir Imagen' }}
+                </label>
+                <small class="upload-hint">
+                  Formatos: JPG, PNG, GIF. Máximo 5MB.
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Basic Information Section -->
+          <div class="basic-info-section" formGroupName="basicInfo">
+            <h3 class="section-title">
+              <mat-icon>person</mat-icon>
+              Información Básica
+            </h3>
+
+            <!-- First Row: First Name and Last Name -->
+            <app-form-row>
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Nombre</mat-label>
+                <input
+                  matInput
+                  formControlName="firstName"
+                  placeholder="Ingrese el nombre"
+                  maxlength="50">
+                <mat-icon matSuffix>person</mat-icon>
+                @if (basicInfoGroup.get('firstName')?.hasError('required') && basicInfoGroup.get('firstName')?.touched) {
+                  <mat-error>El nombre es requerido</mat-error>
+                }
+                @if (basicInfoGroup.get('firstName')?.hasError('minlength')) {
+                  <mat-error>El nombre debe tener al menos 2 caracteres</mat-error>
+                }
+                @if (basicInfoGroup.get('firstName')?.hasError('maxlength')) {
+                  <mat-error>El nombre no puede exceder 50 caracteres</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Apellido</mat-label>
+                <input
+                  matInput
+                  formControlName="lastName"
+                  placeholder="Ingrese el apellido"
+                  maxlength="50">
+                <mat-icon matSuffix>person</mat-icon>
+                @if (basicInfoGroup.get('lastName')?.hasError('required') && basicInfoGroup.get('lastName')?.touched) {
+                  <mat-error>El apellido es requerido</mat-error>
+                }
+                @if (basicInfoGroup.get('lastName')?.hasError('minlength')) {
+                  <mat-error>El apellido debe tener al menos 2 caracteres</mat-error>
+                }
+                @if (basicInfoGroup.get('lastName')?.hasError('maxlength')) {
+                  <mat-error>El apellido no puede exceder 50 caracteres</mat-error>
+                }
+              </mat-form-field>
+            </app-form-row>
+
+            <!-- Second Row: Email -->
+            <app-form-row>
+              <mat-form-field appearance="outline" class="form-field full-width">
+                <mat-label>Email</mat-label>
+                <input
+                  matInput
+                  formControlName="email"
+                  type="email"
+                  placeholder="Ingrese el email">
+                <mat-icon matSuffix>email</mat-icon>
+                @if (basicInfoGroup.get('email')?.hasError('required') && basicInfoGroup.get('email')?.touched) {
+                  <mat-error>El email es requerido</mat-error>
+                }
+                @if (basicInfoGroup.get('email')?.hasError('email')) {
+                  <mat-error>Ingrese un email válido</mat-error>
+                }
+                @if (basicInfoGroup.get('email')?.hasError('uniqueEmail')) {
+                  <mat-error>Este email ya está registrado</mat-error>
+                }
+                @if (basicInfoGroup.get('email')?.pending) {
+                  <mat-progress-spinner matSuffix diameter="20" mode="indeterminate"></mat-progress-spinner>
+                }
+              </mat-form-field>
+            </app-form-row>
+
+            <!-- Third Row: Phone and Birth Date -->
+            <app-form-row>
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Teléfono</mat-label>
+                <input
+                  matInput
+                  formControlName="phone"
+                  placeholder="Ingrese el teléfono">
+                <mat-icon matSuffix>phone</mat-icon>
+                @if (basicInfoGroup.get('phone')?.hasError('required') && basicInfoGroup.get('phone')?.touched) {
+                  <mat-error>El teléfono es requerido</mat-error>
+                }
+                @if (basicInfoGroup.get('phone')?.hasError('pattern')) {
+                  <mat-error>Ingrese un teléfono válido</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Fecha de Nacimiento</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="birthDatePicker"
+                  formControlName="birthDate"
+                  [max]="maxBirthDate()"
+                  placeholder="Seleccione la fecha">
+                <mat-datepicker-toggle matSuffix [for]="birthDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #birthDatePicker></mat-datepicker>
+                @if (basicInfoGroup.get('birthDate')?.hasError('required') && basicInfoGroup.get('birthDate')?.touched) {
+                  <mat-error>La fecha de nacimiento es requerida</mat-error>
+                }
+                @if (basicInfoGroup.get('birthDate')?.hasError('futureDate')) {
+                  <mat-error>La fecha no puede ser futura</mat-error>
+                }
+                @if (basicInfoGroup.get('birthDate')?.hasError('tooYoung')) {
+                  <mat-error>El alumno debe tener al menos 10 años</mat-error>
+                }
+                @if (basicInfoGroup.get('birthDate')?.hasError('tooOld')) {
+                  <mat-error>La fecha no puede ser mayor a 100 años</mat-error>
+                }
+              </mat-form-field>
+            </app-form-row>
+
+            <!-- Age Display -->
+            @if (calculateAge() !== null) {
+              <div class="age-display">
+                <mat-icon>cake</mat-icon>
+                <span>Edad: {{ calculateAge() }} años</span>
+              </div>
+            }
+          </div>
+
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <button
+              type="button"
+              mat-stroked-button
+              color="basic"
+              (click)="goBack()"
+              [disabled]="saving()">
+              <mat-icon>arrow_back</mat-icon>
+              Cancelar
+            </button>
+
+            <div class="action-buttons">
+              @if (hasFormChanges()) {
+                <div class="changes-indicator">
+                  <mat-icon color="warn">edit</mat-icon>
+                  <span>Hay cambios sin guardar</span>
+                </div>
+              }
+
+              <button
+                type="submit"
+                mat-raised-button
+                color="primary"
+                [disabled]="studentForm.invalid || saving() || !hasFormChanges()">
+                @if (saving()) {
+                  <mat-progress-spinner diameter="20" mode="indeterminate"></mat-progress-spinner>
+                } @else {
+                  <mat-icon>save</mat-icon>
+                }
+                {{ saving() ? 'Guardando...' : 'Guardar Cambios' }}
+              </button>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Information Cards -->
+    <div class="info-cards">
+      <!-- Form Status Card -->
+      <mat-card class="status-card">
+        <mat-card-header>
+          <mat-card-title>Estado del Formulario</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="status-item">
+            <mat-icon [color]="studentForm.valid ? 'primary' : 'warn'">
+              {{ studentForm.valid ? 'check_circle' : 'error' }}
+            </mat-icon>
+            <span>{{ studentForm.valid ? 'Formulario válido' : 'Formulario inválido' }}</span>
+          </div>
+          <div class="status-item">
+            <mat-icon [color]="hasFormChanges() ? 'accent' : 'basic'">
+              {{ hasFormChanges() ? 'edit' : 'check' }}
+            </mat-icon>
+            <span>{{ hasFormChanges() ? 'Hay cambios pendientes' : 'Sin cambios' }}</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Help Card -->
+      <mat-card class="help-card">
+        <mat-card-header>
+          <mat-card-title>Ayuda</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="help-item">
+            <mat-icon>info</mat-icon>
+            <span>Los campos marcados con * son obligatorios</span>
+          </div>
+          <div class="help-item">
+            <mat-icon>photo_camera</mat-icon>
+            <span>La imagen es opcional y debe ser menor a 5MB</span>
+          </div>
+          <div class="help-item">
+            <mat-icon>email</mat-icon>
+            <span>El email debe ser único en el sistema</span>
+          </div>
+          <div class="help-item">
+            <mat-icon>cake</mat-icon>
+            <span>El alumno debe tener entre 10 y 100 años</span>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+}

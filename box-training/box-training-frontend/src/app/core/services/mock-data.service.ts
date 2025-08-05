@@ -533,7 +533,7 @@ export class MockDataService {
     const newPlan: Plan = {
       ...plan,
       id: uuidv4(),
-      status: PlanStatus.ACTIVE,
+      status: plan.status || PlanStatus.ACTIVE, // Respetar el estado pasado o usar ACTIVE por defecto
       creationDate: new Date(),
       lastModifiedDate: new Date(),
     }
@@ -542,12 +542,11 @@ export class MockDataService {
     return newPlan
   }
 
-  addStudent(student: Omit<Student, 'id' | 'registrationDate' | 'status'>): Student {
+  addStudent(student: Omit<Student, 'id' | 'registrationDate'>): Student {
     const newStudent: Student = {
       ...student,
       id: uuidv4(),
       registrationDate: new Date(),
-      status: StudentStatus.ACTIVE,
     }
     this.students.push(newStudent)
     this.saveDataToStorage()
@@ -590,6 +589,15 @@ export class MockDataService {
     return this.plans[index]
   }
 
+  updateStudent(id: string, updates: Partial<Student>): Student | null {
+    const index = this.students.findIndex(student => student.id === id)
+    if (index === -1) return null
+
+    this.students[index] = { ...this.students[index], ...updates }
+    this.saveDataToStorage()
+    return this.students[index]
+  }
+
   updateStudentPlan(id: string, updates: Partial<StudentPlan>): StudentPlan | null {
     const index = this.studentPlans.findIndex(ps => ps.id === id)
     if (index === -1) return null
@@ -627,11 +635,59 @@ export class MockDataService {
     return true
   }
 
+  deleteStudent(id: string): boolean {
+    const index = this.students.findIndex(student => student.id === id)
+    if (index === -1) return false
+
+    // Verificar que no tenga planes activos
+    const hasActivePlan = this.studentPlans.some(
+      sp => sp.studentId === id && sp.status === StudentPlanStatus.ACTIVE
+    )
+
+    if (hasActivePlan) {
+      return false // No se puede eliminar
+    }
+
+    this.students.splice(index, 1)
+    this.saveDataToStorage()
+    return true
+  }
+
   deleteReservation(id: string): boolean {
     const index = this.reservations.findIndex(reservation => reservation.id === id)
     if (index === -1) return false
 
     this.reservations.splice(index, 1)
+    this.saveDataToStorage()
+    return true
+  }
+
+  // Métodos para instructores
+  addInstructor(instructor: Omit<Instructor, 'id'>): Instructor {
+    const newInstructor: Instructor = {
+      ...instructor,
+      id: uuidv4(),
+    }
+    this.instructors.push(newInstructor)
+    this.saveDataToStorage()
+    return newInstructor
+  }
+
+  updateInstructor(id: string, updates: Partial<Instructor>): Instructor | null {
+    const index = this.instructors.findIndex(instructor => instructor.id === id)
+    if (index === -1) return null
+
+    this.instructors[index] = { ...this.instructors[index], ...updates }
+    this.saveDataToStorage()
+    return this.instructors[index]
+  }
+
+  deleteInstructor(id: string): boolean {
+    const index = this.instructors.findIndex(instructor => instructor.id === id)
+    if (index === -1) return false
+
+    // Verificar que no tenga clases programadas (por ahora permitimos eliminar)
+    this.instructors.splice(index, 1)
     this.saveDataToStorage()
     return true
   }

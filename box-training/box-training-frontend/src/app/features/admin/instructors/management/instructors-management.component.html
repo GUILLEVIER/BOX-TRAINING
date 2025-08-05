@@ -1,0 +1,81 @@
+<div class="main-container">
+  <!-- Page Header Component -->
+  <app-page-header
+    title="Gestión de Instructores"
+    titleIcon="person"
+    [actions]="headerActionsTemplate"
+  >
+  </app-page-header>
+
+  <!-- Header Actions Template -->
+  <ng-template #headerActionsTemplate>
+    <div>
+      <button mat-raised-button color="primary" (click)="openCreateInstructorDialog()">
+        <mat-icon>add</mat-icon>
+        Crear Instructor
+      </button>
+    </div>
+  </ng-template>
+
+  <!-- Data Table Component -->
+  <app-data-table
+    [columns]="tableColumns"
+    [dataSource]="dataSource"
+    [filters]="tableFilters"
+    [loading]="loading"
+    loadingMessage="Cargando instructores..."
+    tableClass="instructors-table"
+    [pageSizeOptions]="[5, 10, 20]"
+    [showFirstLastButtons]="true"
+    noDataMessage="No se encontraron instructores"
+    noDataIcon="info"
+    [actionsTemplate]="actionsTemplate"
+    [noDataActions]="noDataActionsTemplate"
+    (filterChange)="onFilterChange($event)"
+    (filtersCleared)="clearFilters()"
+  >
+  </app-data-table>
+
+  <!-- Column Templates -->
+  <ng-template #nameTemplate let-instructor>
+    <div>
+      <strong>{{ getFullName(instructor) }}</strong>
+      <div class="email-text">{{ instructor.email }}</div>
+    </div>
+  </ng-template>
+
+  <ng-template #specialtiesTemplate let-instructor>
+    <div class="specialties-container">
+      <mat-chip
+        *ngFor="let specialty of instructor.specialties; trackBy: trackBySpecialty"
+        color="accent"
+        class="specialty-chip"
+      >
+        {{ specialty }}
+      </mat-chip>
+    </div>
+  </ng-template>
+
+  <ng-template #statusTemplate let-instructor>
+    <mat-chip [color]="getStatusChipColor(instructor.status)">
+      {{ instructor.status === 'ACTIVE' ? 'Activo' : 'Inactivo' }}
+    </mat-chip>
+  </ng-template>
+
+  <!-- Actions Template -->
+  <ng-template #actionsTemplate let-instructor>
+    <app-action-buttons
+      [actionButtons]="getActionButtons(instructor)"
+      [menuActions]="getMenuActions(instructor)"
+      (actionClicked)="onActionClicked($event, instructor)"
+    >
+    </app-action-buttons>
+  </ng-template>
+
+  <!-- No Data Actions Template -->
+  <ng-template #noDataActionsTemplate>
+    <button mat-raised-button color="primary" (click)="openCreateInstructorDialog()">
+      Crear Primer Instructor
+    </button>
+  </ng-template>
+</div>

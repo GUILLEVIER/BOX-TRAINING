@@ -26,6 +26,9 @@ export interface Student {
 
   /** Estado actual del alumno */
   status: StudentStatus
+
+  /** Imagen del alumno (opcional) */
+  photo?: string
 }
 
 /**
@@ -45,6 +48,7 @@ export interface CreateStudentDto {
   email: string
   phone: string
   birthDate: Date
+  photo?: string
 }
 
 /**
@@ -59,9 +63,9 @@ export interface UpdateStudentDto extends Partial<CreateStudentDto> {
  */
 export interface DetailedStudent extends Student {
   activePlan?: StudentPlan
-  upcomingReservations?: Reservation[]
+  upcomingReservations?: DetailedReservation[]
 }
 
 // Importaciones necesarias
 import { StudentPlan } from './student-plan.model'
-import { Reservation } from './reservation.model'
+import { DetailedReservation } from './reservation.model'

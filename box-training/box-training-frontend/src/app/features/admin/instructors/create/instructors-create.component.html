@@ -1,0 +1,231 @@
+<div class="main-container">
+  <!-- Page Header -->
+  <app-page-header
+    title="Crear Nuevo Instructor"
+    titleIcon="person_add"
+    [showBackButton]="true"
+    [actions]="headerActionsTemplate"
+  >
+  </app-page-header>
+
+  <!-- Header Actions Template -->
+  <ng-template #headerActionsTemplate>
+    <div class="header-actions">
+      <button 
+        mat-stroked-button 
+        color="primary" 
+        (click)="onCancel()"
+        [disabled]="loading"
+      >
+        <mat-icon>arrow_back</mat-icon>
+        Volver
+      </button>
+    </div>
+  </ng-template>
+
+  <!-- Form Container -->
+  <div class="form-container">
+    <form [formGroup]="instructorForm" (ngSubmit)="onSubmit()">
+      
+      <!-- Información Básica -->
+      <mat-card class="form-section">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>person</mat-icon>
+            Información Básica
+          </mat-card-title>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <app-form-row>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Nombre</mat-label>
+              <input 
+                matInput 
+                formControlName="name"
+                placeholder="Ingrese el nombre"
+                maxlength="50"
+              >
+              <mat-error *ngIf="hasFieldError('name')">
+                {{ getFieldErrorMessage('name') }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Apellido</mat-label>
+              <input 
+                matInput 
+                formControlName="lastName"
+                placeholder="Ingrese el apellido"
+                maxlength="50"
+              >
+              <mat-error *ngIf="hasFieldError('lastName')">
+                {{ getFieldErrorMessage('lastName') }}
+              </mat-error>
+            </mat-form-field>
+          </app-form-row>
+
+          <app-form-row>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Email</mat-label>
+              <input 
+                matInput 
+                type="email"
+                formControlName="email"
+                placeholder="instructor@email.com"
+              >
+              <mat-icon matSuffix>email</mat-icon>
+              <mat-error *ngIf="hasFieldError('email')">
+                {{ getFieldErrorMessage('email') }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Teléfono</mat-label>
+              <input 
+                matInput 
+                formControlName="phone"
+                placeholder="+56912345678"
+              >
+              <mat-icon matSuffix>phone</mat-icon>
+              <mat-error *ngIf="hasFieldError('phone')">
+                {{ getFieldErrorMessage('phone') }}
+              </mat-error>
+            </mat-form-field>
+          </app-form-row>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Información Profesional -->
+      <mat-card class="form-section">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>work</mat-icon>
+            Información Profesional
+          </mat-card-title>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <!-- Especialidades -->
+          <div class="specialty-section">
+            <h4>Especialidades</h4>
+            <div class="specialty-selection">
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Agregar Especialidad</mat-label>
+                <mat-select 
+                  placeholder="Seleccione una especialidad"
+                  (selectionChange)="addSpecialty($event.value)"
+                  [value]="null"
+                >
+                  <mat-option 
+                    *ngFor="let specialty of getAvailableSpecialtiesForSelection()" 
+                    [value]="specialty"
+                  >
+                    {{ specialty }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <!-- Especialidades Seleccionadas -->
+            <div class="selected-specialties" *ngIf="selectedSpecialties.length > 0">
+              <h5>Especialidades Seleccionadas:</h5>
+              <div class="specialties-chips">
+                <mat-chip 
+                  *ngFor="let specialty of selectedSpecialties; trackBy: trackBySpecialty"
+                  color="accent"
+                  [removable]="true"
+                  (removed)="removeSpecialty(specialty)"
+                >
+                  {{ specialty }}
+                  <mat-icon matChipRemove>cancel</mat-icon>
+                </mat-chip>
+              </div>
+            </div>
+
+            <!-- Error para especialidades -->
+            <div class="specialty-error" *ngIf="selectedSpecialties.length === 0 && instructorForm.get('specialties')?.touched">
+              <mat-error>Debe seleccionar al menos una especialidad</mat-error>
+            </div>
+          </div>
+
+          <!-- Biografía -->
+          <app-form-row>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Biografía</mat-label>
+              <textarea 
+                matInput 
+                formControlName="biography"
+                placeholder="Describe la experiencia y certificaciones del instructor"
+                rows="4"
+                maxlength="500"
+              ></textarea>
+              <mat-hint align="end">
+                {{ instructorForm.get('biography')?.value?.length || 0 }}/500
+              </mat-hint>
+              <mat-error *ngIf="hasFieldError('biography')">
+                {{ getFieldErrorMessage('biography') }}
+              </mat-error>
+            </mat-form-field>
+          </app-form-row>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Imagen del Instructor (Opcional) -->
+      <mat-card class="form-section">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>photo_camera</mat-icon>
+            Imagen del Instructor (Opcional)
+          </mat-card-title>
+        </mat-card-header>
+        
+        <mat-card-content>
+          <div class="photo-upload">
+            <input 
+              type="file" 
+              #fileInput 
+              accept="image/*" 
+              (change)="onFileSelect($event)"
+              style="display: none;"
+            >
+            <button 
+              mat-stroked-button 
+              type="button" 
+              (click)="fileInput.click()"
+            >
+              <mat-icon>upload</mat-icon>
+              Seleccionar Imagen
+            </button>
+            <p class="upload-hint">
+              Formatos permitidos: JPG, PNG. Tamaño máximo: 2MB
+            </p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Botones de Acción -->
+      <div class="form-actions">
+        <button 
+          mat-stroked-button 
+          type="button" 
+          (click)="onCancel()"
+          [disabled]="loading"
+        >
+          Cancelar
+        </button>
+
+        <button 
+          mat-raised-button 
+          color="primary" 
+          type="submit"
+          [disabled]="loading || instructorForm.invalid || selectedSpecialties.length === 0"
+        >
+          <mat-icon *ngIf="!loading">save</mat-icon>
+          <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+          {{ loading ? 'Guardando...' : 'Crear Instructor' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

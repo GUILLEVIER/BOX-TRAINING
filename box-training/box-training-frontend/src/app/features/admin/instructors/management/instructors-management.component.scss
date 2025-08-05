@@ -1,0 +1,42 @@
+.main-container {
+  padding: 24px;
+  height: 100%;
+  background-color: var(--surface-ground);
+}
+
+.email-text {
+  font-size: 0.875rem;
+  color: var(--text-color-secondary);
+  margin-top: 4px;
+}
+
+.specialties-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  max-width: 300px;
+}
+
+.specialty-chip {
+  font-size: 0.75rem;
+  height: 24px;
+  line-height: 24px;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .main-container {
+    padding: 16px;
+  }
+
+  .specialties-container {
+    max-width: 200px;
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  .main-container {
+    background-color: var(--surface-ground-dark);
+  }
+}

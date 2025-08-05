@@ -28,10 +28,6 @@
         <mat-icon>{{ plan()!.status === 'ACTIVE' ? 'pause' : 'play_arrow' }}</mat-icon>
         {{ plan()!.status === 'ACTIVE' ? 'Desactivar' : 'Activar' }}
       </button>
-      <button mat-raised-button color="accent" (click)="assignToStudent()">
-        <mat-icon>person_add</mat-icon>
-        Asignar a Estudiante
-      </button>
       <button mat-button (click)="goBack()">
         <mat-icon>arrow_back</mat-icon>
         Volver

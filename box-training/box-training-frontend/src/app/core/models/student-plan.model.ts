@@ -37,6 +37,8 @@ export interface StudentPlan {
  * Estados posibles de un plan asignado a un alumno
  */
 export enum StudentPlanStatus {
+  PENDING_PAYMENT = 'PENDING_PAYMENT',
+  PAID = 'PAID',
   ACTIVE = 'ACTIVE',
   FROZEN = 'FROZEN',
   CANCELED = 'CANCELED',
