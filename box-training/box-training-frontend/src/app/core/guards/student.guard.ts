@@ -1,22 +1,18 @@
-import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
-import { Observable } from 'rxjs';
-import { AuthService } from '../services/auth.service';
-import { UserRole } from '../models/auth.model';
+import { Injectable } from '@angular/core'
+import { CanActivate, Router } from '@angular/router'
+import { Observable } from 'rxjs'
+import { AuthService } from '../services/auth.service'
+import { UserRole } from '../models/auth.model'
 
 /**
  * Guard que protege las rutas de alumno
  * Solo permite acceso a usuarios con rol ALUMNO
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StudentGuard implements CanActivate {
-
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) { }
+  constructor(private authService: AuthService, private router: Router) {}
 
   /**
    * Verifica si el usuario puede activar rutas de alumno
@@ -24,28 +20,28 @@ export class StudentGuard implements CanActivate {
    */
   canActivate(): Observable<boolean> | Promise<boolean> | boolean {
     if (this.authService.isAuthenticated() && this.authService.hasRole(UserRole.STUDENT)) {
-      return true;
+      return true
     }
 
     // Redirigir según el rol del usuario
-    const user = this.authService.getCurrentUser();
+    const user = this.authService.getCurrentUser()
     if (user) {
       // Si está autenticado pero no es alumno, redirigir a su dashboard
       switch (user.role) {
         case UserRole.ADMINISTRATOR:
-          this.router.navigate(['/admin/dashboard']);
-          break;
+          this.router.navigate(['/admin/dashboard'])
+          break
         case UserRole.INSTRUCTOR:
-          this.router.navigate(['/instructor/dashboard']);
-          break;
+          this.router.navigate(['/instructor/dashboard'])
+          break
         default:
-          this.router.navigate(['/']);
+          this.router.navigate(['/'])
       }
     } else {
       // Si no está autenticado, redirigir al login
-      this.router.navigate(['/auth/login']);
+      this.router.navigate(['/auth/login'])
     }
 
-    return false;
+    return false
   }
 }

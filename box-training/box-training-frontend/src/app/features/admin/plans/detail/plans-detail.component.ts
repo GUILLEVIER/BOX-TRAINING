@@ -12,10 +12,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog'
 import { Plan, PlanStatus, PlanType, PlanFormat } from '../../../../core/models'
 import { PlansService } from '../../../../core/services/plans.service'
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component'
-import {
-  ConfirmDialogComponent,
-  ConfirmDialogData,
-} from '../../../../shared/components/confirm-dialog/confirm-dialog.component'
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component'
+import { ConfirmDialogData } from '../../../../interfaces/propsInterface'
 
 /**
  * Componente para mostrar los detalles de un plan

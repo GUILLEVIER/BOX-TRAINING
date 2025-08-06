@@ -3,7 +3,7 @@
   <button
     *ngFor="let button of actionButtons; trackBy: trackByAction"
     mat-icon-button
-    [color]="button.color || 'primary'"
+    [color]="button.color"
     [disabled]="button.disabled"
     [matTooltip]="button.tooltip"
     (click)="onActionClick(button.action)"

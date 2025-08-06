@@ -1,51 +1,50 @@
-import { Injectable, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { filter, map, Subject, takeUntil, Observable } from 'rxjs';
+import { Injectable, OnDestroy, Inject, PLATFORM_ID } from '@angular/core'
+import { isPlatformBrowser } from '@angular/common'
+import { SwUpdate, VersionReadyEvent } from '@angular/service-worker'
+import { MatSnackBar } from '@angular/material/snack-bar'
+import { filter, map, Subject, takeUntil, Observable } from 'rxjs'
 
 /**
  * Servicio PWA para manejar actualizaciones y funcionalidades offline
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PwaService implements OnDestroy {
-  
-  private readonly destroy$ = new Subject<void>();
-  private promptEvent: any;
-  private isBrowser: boolean;
+  private readonly destroy$ = new Subject<void>()
+  private promptEvent: any
+  private isBrowser: boolean
 
   constructor(
     private swUpdate: SwUpdate,
     private snackBar: MatSnackBar,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
-    this.isBrowser = isPlatformBrowser(platformId);
-    
+    this.isBrowser = isPlatformBrowser(platformId)
+
     if (this.isBrowser) {
-      this.initializePromptInstall();
-      this.initializeSwUpdate();
+      this.initializePromptInstall()
+      this.initializeSwUpdate()
     }
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.destroy$.next()
+    this.destroy$.complete()
   }
 
   /**
    * Inicializa el prompt de instalación
    */
   private initializePromptInstall(): void {
-    if (!this.isBrowser) return;
-    
-    window.addEventListener('beforeinstallprompt', (e) => {
+    if (!this.isBrowser) return
+
+    window.addEventListener('beforeinstallprompt', e => {
       // Prevenir que el navegador muestre automáticamente el prompt
-      e.preventDefault();
+      e.preventDefault()
       // Guardar el evento para usarlo después
-      this.promptEvent = e;
-    });
+      this.promptEvent = e
+    })
   }
 
   /**
@@ -53,7 +52,7 @@ export class PwaService implements OnDestroy {
    */
   private initializeSwUpdate(): void {
     if (!this.isBrowser || !this.swUpdate.isEnabled) {
-      return;
+      return
     }
 
     // Escuchar cuando hay una nueva versión disponible
@@ -63,14 +62,16 @@ export class PwaService implements OnDestroy {
         takeUntil(this.destroy$)
       )
       .subscribe(() => {
-        this.showUpdateNotification();
-      });
+        this.showUpdateNotification()
+      })
 
     // Verificar actualizaciones cada 6 horas
     if (this.isBrowser) {
       setInterval(() => {
-        this.swUpdate.checkForUpdate();
-      }, 6 * 60 * 60 * 1000);
+        this.swUpdate.checkForUpdate().catch(error => {
+          console.error('Error al verificar actualizaciones:', error)
+        })
+      }, 6 * 60 * 60 * 1000)
     }
   }
 
@@ -78,18 +79,14 @@ export class PwaService implements OnDestroy {
    * Muestra notificación de actualización disponible
    */
   private showUpdateNotification(): void {
-    const snackBarRef = this.snackBar.open(
-      'Nueva versión disponible',
-      'Actualizar',
-      {
-        duration: 0, // No cierra automáticamente
-        panelClass: ['update-snackbar']
-      }
-    );
+    const snackBarRef = this.snackBar.open('Nueva versión disponible', 'Actualizar', {
+      duration: 0, // No cierra automáticamente
+      panelClass: ['update-snackbar'],
+    })
 
     snackBarRef.onAction().subscribe(() => {
-      this.updateApp();
-    });
+      this.updateApp()
+    })
   }
 
   /**
@@ -97,14 +94,14 @@ export class PwaService implements OnDestroy {
    */
   public updateApp(): void {
     if (!this.isBrowser || !this.swUpdate.isEnabled) {
-      return;
+      return
     }
 
     this.swUpdate.activateUpdate().then(() => {
       if (this.isBrowser) {
-        window.location.reload();
+        window.location.reload()
       }
-    });
+    })
   }
 
   /**
@@ -112,7 +109,7 @@ export class PwaService implements OnDestroy {
    */
   public checkForUpdate(): void {
     if (this.isBrowser && this.swUpdate.isEnabled) {
-      this.swUpdate.checkForUpdate();
+      this.swUpdate.checkForUpdate()
     }
   }
 
@@ -120,18 +117,20 @@ export class PwaService implements OnDestroy {
    * Verifica si la app está siendo ejecutada como PWA
    */
   public isPwa(): boolean {
-    if (!this.isBrowser) return false;
-    
-    return window.matchMedia('(display-mode: standalone)').matches ||
-           (window.navigator as any).standalone ||
-           document.referrer.includes('android-app://');
+    if (!this.isBrowser) return false
+
+    return (
+      window.matchMedia('(display-mode: standalone)').matches ||
+      (window.navigator as any).standalone ||
+      document.referrer.includes('android-app://')
+    )
   }
 
   /**
    * Verifica si el prompt de instalación está disponible
    */
   public canInstall(): boolean {
-    return !!this.promptEvent;
+    return !!this.promptEvent
   }
 
   /**
@@ -139,23 +138,23 @@ export class PwaService implements OnDestroy {
    */
   public async showInstallPrompt(): Promise<boolean> {
     if (!this.isBrowser || !this.promptEvent) {
-      return false;
+      return false
     }
 
     try {
       // Mostrar el prompt
-      this.promptEvent.prompt();
-      
+      this.promptEvent.prompt()
+
       // Esperar la respuesta del usuario
-      const result = await this.promptEvent.userChoice;
-      
+      const result = await this.promptEvent.userChoice
+
       // Limpiar el evento
-      this.promptEvent = null;
-      
-      return result.outcome === 'accepted';
+      this.promptEvent = null
+
+      return result.outcome === 'accepted'
     } catch (error) {
-      console.error('Error al mostrar prompt de instalación:', error);
-      return false;
+      console.error('Error al mostrar prompt de instalación:', error)
+      return false
     }
   }
 
@@ -163,61 +162,59 @@ export class PwaService implements OnDestroy {
    * Obtiene información sobre el estado offline/online
    */
   public getConnectionStatus(): 'online' | 'offline' {
-    if (!this.isBrowser) return 'online';
-    return navigator.onLine ? 'online' : 'offline';
+    if (!this.isBrowser) return 'online'
+    return navigator.onLine ? 'online' : 'offline'
   }
 
   /**
    * Escucha cambios en el estado de conexión
    */
   public onConnectionChange(): Observable<'online' | 'offline'> {
-    const connection$ = new Subject<'online' | 'offline'>();
+    const connection$ = new Subject<'online' | 'offline'>()
 
     if (this.isBrowser) {
       window.addEventListener('online', () => {
-        connection$.next('online');
-      });
+        connection$.next('online')
+      })
 
       window.addEventListener('offline', () => {
-        connection$.next('offline');
-      });
+        connection$.next('offline')
+      })
     }
 
-    return connection$.asObservable().pipe(takeUntil(this.destroy$));
+    return connection$.asObservable().pipe(takeUntil(this.destroy$))
   }
 
   /**
    * Verifica si la aplicación está en modo offline
    */
   public isOffline(): boolean {
-    if (!this.isBrowser) return false;
-    return !navigator.onLine;
+    if (!this.isBrowser) return false
+    return !navigator.onLine
   }
 
   /**
    * Obtiene el tamaño del cache
    */
   public async getCacheSize(): Promise<number> {
-    if (!this.isBrowser) return 0;
-    
+    if (!this.isBrowser) return 0
+
     if ('storage' in navigator && 'estimate' in navigator.storage) {
-      const estimate = await navigator.storage.estimate();
-      return estimate.usage || 0;
+      const estimate = await navigator.storage.estimate()
+      return estimate.usage || 0
     }
-    return 0;
+    return 0
   }
 
   /**
    * Limpia el cache de la aplicación
    */
   public async clearCache(): Promise<void> {
-    if (!this.isBrowser) return;
-    
+    if (!this.isBrowser) return
+
     if ('caches' in window) {
-      const cacheNames = await caches.keys();
-      await Promise.all(
-        cacheNames.map(cacheName => caches.delete(cacheName))
-      );
+      const cacheNames = await caches.keys()
+      await Promise.all(cacheNames.map(cacheName => caches.delete(cacheName)))
     }
   }
 
@@ -226,6 +223,52 @@ export class PwaService implements OnDestroy {
    */
   public trackOfflineUsage(action: string): void {
     // Aquí puedes integrar con tu sistema de analytics
-    console.log(`Uso offline registrado: ${action}`);
+    console.log(`Uso offline registrado: ${action}`)
+  }
+
+  /**
+   * Solicita permisos para notificaciones push
+   */
+  public async requestNotificationPermission(): Promise<NotificationPermission> {
+    if (!this.isBrowser || !('Notification' in window)) {
+      return 'denied'
+    }
+
+    if (Notification.permission === 'default') {
+      return await Notification.requestPermission()
+    }
+
+    return Notification.permission
+  }
+
+  /**
+   * Muestra una notificación local
+   */
+  public showNotification(title: string, options?: NotificationOptions): boolean {
+    if (!this.isBrowser || Notification.permission !== 'granted') {
+      return false
+    }
+
+    try {
+      new Notification(title, {
+        icon: '/assets/icons/icon-192x192.png',
+        badge: '/assets/icons/icon-96x96.png',
+        ...options,
+      })
+      return true
+    } catch (error) {
+      console.error('Error al mostrar notificación:', error)
+      return false
+    }
+  }
+
+  /**
+   * Verifica si las notificaciones están habilitadas
+   */
+  public areNotificationsEnabled(): boolean {
+    if (!this.isBrowser || !('Notification' in window)) {
+      return false
+    }
+    return Notification.permission === 'granted'
   }
 }

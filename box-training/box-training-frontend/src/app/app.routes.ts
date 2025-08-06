@@ -29,7 +29,7 @@ export const routes: Routes = [
     loadChildren: () => import('./features/admin/admin.routes').then(m => m.adminRoutes),
   },
 
-  // Panel de estudiante (requiere autenticación)
+  // Panel de alumno (requiere autenticación)
   {
     path: 'student',
     canActivate: [AuthGuard, StudentGuard],

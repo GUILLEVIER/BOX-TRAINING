@@ -34,10 +34,8 @@ import { StudentsService } from '../../../../core/services/students.service'
 // Shared Components
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component'
 import { FormRowComponent } from '../../../../shared/components/form-row/form-row.component'
-import {
-  ConfirmDialogComponent,
-  ConfirmDialogData,
-} from '../../../../shared/components/confirm-dialog/confirm-dialog.component'
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component'
+import { ConfirmDialogData } from '../../../../interfaces/propsInterface'
 
 /**
  * Componente para editar estudiantes existentes

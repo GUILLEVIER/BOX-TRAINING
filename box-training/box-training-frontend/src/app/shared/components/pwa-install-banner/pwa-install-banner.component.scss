@@ -8,16 +8,10 @@
   margin: 0 auto;
 }
 
-.banner-card {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
 .banner-content {
   display: flex;
-  align-items: center;
   justify-content: space-between;
   padding: 16px;
-  gap: 16px;
 }
 
 .banner-info {
@@ -25,18 +19,6 @@
   align-items: center;
   gap: 12px;
   flex: 1;
-}
-
-.banner-text h4 {
-  margin: 0 0 4px 0;
-  font-size: 16px;
-  font-weight: 500;
-}
-
-.banner-text p {
-  margin: 0;
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.6);
 }
 
 .banner-actions {
@@ -63,20 +45,14 @@
 }
 
 .offline-indicator {
-  background: #f44336;
+  background: var(--box-training-error);
 }
 
 .update-indicator {
-  background: #00bcd4;
+  background: var(--box-training-primary);
 }
 
 @media (max-width: 768px) {
-  .pwa-banner {
-    bottom: 8px;
-    left: 8px;
-    right: 8px;
-  }
-
   .banner-content {
     flex-direction: column;
     align-items: stretch;

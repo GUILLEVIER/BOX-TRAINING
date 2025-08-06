@@ -1,7 +1,9 @@
-import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-// SE ESTÁ USANDO
+import { Component, Input } from '@angular/core'
+import { CommonModule } from '@angular/common'
+/**
+ * Componente para crear una fila de formulario
+ * Permite agrupar controles de formulario en una fila
+ */
 @Component({
   selector: 'app-form-row',
   standalone: true,
@@ -11,8 +13,8 @@ import { CommonModule } from '@angular/common';
       <ng-content></ng-content>
     </div>
   `,
-  styleUrl: './form-row.component.scss'
+  styleUrl: './form-row.component.scss',
 })
 export class FormRowComponent {
-  @Input() fullWidth: boolean = false;
+  @Input() fullWidth: boolean = false
 }

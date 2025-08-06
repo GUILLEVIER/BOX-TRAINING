@@ -11,7 +11,7 @@
 }
 
 .action-card:hover:not(.disabled) {
-  transform: translateY(-4px); /* PX para efectos específicos ✓ */
+  transform: translateY(-10px); /* PX para efectos específicos ✓ */
   box-shadow: 0 8px 25px var(--box-training-black); /* PX para sombras ✓ */
 }
 
@@ -26,19 +26,6 @@
   height: 3rem; /* 48px -> REM para escalabilidad */
   margin-bottom: 1rem; /* 16px -> REM para espaciado */
   color: var(--box-training-primary);
-}
-
-.action-card h3 {
-  margin: 0 0 0.5rem 0; /* 8px -> REM para espaciado */
-  font-size: 1.125rem; /* 18px -> REM para tipografía */
-  font-weight: 500;
-}
-
-.action-card p {
-  margin: 0;
-  color: var(--box-training-text-secondary, #666);
-  font-size: 0.875rem; /* 14px -> REM para tipografía */
-  line-height: 1.4;
 }
 
 /* Responsive */

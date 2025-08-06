@@ -15,10 +15,6 @@
   font-weight: 500;
 }
 
-.spacer {
-  flex: 1 1 auto;
-}
-
 .user-menu {
   display: flex;
   align-items: center;
@@ -31,17 +27,13 @@
 }
 
 .user-name {
-  font-size: 0.875rem; /* 14px -> REM para tipografía */
 }
 
 .user-info {
   padding: 1rem; /* 16px -> REM para espaciado */
   .user-name {
-    font-weight: 500;
-    margin-bottom: 0.25rem; /* 4px -> REM para espaciado */
   }
   .user-role {
-    font-size: 0.75rem; /* 12px -> REM para tipografía */
   }
 }
 

@@ -1,0 +1,106 @@
+<div>
+  <!-- Header -->
+  <div *ngIf="title || headerActions">
+    <h1 *ngIf="title">
+      <mat-icon *ngIf="titleIcon">{{ titleIcon }}</mat-icon>
+      {{ title }}
+    </h1>
+    <div *ngIf="headerActions">
+      <ng-container [ngTemplateOutlet]="headerActions"></ng-container>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <mat-card *ngIf="filters.length > 0">
+    <mat-card-content>
+      <div>
+        <ng-container *ngFor="let filter of filters">
+          <mat-form-field appearance="outline" *ngIf="filter.type === 'text'">
+            <mat-label>{{ filter.label }}</mat-label>
+            <input
+              matInput
+              [placeholder]="filter.placeholder || ''"
+              (keyup)="onFilterChange(filter.key, $event)"
+            />
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+          <mat-form-field appearance="outline" *ngIf="filter.type === 'select'">
+            <mat-label>{{ filter.label }}</mat-label>
+            <mat-select (selectionChange)="onFilterChange(filter.key, $event)">
+              <mat-option value="">Todos</mat-option>
+              <mat-option *ngFor="let option of filter.options" [value]="option.value">
+                {{ option.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </ng-container>
+        <button mat-button (click)="clearFilters()" *ngIf="filters.length > 0">
+          <mat-icon>clear</mat-icon>
+          Limpiar Filtros
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Loading -->
+  <app-loading *ngIf="loading" [message]="loadingMessage"></app-loading>
+
+  <!-- Table -->
+  <mat-card *ngIf="!loading">
+    <mat-card-content>
+      <div>
+        <table mat-table [dataSource]="dataSource" matSort [class]="tableClass">
+          <!-- Dynamic columns -->
+          <ng-container *ngFor="let column of columns" [matColumnDef]="column.key">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              [mat-sort-header]="column.sortable ? column.key : ''"
+            >
+              {{ column.label }}
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <ng-container *ngIf="column.template; else defaultCell">
+                <ng-container
+                  [ngTemplateOutlet]="column.template"
+                  [ngTemplateOutletContext]="{ $implicit: row, column: column }"
+                >
+                </ng-container>
+              </ng-container>
+              <ng-template #defaultCell>
+                {{ getNestedProperty(row, column.key) }}
+              </ng-template>
+            </td>
+          </ng-container>
+          <!-- Actions column -->
+          <ng-container matColumnDef="actions" *ngIf="actionsTemplate">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let row">
+              <ng-container
+                [ngTemplateOutlet]="actionsTemplate"
+                [ngTemplateOutletContext]="{ $implicit: row }"
+              >
+              </ng-container>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+        <!-- No data message -->
+        <div *ngIf="dataSource.data.length === 0">
+          <mat-icon>{{ noDataIcon }}</mat-icon>
+          <p>{{ noDataMessage }}</p>
+          <ng-container *ngIf="noDataActions">
+            <ng-container [ngTemplateOutlet]="noDataActions"></ng-container>
+          </ng-container>
+        </div>
+      </div>
+      <!-- Paginator -->
+      <mat-paginator
+        [pageSizeOptions]="pageSizeOptions"
+        [showFirstLastButtons]="showFirstLastButtons"
+      >
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+</div>

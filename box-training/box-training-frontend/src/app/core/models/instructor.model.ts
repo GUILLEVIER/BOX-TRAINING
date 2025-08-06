@@ -4,31 +4,31 @@
  */
 export interface Instructor {
   /** Identificador único del instructor */
-  id: string;
+  id: string
 
   /** Nombre del instructor */
-  name: string;
+  name: string
 
   /** Apellido del instructor */
-  lastName: string;
+  lastName: string
 
   /** Email de contacto */
-  email: string;
+  email: string
 
   /** Número de teléfono */
-  phone: string;
+  phone: string
 
   /** Especialidades del instructor */
-  specialties: string[];
+  specialties: string[]
 
   /** Biografía del instructor */
-  biography: string;
+  biography: string
 
   /** URL de la foto del instructor */
-  photo?: string;
+  photo?: string
 
   /** Estado actual del instructor */
-  status: InstructorState;
+  status: InstructorState
 }
 
 /**
@@ -36,25 +36,25 @@ export interface Instructor {
  */
 export enum InstructorState {
   ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE'
+  INACTIVE = 'INACTIVE',
 }
 
 /**
  * DTO para crear un nuevo instructor
  */
 export interface CreateInstructorDto {
-  name: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  specialties: string[];
-  biography: string;
-  photo?: string;
+  name: string
+  lastName: string
+  email: string
+  phone: string
+  specialties: string[]
+  biography: string
+  photo?: string
 }
 
 /**
  * DTO para actualizar un instructor
  */
 export interface UpdateInstructorDto extends Partial<CreateInstructorDto> {
-  id: string;
+  id: string
 }

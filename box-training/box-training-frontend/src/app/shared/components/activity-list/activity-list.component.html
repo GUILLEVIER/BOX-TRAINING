@@ -11,8 +11,8 @@
           {{ item.icon }}
         </mat-icon>
         <div matLine>{{ item.title }}</div>
-        <div matLine *ngIf="item.subtitle" class="activity-subtitle">{{ item.subtitle }}</div>
-        <div matLine *ngIf="item.timestamp" class="activity-time">
+        <div matLine *ngIf="item.subtitle">{{ item.subtitle }}</div>
+        <div matLine *ngIf="item.timestamp">
           {{ formatTimestamp(item.timestamp) }}
         </div>
       </mat-list-item>

@@ -1,12 +1,12 @@
-<div class="plan-info-section" *ngIf="planInfo && activePlan">
+<div *ngIf="planInfo && activePlan">
   <h2><mat-icon>card_membership</mat-icon>Mi Plan Activo</h2>
-  <mat-card class="plan-card">
+  <mat-card>
     <mat-card-content>
       <div class="plan-details">
         <!-- Título y Estado -->
         <div class="plan-header">
           <h3>{{ planInfo.name }}</h3>
-          <div class="plan-status">
+          <div>
             <mat-chip [color]="getColorStatus(activePlan.status)" selected>
               {{ getStatusDisplayName(activePlan.status) }}
             </mat-chip>
@@ -35,7 +35,7 @@
     </mat-card-content>
   </mat-card>
   <!-- Progreso -->
-  <mat-card class="progress-card" *ngIf="planInfo.includedClasses !== 999">
+  <mat-card *ngIf="planInfo.includedClasses !== 999">
     <mat-card-content>
       <div class="progress-info">
         <span>Progreso del Plan</span>

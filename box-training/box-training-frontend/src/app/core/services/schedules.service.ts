@@ -1,18 +1,17 @@
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
-import { Schedule, PlanType } from '../models';
-import { MockDataService } from './mock-data.service';
+import { Injectable } from '@angular/core'
+import { Observable, of } from 'rxjs'
+import { delay, map } from 'rxjs/operators'
+import { Schedule, PlanType } from '../models'
+import { MockDataService } from './mock-data.service'
 
 /**
  * Servicio para la gestión de horarios de clases
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SchedulesService {
-
-  constructor(private mockDataService: MockDataService) { }
+  constructor(private mockDataService: MockDataService) {}
 
   /**
    * Obtiene todos los horarios disponibles
@@ -21,7 +20,7 @@ export class SchedulesService {
     return of(null).pipe(
       delay(500),
       map(() => this.mockDataService.getSchedules())
-    );
+    )
   }
 
   /**
@@ -32,10 +31,10 @@ export class SchedulesService {
     return of(null).pipe(
       delay(300),
       map(() => {
-        const allSchedules = this.mockDataService.getSchedules();
-        return allSchedules.filter(schedule => schedule.classType === planType);
+        const allSchedules = this.mockDataService.getSchedules()
+        return allSchedules.filter(schedule => schedule.classType === planType)
       })
-    );
+    )
   }
 
   /**
@@ -46,7 +45,7 @@ export class SchedulesService {
     return of(null).pipe(
       delay(300),
       map(() => this.mockDataService.getScheduleById(id))
-    );
+    )
   }
 
   /**
@@ -54,8 +53,8 @@ export class SchedulesService {
    * @param dayOfWeek Número del día (0-6)
    */
   getDayName(dayOfWeek: number): string {
-    const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-    return days[dayOfWeek] || '';
+    const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
+    return days[dayOfWeek] || ''
   }
 
   /**
@@ -63,7 +62,7 @@ export class SchedulesService {
    * @param schedule Horario a formatear
    */
   formatScheduleDisplay(schedule: Schedule): string {
-    const dayName = this.getDayName(schedule.dayOfWeek);
-    return `${dayName} ${schedule.startTime} - ${schedule.endTime} (${schedule.room})`;
+    const dayName = this.getDayName(schedule.dayOfWeek)
+    return `${dayName} ${schedule.startTime} - ${schedule.endTime} (${schedule.room})`
   }
 }

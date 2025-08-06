@@ -1,5 +1,5 @@
-<div class="filter-chips" *ngIf="chips.length > 0">
-  <span class="chips-label">Filtros activos:</span>
+<div *ngIf="chips.length > 0">
+  <span>Filtros activos:</span>
   <mat-chip-set>
     <mat-chip
       *ngFor="let chip of chips; trackBy: trackByChip"

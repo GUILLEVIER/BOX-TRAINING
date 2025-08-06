@@ -24,14 +24,12 @@ import { Instructor, InstructorState } from '../../../../core/models'
 
 // Shared Component Types
 import {
-  TableColumn,
-  FilterConfig,
-} from '../../../../shared/components/data-table/data-table.component'
-import {
   ActionButton,
+  ConfirmDialogData,
+  FilterConfig,
   MenuAction,
-} from '../../../../shared/components/action-buttons/action-buttons.component'
-import { ConfirmDialogData } from '../../../../shared/components/confirm-dialog/confirm-dialog.component'
+  TableColumn,
+} from '../../../../interfaces/propsInterface'
 
 // Core Services
 import { InstructorsService } from '../../../../core/services/instructors.service'

@@ -55,7 +55,6 @@ export interface ScheduleBlock extends Schedule {
 export class SchedulesCreateComponent {
   private readonly authService = inject(AuthService)
   private readonly mockDataService = inject(MockDataService)
-  private readonly schedulesService = inject(SchedulesService)
   private readonly snackBar = inject(MatSnackBar)
   private readonly dialog = inject(MatDialog)
 

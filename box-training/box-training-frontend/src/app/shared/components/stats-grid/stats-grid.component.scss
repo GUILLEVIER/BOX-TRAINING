@@ -1,8 +1,7 @@
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15.625rem, 1fr)); /* 250px -> REM */
-  gap: 1.5rem; /* 24px -> REM para espaciado */
-  margin-bottom: 2.5rem; /* 40px -> REM para espaciado */
+  grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr)); /* 248px -> REM */
+  gap: 1.25rem; /* 20px -> REM para espaciado */
 }
 
 .stat-card {
@@ -10,7 +9,8 @@
 }
 
 .stat-card:hover {
-  transform: translateY(-2px); /* PX para efectos específicos ✓ */
+  transform: translateY(-10px); /* PX para efectos específicos ✓ */
+  box-shadow: 0 8px 25px var(--box-training-black);
 }
 
 .stat-content {

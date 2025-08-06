@@ -1,0 +1,21 @@
+<div>
+  <div>
+    <button
+      *ngIf="showBackButton"
+      mat-icon-button
+      (click)="onBackClick()"
+      [matTooltip]="backTooltip"
+      class="back-button"
+    >
+      <mat-icon>{{ backIcon }}</mat-icon>
+    </button>
+    <h1>
+      <mat-icon *ngIf="titleIcon">{{ titleIcon }}</mat-icon>
+      {{ title }}
+    </h1>
+    <p *ngIf="subtitle">{{ subtitle }}</p>
+  </div>
+  <div *ngIf="actions">
+    <ng-container [ngTemplateOutlet]="actions"></ng-container>
+  </div>
+</div>

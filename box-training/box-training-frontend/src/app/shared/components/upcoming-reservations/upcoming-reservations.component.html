@@ -1,4 +1,4 @@
-<div class="reservas-section">
+<div class="reservation-section">
   <h2><mat-icon>upcoming</mat-icon>Próximas Reservas</h2>
   <mat-card>
     <mat-card-content>
@@ -24,13 +24,13 @@
         </mat-list-item>
       </mat-list>
       <!-- Sin reservas -->
-      <div *ngIf="reservations.length === 0" class="no-reservas">
+      <div *ngIf="reservations.length === 0" class="no-reservation">
         <mat-icon>event_busy</mat-icon>
         <p>No tienes clases agendadas próximamente</p>
         <p>¡Agenda tu próxima sesión de entrenamiento!</p>
       </div>
       <!-- Acciones -->
-      <div class="reservas-actions">
+      <div class="reservation-actions">
         <button mat-raised-button color="primary" (click)="onNavigateToSchedules()">
           <mat-icon>add</mat-icon>
           Agendar Clase

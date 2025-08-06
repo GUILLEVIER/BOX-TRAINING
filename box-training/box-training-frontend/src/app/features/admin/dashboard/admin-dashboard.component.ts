@@ -10,19 +10,11 @@ import { forkJoin } from 'rxjs'
 import { DashboardStats, User } from '../../../core/models'
 import { PlansService } from '../../../core/services/plans.service'
 import { LoadingComponent } from '../../../shared/components/loading/loading.component'
-import {
-  StatsGridComponent,
-  StatItem,
-} from '../../../shared/components/stats-grid/stats-grid.component'
-import {
-  QuickActionsGridComponent,
-  QuickAction,
-} from '../../../shared/components/quick-actions-grid/quick-actions-grid.component'
+import { StatsGridComponent } from '../../../shared/components/stats-grid/stats-grid.component'
+import { QuickActionsGridComponent } from '../../../shared/components/quick-actions-grid/quick-actions-grid.component'
 import { SectionHeaderComponent } from '../../../shared/components/section-header/section-header.component'
-import {
-  ActivityListComponent,
-  ActivityItem,
-} from '../../../shared/components/activity-list/activity-list.component'
+import { ActivityListComponent } from '../../../shared/components/activity-list/activity-list.component'
+import { ActivityItem, QuickAction, StatItem } from '../../../interfaces/propsInterface'
 import { AuthService } from '../../../core/services/auth.service'
 import { MainHeaderComponent } from '../../../shared/components'
 

@@ -200,8 +200,8 @@ export class MockDataService {
       name: 'Plan CrossFit Ilimitado',
       type: [
         {
-          id: '2',
-          name: 'ZUMBA',
+          id: '1',
+          name: 'CROSSFIT',
           format: PlanFormat.IN_PERSON,
         },
       ],
@@ -392,6 +392,37 @@ export class MockDataService {
     },
   ]
 
+  // Contraseñas mock para autenticación
+  private mockPasswords = {
+    [UserRole.ADMINISTRATOR]: 'admin123',
+    [UserRole.STUDENT]: 'student123',
+    [UserRole.INSTRUCTOR]: 'instructor123',
+  }
+
+  // Credenciales mock para demo en UI
+  private mockCredentials = [
+    {
+      email: 'admin@boxtraining.com',
+      password: 'admin123',
+      role: 'Administrador',
+    },
+    {
+      email: 'ana.silva@email.com',
+      password: 'student123',
+      role: 'Alumno',
+    },
+    {
+      email: 'luis.martinez@email.com',
+      password: 'student123',
+      role: 'Alumno',
+    },
+    {
+      email: 'guillermo.morales@gmail.com',
+      password: 'instructor123',
+      role: 'Instructor',
+    },
+  ]
+
   constructor(@Inject(PLATFORM_ID) platformId: Object) {
     // Verificamos si estamos en el navegador
     this.isBrowser = isPlatformBrowser(platformId)
@@ -489,6 +520,20 @@ export class MockDataService {
 
   getUsers(): User[] {
     return [...this.users]
+  }
+
+  /**
+   * Obtiene las contraseñas mock para autenticación
+   */
+  getMockPasswords(): { [key: string]: string } {
+    return { ...this.mockPasswords }
+  }
+
+  /**
+   * Obtiene las credenciales mock para mostrar en UI
+   */
+  getMockCredentials(): { email: string; password: string; role: string }[] {
+    return [...this.mockCredentials]
   }
 
   // Métodos para encontrar por ID

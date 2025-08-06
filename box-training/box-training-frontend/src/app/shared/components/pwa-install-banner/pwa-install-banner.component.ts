@@ -5,12 +5,12 @@ import { MatCardModule } from '@angular/material/card'
 import { MatIconModule } from '@angular/material/icon'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { Subject, takeUntil } from 'rxjs'
+import { trigger, state, style, transition, animate } from '@angular/animations'
 import { PwaService } from '../../../core/services/pwa.service'
 
 /**
  * Componente para mostrar banner de instalación PWA
  */
-// SE ESTÁ USANDO
 @Component({
   selector: 'app-pwa-install-banner',
   standalone: true,
@@ -18,7 +18,24 @@ import { PwaService } from '../../../core/services/pwa.service'
   templateUrl: './pwa-install-banner.component.html',
   styleUrls: ['./pwa-install-banner.component.scss'],
   animations: [
-    // Aquí podrías agregar animaciones Angular si las necesitas
+    trigger('slideIn', [
+      transition(':enter', [
+        style({ transform: 'translateY(100%)', opacity: 0 }),
+        animate('300ms ease-out', style({ transform: 'translateY(0)', opacity: 1 })),
+      ]),
+      transition(':leave', [
+        animate('300ms ease-in', style({ transform: 'translateY(100%)', opacity: 0 })),
+      ]),
+    ]),
+    trigger('slideDown', [
+      transition(':enter', [
+        style({ transform: 'translateY(-100%)', opacity: 0 }),
+        animate('300ms ease-out', style({ transform: 'translateY(0)', opacity: 1 })),
+      ]),
+      transition(':leave', [
+        animate('300ms ease-in', style({ transform: 'translateY(-100%)', opacity: 0 })),
+      ]),
+    ]),
   ],
 })
 export class PwaInstallBannerComponent implements OnInit, OnDestroy {

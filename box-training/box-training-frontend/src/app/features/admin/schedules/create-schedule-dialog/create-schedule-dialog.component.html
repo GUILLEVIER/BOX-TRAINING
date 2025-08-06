@@ -135,11 +135,15 @@
       [disabled]="!createForm.valid || loading()"
     >
       @if (loading()) {
-        <mat-icon>hourglass_empty</mat-icon>
-        Creando...
+        <ng-container>
+          <mat-icon>hourglass_empty</mat-icon>
+          Creando...
+        </ng-container>
       } @else {
-        <mat-icon>save</mat-icon>
-        Crear Clase
+        <ng-container>
+          <mat-icon>save</mat-icon>
+          Crear Clase
+        </ng-container>
       }
     </button>
   </mat-dialog-actions>

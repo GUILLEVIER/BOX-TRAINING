@@ -1,7 +1,11 @@
-<div class="quick-actions-grid" [class]="gridClass" [style.grid-template-columns]="columns ? 'repeat(' + columns + ', 1fr)' : null">
-  <mat-card 
-    class="action-card" 
-    *ngFor="let action of actions" 
+<div
+  class="quick-actions-grid"
+  [class]="gridClass"
+  [style.grid-template-columns]="columns ? 'repeat(' + columns + ', 1fr)' : null"
+>
+  <mat-card
+    class="action-card"
+    *ngFor="let action of actions"
     (click)="executeAction(action)"
     [class.disabled]="action.disabled"
   >

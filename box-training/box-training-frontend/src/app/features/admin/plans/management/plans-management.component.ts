@@ -16,21 +16,17 @@ import { MatTooltipModule } from '@angular/material/tooltip'
 import { Router, RouterModule } from '@angular/router'
 import { PlanStatus, Plan, PlanType } from '../../../../core/models'
 import { PlansService } from '../../../../core/services/plans.service'
-import {
-  ConfirmDialogComponent,
-  ConfirmDialogData,
-} from '../../../../shared/components/confirm-dialog/confirm-dialog.component'
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component'
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component'
+import { DataTableComponent } from '../../../../shared/components/data-table/data-table.component'
+import { ActionButtonsComponent } from '../../../../shared/components/action-buttons/action-buttons.component'
 import {
-  DataTableComponent,
-  TableColumn,
-  FilterConfig,
-} from '../../../../shared/components/data-table/data-table.component'
-import {
-  ActionButtonsComponent,
   ActionButton,
+  ConfirmDialogData,
+  FilterConfig,
   MenuAction,
-} from '../../../../shared/components/action-buttons/action-buttons.component'
+  TableColumn,
+} from '../../../../interfaces/propsInterface'
 
 /**
  * Componente para la gestión de planes del administrador

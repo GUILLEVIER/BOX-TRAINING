@@ -19,11 +19,17 @@
               </div>
               <div class="info-item">
                 <mat-icon>access_time</mat-icon>
-                <span><strong>Horario:</strong> {{ data.schedule.startTime }} - {{ data.schedule.endTime }}</span>
+                <span
+                  ><strong>Horario:</strong> {{ data.schedule.startTime }} -
+                  {{ data.schedule.endTime }}</span
+                >
               </div>
               <div class="info-item">
                 <mat-icon>group</mat-icon>
-                <span><strong>Reservas Actuales:</strong> {{ data.schedule.currentReservations || 0 }}</span>
+                <span
+                  ><strong>Reservas Actuales:</strong>
+                  {{ data.schedule.currentReservations || 0 }}</span
+                >
               </div>
             </div>
           </div>
@@ -53,14 +59,14 @@
             <!-- Capacidad máxima -->
             <mat-form-field appearance="outline">
               <mat-label>Capacidad Máxima</mat-label>
-              <input 
-                matInput 
-                type="number" 
-                formControlName="maxCapacity" 
-                min="1" 
+              <input
+                matInput
+                type="number"
+                formControlName="maxCapacity"
+                min="1"
                 max="50"
                 required
-              >
+              />
               <mat-icon matSuffix>group</mat-icon>
               <mat-hint>Número máximo de estudiantes (1-50)</mat-hint>
               <mat-error *ngIf="editForm.get('maxCapacity')?.hasError('required')">
@@ -81,7 +87,9 @@
                 <mat-option *ngFor="let instructor of data.instructors" [value]="instructor.id">
                   <div class="instructor-option">
                     <div class="instructor-name">{{ getInstructorName(instructor) }}</div>
-                    <div class="instructor-specialties">{{ getInstructorSpecialties(instructor) }}</div>
+                    <div class="instructor-specialties">
+                      {{ getInstructorSpecialties(instructor) }}
+                    </div>
                   </div>
                 </mat-option>
               </mat-select>
@@ -110,9 +118,9 @@
             <!-- Descripción (opcional) -->
             <mat-form-field appearance="outline">
               <mat-label>Descripción (Opcional)</mat-label>
-              <textarea 
-                matInput 
-                formControlName="description" 
+              <textarea
+                matInput
+                formControlName="description"
                 rows="3"
                 maxlength="500"
                 placeholder="Describe la clase, nivel requerido, equipamiento especial, etc."
@@ -137,23 +145,23 @@
               <mat-icon>group</mat-icon>
               Estudiantes Reservados ({{ reservedStudents().length }})
             </h3>
-            
+
             @if (reservedStudents().length > 0) {
-              <mat-list>
-                @for (student of reservedStudents(); track student.id) {
-                  <mat-list-item>
-                    <mat-icon matListItemIcon>person</mat-icon>
-                    <div matListItemTitle>{{ student.firstName }} {{ student.lastName }}</div>
-                    <div matListItemLine>Reservado</div>
-                  </mat-list-item>
-                  <mat-divider></mat-divider>
-                }
-              </mat-list>
+            <mat-list>
+              @for (student of reservedStudents(); track student.id) {
+              <mat-list-item>
+                <mat-icon matListItemIcon>person</mat-icon>
+                <div matListItemTitle>{{ student.firstName }} {{ student.lastName }}</div>
+                <div matListItemLine>Reservado</div>
+              </mat-list-item>
+              <mat-divider></mat-divider>
+              }
+            </mat-list>
             } @else {
-              <div class="no-students">
-                <mat-icon>info</mat-icon>
-                <p>No hay estudiantes reservados para esta clase.</p>
-              </div>
+            <div class="no-students">
+              <mat-icon>info</mat-icon>
+              <p>No hay estudiantes reservados para esta clase.</p>
+            </div>
             }
           </div>
         </div>
@@ -162,36 +170,29 @@
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
-    <button 
-      mat-button 
-      (click)="onCancel()"
-      [disabled]="loading()"
-    >
-      Cancelar
-    </button>
-    
-    <button 
-      mat-button 
-      color="warn"
-      (click)="onDelete()"
-      [disabled]="loading()"
-    >
+    <button mat-button (click)="onCancel()" [disabled]="loading()">Cancelar</button>
+
+    <button mat-button color="warn" (click)="onDelete()" [disabled]="loading()">
       <mat-icon>delete</mat-icon>
       Eliminar
     </button>
-    
-    <button 
-      mat-raised-button 
-      color="primary" 
+
+    <button
+      mat-raised-button
+      color="primary"
       (click)="onSave()"
       [disabled]="!editForm.valid || !hasChanges() || loading()"
     >
       @if (loading()) {
+      <ng-container>
         <mat-icon>hourglass_empty</mat-icon>
         Guardando...
+      </ng-container>
       } @else {
+      <ng-container>
         <mat-icon>save</mat-icon>
         Guardar Cambios
+      </ng-container>
       }
     </button>
   </mat-dialog-actions>

@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon'
 import { MatListModule } from '@angular/material/list'
 import { MatProgressBarModule } from '@angular/material/progress-bar'
 import { RouterModule, Router } from '@angular/router'
-import { Plan, StudentPlan, Reservation, User, PlanType } from '../../../core/models'
+import { Reservation, User, PlanType } from '../../../core/models'
 import { AuthService } from '../../../core/services/auth.service'
 import { MockDataService } from '../../../core/services/mock-data.service'
 import { LoadingComponent } from '../../../shared/components/loading/loading.component'
@@ -15,31 +15,10 @@ import { MainHeaderComponent } from '../../../shared/components/main-header/main
 import { PlanInfoComponent } from '../../../shared/components/plan-info/plan-info.component'
 import { UpcomingReservationsComponent } from '../../../shared/components/upcoming-reservations/upcoming-reservations.component'
 import { NoPlanMessageComponent } from '../../../shared/components/no-plan-message/no-plan-message.component'
-import {
-  StatsGridComponent,
-  StatItem,
-} from '../../../shared/components/stats-grid/stats-grid.component'
-import {
-  QuickActionsGridComponent,
-  QuickAction,
-} from '../../../shared/components/quick-actions-grid/quick-actions-grid.component'
+import { StatsGridComponent } from '../../../shared/components/stats-grid/stats-grid.component'
+import { QuickActionsGridComponent } from '../../../shared/components/quick-actions-grid/quick-actions-grid.component'
 import { SectionHeaderComponent } from '../../../shared/components/section-header/section-header.component'
-
-/**
- * Interfaz para los datos del dashboard del alumno
- */
-// PROBADO
-interface StudentDashboardData {
-  activePlan?: StudentPlan
-  planInfo?: Plan
-  upcomingReservations: Reservation[]
-  statistics: {
-    availableClasses: number
-    scheduledClasses: number
-    totalClasses: number
-    remainingDays: number
-  }
-}
+import { QuickAction, StatItem, StudentDashboardData } from '../../../interfaces/propsInterface'
 
 /**
  * Componente del dashboard del alumno

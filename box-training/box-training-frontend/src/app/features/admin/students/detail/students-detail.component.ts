@@ -29,10 +29,8 @@ import {
 import { StudentsService } from '../../../../core/services/students.service'
 import { PlansService } from '../../../../core/services/plans.service'
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component'
-import {
-  ConfirmDialogComponent,
-  ConfirmDialogData,
-} from '../../../../shared/components/confirm-dialog/confirm-dialog.component'
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component'
+import { ConfirmDialogData } from '../../../../interfaces/propsInterface'
 
 /**
  * Componente para mostrar los detalles de un estudiante

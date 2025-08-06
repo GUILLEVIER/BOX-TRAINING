@@ -27,11 +27,9 @@ import { map, switchMap, catchError } from 'rxjs/operators'
 import { Plan, PlanType, UpdatePlanDto, PlanFormat } from '../../../../core/models/plan.model'
 import { PlansService } from '../../../../core/services/plans.service'
 import { PageHeaderComponent, FormRowComponent } from '../../../../shared/components'
-import {
-  ConfirmDialogComponent,
-  ConfirmDialogData,
-} from '../../../../shared/components/confirm-dialog/confirm-dialog.component'
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component'
 import { MatProgressSpinner } from '@angular/material/progress-spinner'
+import { ConfirmDialogData } from '../../../../interfaces/propsInterface'
 
 /**
  * Componente para editar planes de entrenamiento existentes

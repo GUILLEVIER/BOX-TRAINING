@@ -1,24 +1,7 @@
-.plan-info-section h2 {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.plan-card {
-  margin-bottom: 16px;
-}
-
 .plan-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 16px;
-}
-
-.plan-header h3 {
-  margin: 0;
-  font-size: 1.4rem;
 }
 
 .plan-details {
@@ -40,29 +23,18 @@
   min-width: 200px;
 }
 
-.date-item mat-icon {
-}
-
 .plan-description {
-  margin: 0;
   line-height: 1.5;
   font-style: italic;
-}
-
-.progress-card {
-  margin-top: 16px;
 }
 
 .progress-info {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 8px;
   font-weight: 500;
 }
 
 .progress-details {
-  margin-top: 8px;
-  font-size: 12px;
   text-align: center;
 }
 
