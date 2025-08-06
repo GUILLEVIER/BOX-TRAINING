@@ -40,6 +40,7 @@ const ROOMS = [
 /**
  * Diálogo para editar un horario de clase existente
  */
+// TODO: SACAR COMPONENTES HTML Y CSS A ARCHIVOS SEPARADOS
 @Component({
   selector: 'app-edit-schedule-dialog',
   standalone: true,

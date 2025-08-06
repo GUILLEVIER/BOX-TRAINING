@@ -32,6 +32,7 @@ interface ReservedStudent {
 /**
  * Diálogo para mostrar los detalles de un bloque de horario
  */
+// TODO: SACAR COMPONENTES HTML Y CSS A ARCHIVOS SEPARADOS
 @Component({
   selector: 'app-schedule-detail-dialog',
   standalone: true,

@@ -14,6 +14,7 @@ import { InstructorsService } from '../../../../core/services/instructors.servic
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component'
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component'
 import { ConfirmDialogData } from '../../../../interfaces/propsInterface'
+import { LoadingComponent } from '../../../../shared/components'
 
 /**
  * Componente para mostrar los detalles de un instructor
@@ -34,6 +35,7 @@ import { ConfirmDialogData } from '../../../../interfaces/propsInterface'
     MatSnackBarModule,
     MatDialogModule,
     PageHeaderComponent,
+    LoadingComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './instructors-detail.component.html',

@@ -22,7 +22,6 @@ import { MainHeaderComponent } from '../../../shared/components'
  * Componente del dashboard del administrador
  * Muestra estadísticas generales y accesos rápidos a funciones principales
  */
-// PROBADO
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,

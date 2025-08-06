@@ -29,6 +29,7 @@ import { PageHeaderComponent } from '../../../../shared/components/page-header/p
  * Componente para editar instructores existentes
  * Cumple con los criterios de aceptación para la edición de instructores
  */
+// TODO: SACAR COMPONENTES HTML Y CSS A ARCHIVOS SEPARADOS
 @Component({
   selector: 'app-instructors-edit',
   standalone: true,

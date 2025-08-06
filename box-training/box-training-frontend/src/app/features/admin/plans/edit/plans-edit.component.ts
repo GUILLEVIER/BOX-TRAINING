@@ -35,6 +35,7 @@ import { ConfirmDialogData } from '../../../../interfaces/propsInterface'
  * Componente para editar planes de entrenamiento existentes
  * Cumple con los criterios de aceptación para la edición de planes
  */
+// TODO: SACAR COMPONENTES HTML Y CSS A ARCHIVOS SEPARADOS
 @Component({
   selector: 'app-plans-edit',
   standalone: true,

@@ -24,7 +24,6 @@
     [filters]="tableFilters"
     [loading]="loading"
     loadingMessage="Cargando instructores..."
-    tableClass="instructors-table"
     [pageSizeOptions]="[5, 10, 20]"
     [showFirstLastButtons]="true"
     noDataMessage="No se encontraron instructores"
@@ -40,16 +39,15 @@
   <ng-template #nameTemplate let-instructor>
     <div>
       <strong>{{ getFullName(instructor) }}</strong>
-      <div class="email-text">{{ instructor.email }}</div>
+      <div>{{ instructor.email }}</div>
     </div>
   </ng-template>
 
   <ng-template #specialtiesTemplate let-instructor>
-    <div class="specialties-container">
+    <div>
       <mat-chip
         *ngFor="let specialty of instructor.specialties; trackBy: trackBySpecialty"
         color="accent"
-        class="specialty-chip"
       >
         {{ specialty }}
       </mat-chip>

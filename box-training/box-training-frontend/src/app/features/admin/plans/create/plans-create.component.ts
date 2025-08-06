@@ -31,6 +31,7 @@ import { PageHeaderComponent, FormRowComponent } from '../../../../shared/compon
  * Componente para crear nuevos planes de entrenamiento
  * Incluye formulario con validaciones y soporte para documentos e imágenes
  */
+// TODO: SACAR COMPONENTES HTML Y CSS A ARCHIVOS SEPARADOS
 @Component({
   selector: 'app-plans-create',
   standalone: true,

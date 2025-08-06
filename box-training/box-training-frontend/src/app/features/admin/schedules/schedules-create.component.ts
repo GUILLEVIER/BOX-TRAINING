@@ -31,6 +31,7 @@ export interface AdminScheduleBlock extends Schedule {
 /**
  * Componente para la administración y creación de horarios por el administrador
  */
+// TODO: SACAR COMPONENTES HTML Y CSS A ARCHIVOS SEPARADOS
 @Component({
   selector: 'app-schedules-create',
   standalone: true,

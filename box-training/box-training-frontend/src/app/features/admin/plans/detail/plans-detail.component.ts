@@ -19,6 +19,7 @@ import { ConfirmDialogData } from '../../../../interfaces/propsInterface'
  * Componente para mostrar los detalles de un plan
  * Incluye información completa del plan y acciones disponibles
  */
+// TODO: SACAR COMPONENTES HTML Y CSS A ARCHIVOS SEPARADOS
 @Component({
   selector: 'app-plans-detail',
   standalone: true,

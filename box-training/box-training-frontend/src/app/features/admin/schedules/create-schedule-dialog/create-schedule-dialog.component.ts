@@ -40,6 +40,7 @@ const ROOMS = [
 /**
  * Diálogo para crear un nuevo horario de clase
  */
+// TODO: SACAR COMPONENTES HTML Y CSS A ARCHIVOS SEPARADOS
 @Component({
   selector: 'app-create-schedule-dialog',
   standalone: true,

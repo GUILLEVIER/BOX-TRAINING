@@ -32,6 +32,7 @@ export interface ScheduleBlock extends Schedule {
 /**
  * Componente para la visualización y reserva de horarios por rango de fechas
  */
+// TODO: SACAR COMPONENTES HTML Y CSS A ARCHIVOS SEPARADOS
 @Component({
   selector: 'app-schedules-create',
   standalone: true,

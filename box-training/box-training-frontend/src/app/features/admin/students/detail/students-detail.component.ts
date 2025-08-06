@@ -36,6 +36,7 @@ import { ConfirmDialogData } from '../../../../interfaces/propsInterface'
  * Componente para mostrar los detalles de un estudiante
  * Incluye información completa del estudiante y acciones disponibles
  */
+// TODO: SACAR COMPONENTES HTML Y CSS A ARCHIVOS SEPARADOS
 @Component({
   selector: 'app-students-detail',
   standalone: true,

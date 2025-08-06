@@ -24,6 +24,7 @@ import { AuthService } from '../../../core/services/auth.service'
 import { MockDataService } from '../../../core/services/mock-data.service'
 import { FilterChip } from '../../../interfaces/propsInterface'
 
+// TODO: SACAR COMPONENTES HTML Y CSS A ARCHIVOS SEPARADOS
 @Component({
   selector: 'app-reservation-create',
   standalone: true,
